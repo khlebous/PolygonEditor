@@ -7,5 +7,7 @@ namespace GL
 		Point();
 		Point(int _x, int _y);
 		Point(const Point& p);
+		bool Point::operator==(const Point &p);
+		bool Point::operator!=(const Point &p);
 	};
 }

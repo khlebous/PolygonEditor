@@ -3,11 +3,11 @@
 #include "MouseManager.h"
 #include "ExternVariables.h"
 using namespace std;
-const int WINDOW_HEIGHT = 640;
-const int WINDOW_WIDTH = 320;
+const int WINDOW_HEIGHT = 600;
+const int WINDOW_WIDTH = 300;
 void display(void)
 {
-	glColor3f(1.0f, 1.0f, 1.0f);
+	/*glColor3f(1.0f, 1.0f, 1.0f);
 	glPointSize(1);
 	glBegin(GL_POINTS);
 	for (int i = 0; i < 100; i++)
@@ -15,17 +15,8 @@ void display(void)
 		glVertex2i(i, i);
 	}
 	glEnd();
-
+	*/
 	glFlush();
-}
-
-void mouse(int button, int state, int x, int y)
-{
-	
-}
-static void mouse2(int button, int state, int x, int y)
-{
-
 }
 
 int main(int argc, char** argv)
@@ -43,7 +34,8 @@ int main(int argc, char** argv)
 
 	glutDisplayFunc(display);
 
-	glutMouseFunc(MouseManager::mouse2);
+	glutMouseFunc(MouseManager::mouse);
+	glutPassiveMotionFunc(MouseManager::mouse2);
 	//glutIdleFunc(idle);
 	glutMainLoop();
 }

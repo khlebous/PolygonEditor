@@ -18,3 +18,13 @@ GL::Point::Point(const GL::Point & p)
 	x = p.x;
 	y = p.y;
 }
+
+bool GL::Point::operator==(const Point & p)
+{
+	return ((x == p.x) && (y == p.y));
+}
+
+bool GL::Point::operator!=(const Point & p)
+{
+	return !((x == p.x) && (y == p.y));
+}

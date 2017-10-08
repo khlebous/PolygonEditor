@@ -7,9 +7,34 @@
 
 using namespace std;
 
-
-void Line(int x1, int y1, int x2, int y2)
+// TODO more univesal
+void GL::SetPixel(int x, int y, float size)
 {
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glPointSize(size);
+	glBegin(GL_POINTS);
+	glVertex2i(x, y);
+	glEnd();
+	glFlush();
+}
+
+void GL::DrawVertice(int x, int y)
+{
+	GL::SetPixel(x, y, 6);
+}
+void GL::DrawHighlitVertice(int x, int y)
+{
+
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glPointSize(6);
+	glBegin(GL_POINTS);
+	glVertex2i(x, y);
+	glEnd();
+	glFlush();
+}
+vector<GL::Point> GL::Line(int x1, int y1, int x2, int y2)
+{
+	vector<GL::Point> edge;
 	// Bresenham's line algorithm
 	const bool steep = (fabs(y2 - y1) > fabs(x2 - x1));
 	if (steep)
@@ -37,11 +62,13 @@ void Line(int x1, int y1, int x2, int y2)
 	{
 		if (steep)
 		{
-			MySetPixel(y, x);
+			edge.push_back(GL::Point(y, x));
+			//GL::SetPixel(y, x);
 		}
 		else
 		{
-			MySetPixel(x, y);
+			edge.push_back(GL::Point(x, y));
+			//GL::SetPixel(x, y);
 		}
 
 		error -= dy;
@@ -51,20 +78,20 @@ void Line(int x1, int y1, int x2, int y2)
 			error += dx;
 		}
 	}
+	for each (GL::Point p in edge)
+	{
+		GL::SetPixel(p.x, p.y);
+	}
+	return edge;
 }
-void Drawline(GL::Point p1, GL::Point p2)
+void GL::Drawline(GL::Point p1, GL::Point p2)
 {
-	Line(p1.x, p1.y, p2.x, p2.y);
+	GL::Line(p1.x, p1.y, p2.x, p2.y);
 }
 
-void MySetPixel(int x, int y)
+void GL::DrawEdge(GL::Polygon*  polygon)
 {
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glPointSize(1);
-	glBegin(GL_POINTS);
-	glVertex2i(x, y);
-	glEnd();
-	glFlush();
+	Point p1 = polygon->GetPoint(polygon->VerticesCount() - 2);
+	Point p2 = polygon->GetPoint(polygon->VerticesCount() - 1);
+	polygon->AddEdge(GL::Line(p1.x, p1.y, p2.x, p2.y));
 }
-
-
