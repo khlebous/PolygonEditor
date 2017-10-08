@@ -13,5 +13,54 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="GraphicsLibrary">
+      <UniqueIdentifier>{113aa875-6f6a-4ebb-8158-2a9c4ff19d58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Polygon">
+      <UniqueIdentifier>{1861849c-831f-4a55-8755-3f08f6df75f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GraphicsLibrary\Point">
+      <UniqueIdentifier>{63b69871-80f5-4e2d-8ec0-e69ca2fbff7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GraphicsLibrary\Mouse">
+      <UniqueIdentifier>{4daad2d5-22a1-41ab-a1a0-2824cd3328a8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\Downloads\glad\src\glad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsLibrary.cpp">
+      <Filter>GraphicsLibrary</Filter>
+    </ClCompile>
+    <ClCompile Include="Polygon.cpp">
+      <Filter>Polygon</Filter>
+    </ClCompile>
+    <ClCompile Include="Point.cpp">
+      <Filter>GraphicsLibrary\Point</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseManager.cpp">
+      <Filter>GraphicsLibrary\Mouse</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GraphicsLibrary.h">
+      <Filter>GraphicsLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="Polygon.h">
+      <Filter>Polygon</Filter>
+    </ClInclude>
+    <ClInclude Include="Point.h">
+      <Filter>GraphicsLibrary\Point</Filter>
+    </ClInclude>
+    <ClInclude Include="ExternVariables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseManager.h">
+      <Filter>GraphicsLibrary\Mouse</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
