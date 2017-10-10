@@ -13,4 +13,6 @@ namespace GL
 	vector<GL::Point> Line(int x1, int y1, int x2, int y2);
 	void Drawline(GL::Point p1, GL::Point p2);
 	void DrawEdge(GL::Polygon* polygon);
+	void DrawEdge(vector<GL::Point> edge);
+	void DrawHighlightEdge(vector<GL::Point> edge);
 }

@@ -10,6 +10,7 @@ MouseManager::MouseManager()
 {
 	polygon = new GL::Polygon;
 	highlightVertice = GL::Point(-1, -1);
+	highlightEdge = vector<GL::Point>();
 }
 
 MouseManager* MouseManager::getInstance()
@@ -55,31 +56,7 @@ void MouseManager::DrawNewVerticeAndEdge(int x, int y)
 
 bool MouseManager::CheckVertices(int x, int y)
 {
-	//GL::Polygon* polygon = polygon;
-	GL::Point p = polygon->Check1(x, y);
-	/*if (highlightVertice.x == -1)
-	{
-		if (p.x == -1)
-			return true;
-		GL::DrawHighlitVertice(p.x, p.y);
-		highlightVertice = p;
-	}
-	else
-	{
-		if (p.x == -1)
-		{
-			GL::DrawVertice(highlightVertice.x, highlightVertice.y);
-			highlightVertice = GL::Point(-1,-1);
-		}
-		else
-		{
-			if ((p.x == highlightVertice.x) && (p.y == highlightVertice.y))
-				return true;
-			GL::DrawVertice(highlightVertice.x, highlightVertice.y);
-			GL::DrawHighlitVertice(p.x, p.y);
-			highlightVertice = p;
-		}
-	}*/
+	GL::Point p = polygon->CheckMouseNearVertice(x, y);
 	// TODO find bug
 	if (p.x == -1)
 	{
@@ -91,12 +68,12 @@ bool MouseManager::CheckVertices(int x, int y)
 	}
 	else
 	{
-		if (highlightVertice.x == -1)
+		/*if (highlightVertice.x == -1)
 		{
 			highlightVertice = p;
 			GL::DrawHighlitVertice(p.x, p.y);
 		}
-		else if(highlightVertice!=p)
+		else */if(highlightVertice!=p)
 		{
 			if (highlightVertice.x != -1)
 				GL::DrawVertice(highlightVertice.x, highlightVertice.y);
@@ -109,5 +86,31 @@ bool MouseManager::CheckVertices(int x, int y)
 
 bool MouseManager::CheckEdges(int x, int y)
 {
-	return false;
+	vector<GL::Point> e = polygon->CheckMouseNearEdge(x, y);
+	// TODO find bug
+	if (e.size()==0)
+	{
+		if (highlightEdge.size() == 0)
+		{
+			GL::DrawEdge(highlightEdge);
+			highlightEdge = vector<GL::Point>();
+		}
+	}
+	else
+	{
+		/*if (highlightVertice.x == -1)
+		{
+		highlightVertice = p;
+		GL::DrawHighlitVertice(p.x, p.y);
+		}
+		else */
+		if (highlightEdge != e)
+		{
+			if (highlightEdge.size()>0)
+				GL::DrawEdge(highlightEdge);
+			GL::DrawHighlightEdge(e);
+			highlightEdge = e;
+		}
+	}
+	return true;
 }

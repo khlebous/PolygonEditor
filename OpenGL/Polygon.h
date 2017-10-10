@@ -20,7 +20,9 @@ namespace GL
 		void AddEdge(vector < GL::Point> edge);
 		GL::Point GetPoint(int index);
 		int VerticesCount() { return vertices.size(); }
-		GL::Point Check1(int x, int y);
+		GL::Point CheckMouseNearVertice(int x, int y);
+		vector<GL::Point> CheckMouseNearEdge(int x, int y);
+
 	};
 }
 

@@ -6,6 +6,7 @@ class MouseManager
 	GL::Polygon* polygon;
 private:
 	GL::Point highlightVertice;
+	vector<GL::Point> highlightEdge;
 
 	static MouseManager* instance;
 	MouseManager();

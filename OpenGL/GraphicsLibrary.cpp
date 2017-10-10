@@ -95,3 +95,25 @@ void GL::DrawEdge(GL::Polygon*  polygon)
 	Point p2 = polygon->GetPoint(polygon->VerticesCount() - 1);
 	polygon->AddEdge(GL::Line(p1.x, p1.y, p2.x, p2.y));
 }
+
+void GL::DrawEdge(vector<GL::Point> edge)
+{
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glPointSize(1);
+	glBegin(GL_POINTS);
+	for each (GL::Point p in edge)
+		glVertex2i(p.x, p.y);
+	glEnd();
+	glFlush();
+}
+
+void GL::DrawHighlightEdge(vector<GL::Point> edge)
+{
+	glColor3f(1.0f, 0.0f, 1.0f);
+	glPointSize(1);
+	glBegin(GL_POINTS);
+	for each (GL::Point p in edge)
+		glVertex2i(p.x, p.y);
+	glEnd();
+	glFlush();
+}
