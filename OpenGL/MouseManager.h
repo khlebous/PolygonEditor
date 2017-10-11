@@ -16,6 +16,7 @@ public:
 
 	static void mouseFunc(int button, int state, int x, int y);
 	static void mousePassiveFunc(int x, int y);
+	static void loopPolygon(unsigned char key, int x, int y);
 
 	void UnhighlightVertice();
 	void UnhighlightEdge();

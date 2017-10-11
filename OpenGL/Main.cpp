@@ -25,6 +25,7 @@ int main(int argc, char** argv)
 
 	glutMouseFunc(MouseManager::mouseFunc);
 	glutPassiveMotionFunc(MouseManager::mousePassiveFunc);
+	glutKeyboardFunc(MouseManager::loopPolygon);
 	//glutIdleFunc(idle);
 	glutMainLoop();
 }

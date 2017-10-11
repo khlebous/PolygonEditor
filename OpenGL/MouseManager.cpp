@@ -35,6 +35,20 @@ void MouseManager::mousePassiveFunc(int x, int y)
 		instance->UnhighlightEdge();
 }
 
+void MouseManager::loopPolygon(unsigned char key, int x, int y)
+{
+	switch (key)
+	{
+	case 27:     // ESC key
+		exit(0);
+		break;
+	case 'l':
+		GL::Polygon* polygon = getInstance()->polygon;
+		polygon->Loop();
+		break;
+	}
+}
+
 void MouseManager::UnhighlightVertice()
 {
 	highlightVertice.UnhighlightVertice();
