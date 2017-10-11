@@ -51,14 +51,25 @@ void MouseManager::DrawNewVerticeAndEdge(int x, int y)
 {
 	GL::Polygon* polygon = getInstance()->polygon;
 
-	polygon->AddVertice(x, WINDOW_WIDTH - y);
-	polygon->GetVertice(polygon->VertCount() - 1).Draw();
-
-	if (polygon->VertCount() > 1)
+	//TODO new function
+	if (polygon->VertCount() > 2)
 	{
-		polygon->AddEdge(polygon->GetVertice(polygon->VertCount() - 2),
-			polygon->GetVertice(polygon->VertCount() - 1));
-		polygon->GetEdge(polygon->VertCount() - 2).Draw();
+		GL::Vertice v = polygon->GetVertice(0);
+		if ((abs(v.GetX() - x) < 6) && (abs(v.GetY() - (WINDOW_WIDTH-y)) < 6))
+			polygon->Loop();
+	}
+	//
+	if (!polygon->IsLooped())
+	{
+		polygon->AddVertice(x, WINDOW_WIDTH - y);
+		polygon->GetVertice(polygon->VertCount() - 1).Draw();
+
+		if (polygon->VertCount() > 1)
+		{
+			polygon->AddEdge(polygon->GetVertice(polygon->VertCount() - 2),
+				polygon->GetVertice(polygon->VertCount() - 1));
+			polygon->GetEdge(polygon->VertCount() - 2).Draw();
+		}
 	}
 }
 
@@ -80,10 +91,9 @@ bool MouseManager::CheckVertices(int x, int y)
 			highlightVertice.UnhighlightVertice();
 		v.HighlightVertice();
 		highlightVertice = v;
-		return true;
 	}
+	return true;
 }
-
 void MouseManager::CheckEdges(int x, int y)
 {
 	GL::Edge e = polygon->CheckMouseNearEdge(x, y);

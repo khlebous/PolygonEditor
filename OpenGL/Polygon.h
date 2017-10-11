@@ -10,7 +10,9 @@ namespace GL
 	{
 		vector<GL::Vertice> vertices;
 		vector<GL::Edge> edges;
-		int maxDistance = 5;
+
+		bool isLooped = false;
+		int maxDistToHighl = 5;
 	public:
 		Polygon();
 		~Polygon();
@@ -27,6 +29,8 @@ namespace GL
 		GL::Vertice CheckMouseNearVertice(int x, int y);
 		GL::Edge CheckMouseNearEdge(int x, int y);
 
+		void Loop();
+		bool IsLooped() { return isLooped; }
 	};
 }
 

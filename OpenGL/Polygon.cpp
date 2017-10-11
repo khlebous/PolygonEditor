@@ -38,14 +38,23 @@ GL::Edge GL::Polygon::GetEdge(int index)
 GL::Vertice GL::Polygon::CheckMouseNearVertice(int x, int y)
 {
 	for(GL::Vertice& v : vertices)
-		if ((abs(v.GetX() - x) < maxDistance) && (abs(v.GetY() - y) < maxDistance))
+		if ((abs(v.GetX() - x) < maxDistToHighl) && (abs(v.GetY() - y) < maxDistToHighl))
 			return v;
 	return GL::Vertice(-1, -1);
 }
 GL::Edge GL::Polygon::CheckMouseNearEdge(int x, int y)
 {
 	for (GL::Edge& edge : edges)
-		if (edge.IsPointNear(x, y, maxDistance))
+		if (edge.IsPointNear(x, y, maxDistToHighl))
 			return edge;
 	return GL::Edge();
+}
+
+void GL::Polygon::Loop()
+{
+	if (VertCount() < 3)
+		return;
+	isLooped = true;
+	AddEdge(GetVertice(0), GetVertice(VertCount() - 1));
+	GetEdge(EdgCount() - 1).Draw();
 }
