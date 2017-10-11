@@ -2,65 +2,50 @@
 
 GL::Polygon::Polygon()
 {
-	vertices = vector<GL::Point>();
-	edges = vector<vector<GL::Point>>();
+	vertices = vector<GL::Vertice>();
+	edges = vector<GL::Edge>();
 }
 GL::Polygon::~Polygon()
 {
 	vertices.clear();
-	for each (vector<GL::Point> v in edges)
-		v.clear();
+	for each (Edge v in edges)
+		v.~Edge();
 	edges.clear();
 }
 
 void GL::Polygon::AddVertice(int x, int y)
 {
-	vertices.push_back(GL::Point(x, y));
+	vertices.push_back(GL::Vertice(x, y));
 }
 void GL::Polygon::AddVertice(GL::Point p)
 {
-	vertices.push_back(GL::Point(p));
+	vertices.push_back(GL::Vertice(p));
 }
-void GL::Polygon::AddEdge(vector<GL::Point> edge)
+void GL::Polygon::AddEdge(GL::Vertice v1, GL::Vertice v2)
 {
-	edges.push_back(edge);
+	edges.push_back(GL::Edge(v1, v2));
 }
-GL::Point GL::Polygon::GetPoint(int index)
+
+GL::Vertice GL::Polygon::GetVertice(int index)
 {
 	return vertices[index];
 }
-
-GL::Point GL::Polygon::CheckMouseNearVertice(int x, int y)
+GL::Edge GL::Polygon::GetEdge(int index)
 {
-	int maxDistance = 5;
-	for each (GL::Point p in vertices)
-	{
-		if ((abs(p.x - x) < maxDistance) && (abs(p.y - y) < maxDistance))
-		{
-			return p;
-		}
-	}
-	return GL::Point(-1, -1);
+	return edges[index];
 }
 
-vector<GL::Point> GL::Polygon::CheckMouseNearEdge(int x, int y)
+GL::Vertice GL::Polygon::CheckMouseNearVertice(int x, int y)
 {
-	int maxDistance = 5;
-	for each (vector<GL::Point> edge in edges)
-	{
-		//bool _val = true;
-		for each (GL::Point p in edge)
-		{
-			if ((abs(p.x - x) < maxDistance) && (abs(p.y - y) < maxDistance))
-			{
-				return edge;
-				//_val = false;
-				//break;
-			}
-		}
-		//if (_val == true)
-			
-	}
-
-	return vector<GL::Point>();
+	for(GL::Vertice& v : vertices)
+		if ((abs(v.GetX() - x) < maxDistance) && (abs(v.GetY() - y) < maxDistance))
+			return v;
+	return GL::Vertice(-1, -1);
+}
+GL::Edge GL::Polygon::CheckMouseNearEdge(int x, int y)
+{
+	for (GL::Edge& edge : edges)
+		if (edge.IsPointNear(x, y, maxDistance))
+			return edge;
+	return GL::Edge();
 }

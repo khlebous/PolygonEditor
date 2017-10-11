@@ -5,26 +5,15 @@
 using namespace std;
 const int WINDOW_HEIGHT = 600;
 const int WINDOW_WIDTH = 300;
-void display(void)
-{
-	/*glColor3f(1.0f, 1.0f, 1.0f);
-	glPointSize(1);
-	glBegin(GL_POINTS);
-	for (int i = 0; i < 100; i++)
-	{
-		glVertex2i(i, i);
-	}
-	glEnd();
-	*/
-	glFlush();
-}
+
+void display(void);
 
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE);
 	glutInitWindowSize(WINDOW_HEIGHT, WINDOW_WIDTH);
-	glutCreateWindow("Randomly generated points");
+	glutCreateWindow("PolygonEditor");
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -34,8 +23,12 @@ int main(int argc, char** argv)
 
 	glutDisplayFunc(display);
 
-	glutMouseFunc(MouseManager::mouse);
-	glutPassiveMotionFunc(MouseManager::mouse2);
+	glutMouseFunc(MouseManager::mouseFunc);
+	glutPassiveMotionFunc(MouseManager::mousePassiveFunc);
 	//glutIdleFunc(idle);
 	glutMainLoop();
+}
+
+void display(void)
+{
 }

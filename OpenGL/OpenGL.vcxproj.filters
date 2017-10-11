@@ -25,6 +25,12 @@
     <Filter Include="GraphicsLibrary\Mouse">
       <UniqueIdentifier>{4daad2d5-22a1-41ab-a1a0-2824cd3328a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GraphicsLibrary\Vertice">
+      <UniqueIdentifier>{ab2a087e-ebd9-498e-8e1c-c38b316d4841}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GraphicsLibrary\Edge">
+      <UniqueIdentifier>{377a76f2-6249-4397-ab2f-d46dc526c4fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\Downloads\glad\src\glad.c">
@@ -45,6 +51,12 @@
     <ClCompile Include="MouseManager.cpp">
       <Filter>GraphicsLibrary\Mouse</Filter>
     </ClCompile>
+    <ClCompile Include="Vertice.cpp">
+      <Filter>GraphicsLibrary\Vertice</Filter>
+    </ClCompile>
+    <ClCompile Include="Edge.cpp">
+      <Filter>GraphicsLibrary\Edge</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsLibrary.h">
@@ -61,6 +73,12 @@
     </ClInclude>
     <ClInclude Include="MouseManager.h">
       <Filter>GraphicsLibrary\Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertice.h">
+      <Filter>GraphicsLibrary\Vertice</Filter>
+    </ClInclude>
+    <ClInclude Include="Edge.h">
+      <Filter>GraphicsLibrary\Edge</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
