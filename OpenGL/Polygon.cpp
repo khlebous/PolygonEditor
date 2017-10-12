@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "Polygon.h"
 
 GL::Polygon::Polygon()
@@ -35,19 +36,27 @@ GL::Edge GL::Polygon::GetEdge(int index)
 	return edges[index];
 }
 
-GL::Vertice GL::Polygon::CheckMouseNearVertice(int x, int y)
+int GL::Polygon::CheckMouseNearVertice(int x, int y)
 {
-	for(GL::Vertice& v : vertices)
+	int i = 0;
+	for (GL::Vertice& v : vertices)
+	{
 		if ((abs(v.GetX() - x) < maxDistToHighl) && (abs(v.GetY() - y) < maxDistToHighl))
-			return v;
-	return GL::Vertice(-1, -1);
+			return i;
+		i++;
+	}
+	return -1;
 }
-GL::Edge GL::Polygon::CheckMouseNearEdge(int x, int y)
+int GL::Polygon::CheckMouseNearEdge(int x, int y)
 {
+	int i = 0;
 	for (GL::Edge& edge : edges)
+	{
 		if (edge.IsPointNear(x, y, maxDistToHighl))
-			return edge;
-	return GL::Edge();
+			return i;
+		i++;
+	}
+	return -1;
 }
 
 void GL::Polygon::Loop()

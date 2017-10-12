@@ -5,8 +5,8 @@ class MouseManager
 {
 	GL::Polygon* polygon;
 private:
-	GL::Vertice highlightVertice;
-	GL::Edge highlightEdge;
+	int highlightVertice;
+	int highlightEdge;
 
 	static MouseManager* instance;
 	MouseManager();
@@ -18,9 +18,6 @@ public:
 	static void mousePassiveFunc(int x, int y);
 	static void loopPolygon(unsigned char key, int x, int y);
 
-	void UnhighlightVertice();
-	void UnhighlightEdge();
-// additional methods
 private:
 	void DrawNewVerticeAndEdge(int x, int y);
 	bool CheckVertices(int x, int y);

@@ -6,8 +6,8 @@ MouseManager* MouseManager::instance = NULL;
 MouseManager::MouseManager()
 {
 	polygon = new GL::Polygon;
-	highlightVertice = GL::Vertice(-1, -1);
-	highlightEdge = GL::Edge();
+	highlightVertice = -1;
+	highlightEdge = -1;
 }
 MouseManager* MouseManager::getInstance()
 {
@@ -31,15 +31,15 @@ void MouseManager::mousePassiveFunc(int x, int y)
 	MouseManager* instance = getInstance();
 	if (!instance->CheckVertices(x, WINDOW_WIDTH - y))
 		instance->CheckEdges(x, WINDOW_WIDTH - y);
-	else
-		instance->UnhighlightEdge();
+	else if(instance->highlightEdge!=-1)
+		instance->polygon->GetEdge(instance->highlightEdge);
 }
 
 void MouseManager::loopPolygon(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
-	case 27:     // ESC key
+	case 27:  
 		exit(0);
 		break;
 	case 'l':
@@ -49,27 +49,14 @@ void MouseManager::loopPolygon(unsigned char key, int x, int y)
 	}
 }
 
-void MouseManager::UnhighlightVertice()
-{
-	highlightVertice.UnhighlightVertice();
-	highlightVertice = GL::Vertice(-1, -1);
-}
-
-void MouseManager::UnhighlightEdge()
-{
-	highlightEdge.Unhighlight();
-	highlightEdge = GL::Edge();
-}
-
 void MouseManager::DrawNewVerticeAndEdge(int x, int y)
 {
 	GL::Polygon* polygon = getInstance()->polygon;
-
 	//TODO new function
 	if (polygon->VertCount() > 2)
 	{
 		GL::Vertice v = polygon->GetVertice(0);
-		if ((abs(v.GetX() - x) < 6) && (abs(v.GetY() - (WINDOW_WIDTH-y)) < 6))
+		if ((abs(v.GetX() - x) < 6) && (abs(v.GetY() - (WINDOW_WIDTH - y)) < 6))
 			polygon->Loop();
 	}
 	//
@@ -89,41 +76,43 @@ void MouseManager::DrawNewVerticeAndEdge(int x, int y)
 
 bool MouseManager::CheckVertices(int x, int y)
 {
-	GL::Vertice v = polygon->CheckMouseNearVertice(x, y);
-	if (v.GetX() == -1)
+	int v = polygon->CheckMouseNearVertice(x, y);
+	if (v == -1)
 	{
-		if (highlightVertice.GetX() != -1)
+		if (highlightVertice != -1)
 		{
-			highlightVertice.UnhighlightVertice();
-			highlightVertice = GL::Vertice(-1, -1);
+			polygon->GetVertice(highlightVertice).UnhighlightVertice();
+			highlightVertice = -1;
 		}
 		return false;
 	}
 	else if (highlightVertice != v)
 	{
-		if (highlightVertice.GetX() != -1)
-			highlightVertice.UnhighlightVertice();
-		v.HighlightVertice();
+		if (highlightVertice != -1)
+		{
+			polygon->GetVertice(highlightVertice).UnhighlightVertice();
+		}
+		polygon->GetVertice(v).HighlightVertice();
 		highlightVertice = v;
 	}
 	return true;
 }
 void MouseManager::CheckEdges(int x, int y)
 {
-	GL::Edge e = polygon->CheckMouseNearEdge(x, y);
-	if (e.Length() == 0)
+	int e = polygon->CheckMouseNearEdge(x, y);
+	if (e == -1)
 	{
-		if (highlightEdge.Length() != 0)
+		if (highlightEdge != -1)
 		{
-			highlightEdge.Unhighlight();
-			highlightEdge = GL::Edge();
+			polygon->GetEdge(highlightEdge).Unhighlight();
+			highlightEdge = -1;
 		}
 	}
 	else if (highlightEdge != e)
 	{
-		if (highlightEdge.Length() > 0)
-			highlightEdge.Unhighlight();
-		e.Highlight();
+		if (highlightEdge != -1)
+			polygon->GetEdge(highlightEdge).Unhighlight();
+		polygon->GetEdge(e).Highlight();
 		highlightEdge = e;
 	}
 }

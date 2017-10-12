@@ -25,9 +25,9 @@ namespace GL
 		GL::Edge GetEdge(int index);
 		int VertCount() { return vertices.size(); }
 		int EdgCount() { return edges.size(); }
-		
-		GL::Vertice CheckMouseNearVertice(int x, int y);
-		GL::Edge CheckMouseNearEdge(int x, int y);
+
+		int CheckMouseNearVertice(int x, int y);
+		int CheckMouseNearEdge(int x, int y);
 
 		void Loop();
 		bool IsLooped() { return isLooped; }
