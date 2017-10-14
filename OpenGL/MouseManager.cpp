@@ -1,5 +1,8 @@
 #include "ExternVariables.h"
 #include "MouseManager.h"
+#include "GraphicsLibrary.h"
+//const int WINDOW_HEIGHT = 600;
+//const int WINDOW_WIDTH = 300;
 
 MouseManager* MouseManager::instance = NULL;
 
@@ -22,24 +25,55 @@ MouseManager::~MouseManager()
 
 void MouseManager::mouseFunc(int button, int state, int x, int y)
 {
+	MouseManager* mm = getInstance();
+	GL::Polygon* polygon = mm->polygon;
 	// left click-> new vert & edge
+	/* if ((button == GLUT_LEFT_BUTTON) && (state == GLUT_UP))
+	{
+		 mm->isMoving = false;
+	}
+	else */
 	if ((button == GLUT_LEFT_BUTTON) && (state == GLUT_DOWN))
-		getInstance()->DrawNewVerticeAndEdge(x, y);
+	{
+		//if (polygon->IsLooped() && (mm->highlightVertice != -1))
+		//{
+			//mm->isMoving = true;
+			//polygon->MoveVertice(mm->highlightVertice, x, WINDOW_WIDTH - y);
+			//mouseFunc(button, state, x, y);
+
+		//}
+		//TO y ->height-y
+		//else
+		//{
+			//mm->isMoving = false;
+		if (!polygon->IsLooped())
+			mm->NewVerticeAndEdge(x, y);
+		//}
+	}
 }
 void MouseManager::mousePassiveFunc(int x, int y)
 {
-	MouseManager* instance = getInstance();
-	if (!instance->CheckVertices(x, WINDOW_WIDTH - y))
-		instance->CheckEdges(x, WINDOW_WIDTH - y);
-	else if(instance->highlightEdge!=-1)
-		instance->polygon->GetEdge(instance->highlightEdge);
+	MouseManager* mm = getInstance();
+	/*if (mm->isMoving)
+	{
+		mm->polygon->MoveVertice(mm->highlightVertice, x, WINDOW_WIDTH - y);
+		glutPostRedisplay();
+
+	}
+	else
+	{*/
+	if (!mm->CheckVertices(x, WINDOW_WIDTH - y))
+		mm->CheckEdges(x, WINDOW_WIDTH - y);
+	else if (mm->highlightEdge != -1)
+		mm->polygon->GetEdge(mm->highlightEdge);
+	//}
 }
 
 void MouseManager::loopPolygon(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
-	case 27:  
+	case 27:
 		exit(0);
 		break;
 	case 'l':
@@ -49,29 +83,35 @@ void MouseManager::loopPolygon(unsigned char key, int x, int y)
 	}
 }
 
-void MouseManager::DrawNewVerticeAndEdge(int x, int y)
+void MouseManager::NewVerticeAndEdge(int x, int y)
 {
 	GL::Polygon* polygon = getInstance()->polygon;
 	//TODO new function
+	// jsesli kliknelismy w 0 i countV>=3
 	if (polygon->VertCount() > 2)
 	{
 		GL::Vertice v = polygon->GetVertice(0);
 		if ((abs(v.GetX() - x) < 6) && (abs(v.GetY() - (WINDOW_WIDTH - y)) < 6))
+		{
 			polygon->Loop();
+			GL::DrawPolygon(polygon);
+			return;
+		}
 	}
 	//
-	if (!polygon->IsLooped())
+	//else //if (!polygon->IsLooped())
 	{
 		polygon->AddVertice(x, WINDOW_WIDTH - y);
-		polygon->GetVertice(polygon->VertCount() - 1).Draw();
+		//polygon->GetVertice(polygon->VertCount() - 1).Draw();
 
 		if (polygon->VertCount() > 1)
 		{
 			polygon->AddEdge(polygon->GetVertice(polygon->VertCount() - 2),
 				polygon->GetVertice(polygon->VertCount() - 1));
-			polygon->GetEdge(polygon->VertCount() - 2).Draw();
+			//polygon->GetEdge(polygon->VertCount() - 2).Draw();
 		}
 	}
+	GL::DrawPolygon(polygon);
 }
 
 bool MouseManager::CheckVertices(int x, int y)

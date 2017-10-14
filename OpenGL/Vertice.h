@@ -18,6 +18,7 @@ namespace GL
 		void Draw();
 		void HighlightVertice();
 		void UnhighlightVertice();
+		void Move(int x, int y);
 
 		int GetX()const { return x; };
 		int GetY()const { return y; }

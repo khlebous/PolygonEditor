@@ -8,6 +8,8 @@ private:
 	int highlightVertice;
 	int highlightEdge;
 
+	bool isMoving = false;
+
 	static MouseManager* instance;
 	MouseManager();
 public:
@@ -19,7 +21,7 @@ public:
 	static void loopPolygon(unsigned char key, int x, int y);
 
 private:
-	void DrawNewVerticeAndEdge(int x, int y);
+	void NewVerticeAndEdge(int x, int y);
 	bool CheckVertices(int x, int y);
 	void CheckEdges(int x, int y);
 };

@@ -27,6 +27,7 @@ void GL::Vertice::Draw()
 	glVertex2i(x, y);
 	glEnd();
 	glFlush();
+	glutPostRedisplay();
 }
 void GL::Vertice::HighlightVertice()
 {
@@ -40,6 +41,18 @@ void GL::Vertice::HighlightVertice()
 void GL::Vertice::UnhighlightVertice()
 {
 	Draw();
+}
+
+void GL::Vertice::Move(int _x, int _y)
+{
+	//glColor3f(0.0f, 0.0f, 0.0f);
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glPointSize(4);
+	glBegin(GL_POINTS);
+	//glVertex2i(x, y);
+	glVertex2i(_x, _y);
+	glEnd();
+	glFlush();
 }
 
 bool GL::Vertice::operator==(Vertice & v) const
