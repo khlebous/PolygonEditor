@@ -45,14 +45,8 @@ void GL::Vertice::UnhighlightVertice()
 
 void GL::Vertice::Move(int _x, int _y)
 {
-	//glColor3f(0.0f, 0.0f, 0.0f);
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glPointSize(4);
-	glBegin(GL_POINTS);
-	//glVertex2i(x, y);
-	glVertex2i(_x, _y);
-	glEnd();
-	glFlush();
+	x = _x; 
+	y = _y;
 }
 
 bool GL::Vertice::operator==(Vertice & v) const

@@ -22,6 +22,8 @@ namespace GL
 
 		int GetX()const { return x; };
 		int GetY()const { return y; }
+		void SetX(int _x) { x = _x; }
+		void SetY(int _y) { y = _y; }
 
 		bool operator==(Vertice& v)const;
 		bool operator!=(Vertice& v)const;

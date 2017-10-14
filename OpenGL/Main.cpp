@@ -6,10 +6,10 @@ using namespace std;
 const int WINDOW_HEIGHT = 600;
 const int WINDOW_WIDTH = 300;
 
-void idle(void);
 void display(void);
-void mouse(int button, int state, int x, int y);
-void mouse2(int x, int y);
+/*void mouse(int button, int state, int x, int y);
+void mouse2(int x, int y);*/
+
 void initGL() {
 	glClearColor(0.0, 0.0, 0.0, 1.0); // Set background (clear) color to black
 }
@@ -29,7 +29,6 @@ int main(int argc, char** argv)
 	gluOrtho2D(0.0, WINDOW_HEIGHT, 0.0, WINDOW_WIDTH);
 
 	glutDisplayFunc(display);
-	//glutMotionFunc(mouse2);
 	
 	glutMouseFunc(MouseManager::mouseFunc);
 	//glutMouseFunc(mouse);
@@ -37,14 +36,19 @@ int main(int argc, char** argv)
 	glutPassiveMotionFunc(MouseManager::mousePassiveFunc);
 	//glutPassiveMotionFunc(mouse2);
 	
-	glutKeyboardFunc(MouseManager::loopPolygon);
+	glutKeyboardFunc(MouseManager::keyboardFunc);
 	
-	//glutIdleFunc(idle);
+	//glutIdleFunc(MouseManager::idleFunc);
+	glutMotionFunc(MouseManager::motionFunc);
+
 	initGL();
 	glutMainLoop();
 }
-
-int x=-1; int y=-1; bool isDisp = false;
+void display(void)
+{
+	
+}
+/*int x=-1; int y=-1; bool isDisp = false;
 void mouse(int button, int state, int _x, int _y)
 {
 	if ((button == GLUT_LEFT_BUTTON) && (state == GLUT_DOWN))
@@ -84,7 +88,6 @@ void idle(void)
 	}
 
 }
-
 void display(void)
 {
 	/*if (isDisp)
@@ -104,5 +107,5 @@ void display(void)
 		glClear(GL_COLOR_BUFFER_BIT);
 		glFlush();
 		glutSwapBuffers();
-	}*/
-}
+	}
+}*/

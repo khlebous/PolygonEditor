@@ -8,6 +8,9 @@ private:
 	int highlightVertice;
 	int highlightEdge;
 
+	int x;
+	int y;
+
 	bool isMoving = false;
 
 	static MouseManager* instance;
@@ -18,7 +21,10 @@ public:
 
 	static void mouseFunc(int button, int state, int x, int y);
 	static void mousePassiveFunc(int x, int y);
-	static void loopPolygon(unsigned char key, int x, int y);
+	static void keyboardFunc(unsigned char key, int x, int y);
+	static void idleFunc();
+	static void motionFunc(int x, int y);
+
 
 private:
 	void NewVerticeAndEdge(int x, int y);
