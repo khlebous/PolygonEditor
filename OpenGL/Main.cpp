@@ -36,7 +36,7 @@ int main(int argc, char** argv)
 	glutPassiveMotionFunc(MouseManager::mousePassiveFunc);
 	//glutPassiveMotionFunc(mouse2);
 	
-	glutKeyboardFunc(MouseManager::keyboardFunc);
+	glutKeyboardUpFunc(MouseManager::keyboardFunc);
 	
 	//glutIdleFunc(MouseManager::idleFunc);
 	glutMotionFunc(MouseManager::motionFunc);

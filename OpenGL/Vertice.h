@@ -4,6 +4,7 @@
 
 namespace GL
 {
+	//TODO Vetex
 	class Vertice
 	{
 		int x;

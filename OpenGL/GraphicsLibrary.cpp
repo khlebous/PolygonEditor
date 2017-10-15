@@ -35,11 +35,11 @@ void GL::DrawVertice(GL::Vertice v)
 	glVertex2i(v.GetX(), v.GetY());
 	glEnd(); 
 	glFlush();
-	//glutSwapBuffers();
 }
 
 void GL::DrawEdge(GL::Vertice v1, GL::Vertice v2)
 {
+	//TODO another one
 	int x1 = v1.GetX();
 	int y1 = v1.GetY();
 	int x2 = v2.GetX();

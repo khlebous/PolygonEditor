@@ -10,7 +10,8 @@ namespace GL
 	class Polygon
 	{
 		vector<GL::Vertice> vertices;
-		list<int> verticalEdges;
+		list<int> vEdges;
+		list<int> hEdges;
 		//vector<GL::Edge> edges;
 
 		bool isLooped = false;
@@ -33,11 +34,16 @@ namespace GL
 		int CheckMouseNearEdge(int x, int y);
 
 		void MoveVertice(int vertNum, int x, int y);
+		void AddVert(int n, int x, int y);
 		void DeleteVert(int n);
 		void MakeEdgeVertical(int n);
+		void MakeEdgeHorizontal(int n);
 
 		void Loop();
 		bool IsLooped() { return isLooped; }
+
+	private:
+		void CheckEdgeVH(int n, list<int>* v1, list <int>* v2, bool checkV);
 	};
 }
 

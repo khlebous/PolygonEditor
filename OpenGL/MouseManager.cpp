@@ -75,13 +75,24 @@ void MouseManager::keyboardFunc(unsigned char key, int x, int y)
 	case 27://esc
 		exit(0);
 		break;
+	case 'a':
+	{
+		MouseManager* mm = getInstance();
+		if (mm->highlightEdge != -1)
+		{
+			GL::Polygon* polygon = getInstance()->polygon;
+			polygon->AddVert(mm->highlightEdge, x, WINDOW_WIDTH-y);
+			//mm->highlightVertice = -1;
+			GL::DrawPolygon(polygon);
+		}
+		break;
+	}
 	case 'd':
 	{
 		MouseManager* mm = getInstance();
 		if (mm->highlightVertice != -1)
 		{
 			GL::Polygon* polygon = getInstance()->polygon;
-			int aa = mm->highlightVertice;
 			polygon->DeleteVert(mm->highlightVertice);
 			mm->highlightVertice = -1;
 			GL::DrawPolygon(polygon);
@@ -104,8 +115,9 @@ void MouseManager::keyboardFunc(unsigned char key, int x, int y)
 			polygon->MakeEdgeVertical(mm->highlightEdge);
 			GL::DrawPolygon(getInstance()->polygon);
 		}
+		break;
 	}
-	/*case 'h':
+	case 'h':
 	{
 		MouseManager* mm = getInstance();
 		if (mm->highlightEdge != -1)
@@ -114,7 +126,8 @@ void MouseManager::keyboardFunc(unsigned char key, int x, int y)
 			polygon->MakeEdgeHorizontal(mm->highlightEdge);
 			GL::DrawPolygon(getInstance()->polygon);
 		}
-	}*/
+		break;
+	}
 	}
 }
 
@@ -198,6 +211,6 @@ void MouseManager::CheckEdges(int x, int y)
 		//if (highlightEdge != -1)
 			//polygon->GetEdge(highlightEdge).Unhighlight();
 		//polygon->GetEdge(e).Highlight();
-			highlightEdge = e;
+		highlightEdge = e;
 	}
 }
