@@ -1,7 +1,7 @@
 #pragma once
 #include "Polygon.h"
 
-class MouseManager
+class Manager
 {
 	GL::Polygon* polygon;
 private:
@@ -13,11 +13,11 @@ private:
 
 	bool isMoving = false;
 
-	static MouseManager* instance;
-	MouseManager();
+	static Manager* instance;
+	Manager();
 public:
-	static MouseManager* getInstance();
-	~MouseManager();
+	static Manager* getInstance();
+	~Manager();
 
 	static void mouseFunc(int button, int state, int x, int y);
 	static void mousePassiveFunc(int x, int y);

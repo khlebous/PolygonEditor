@@ -33,9 +33,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Downloads\glad\src\glad.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -48,14 +45,17 @@
     <ClCompile Include="Point.cpp">
       <Filter>GraphicsLibrary\Point</Filter>
     </ClCompile>
-    <ClCompile Include="MouseManager.cpp">
-      <Filter>GraphicsLibrary\Mouse</Filter>
-    </ClCompile>
-    <ClCompile Include="Vertice.cpp">
-      <Filter>GraphicsLibrary\Vertice</Filter>
-    </ClCompile>
     <ClCompile Include="Edge.cpp">
       <Filter>GraphicsLibrary\Edge</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Vertex.cpp">
+      <Filter>GraphicsLibrary\Vertice</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager.cpp">
+      <Filter>GraphicsLibrary\Mouse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -71,14 +71,14 @@
     <ClInclude Include="ExternVariables.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MouseManager.h">
-      <Filter>GraphicsLibrary\Mouse</Filter>
-    </ClInclude>
-    <ClInclude Include="Vertice.h">
-      <Filter>GraphicsLibrary\Vertice</Filter>
-    </ClInclude>
     <ClInclude Include="Edge.h">
       <Filter>GraphicsLibrary\Edge</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>GraphicsLibrary\Vertice</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager.h">
+      <Filter>GraphicsLibrary\Mouse</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

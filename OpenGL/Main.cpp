@@ -1,6 +1,6 @@
 ﻿#include <GL/glut.h> 
 #include <stdlib.h> 
-#include "MouseManager.h"
+#include "Manager.h"
 #include "ExternVariables.h"
 using namespace std;
 const int WINDOW_HEIGHT = 600;
@@ -13,6 +13,7 @@ void mouse2(int x, int y);*/
 void initGL() {
 	glClearColor(0.0, 0.0, 0.0, 1.0); // Set background (clear) color to black
 }
+//TODO redraw when hide/show
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
@@ -30,16 +31,10 @@ int main(int argc, char** argv)
 
 	glutDisplayFunc(display);
 	
-	glutMouseFunc(MouseManager::mouseFunc);
-	//glutMouseFunc(mouse);
-	
-	glutPassiveMotionFunc(MouseManager::mousePassiveFunc);
-	//glutPassiveMotionFunc(mouse2);
-	
-	glutKeyboardUpFunc(MouseManager::keyboardFunc);
-	
-	//glutIdleFunc(MouseManager::idleFunc);
-	glutMotionFunc(MouseManager::motionFunc);
+	glutMouseFunc(Manager::mouseFunc);
+	glutPassiveMotionFunc(Manager::mousePassiveFunc);
+	glutKeyboardUpFunc(Manager::keyboardFunc);
+	glutMotionFunc(Manager::motionFunc);
 
 	initGL();
 	glutMainLoop();

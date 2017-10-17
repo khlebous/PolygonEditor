@@ -5,20 +5,20 @@
 namespace GL
 {
 	//TODO Vetex
-	class Vertice
+	class Vertex
 	{
 		int x;
 		int y;
 
 	public:
-		Vertice();
-		~Vertice();
-		Vertice(int _x, int _y);
-		Vertice(GL::Point p);
+		Vertex();
+		~Vertex();
+		Vertex(int _x, int _y);
+		Vertex(GL::Point p);
 
 		void Draw();
-		void HighlightVertice();
-		void UnhighlightVertice();
+		void HighlightVertex();
+		void UnhighlightVertex();
 		void Move(int x, int y);
 
 		int GetX()const { return x; };
@@ -26,8 +26,11 @@ namespace GL
 		void SetX(int _x) { x = _x; }
 		void SetY(int _y) { y = _y; }
 
-		bool operator==(Vertice& v)const;
-		bool operator!=(Vertice& v)const;
+		bool operator==(Vertex& v)const;
+		bool operator!=(Vertex& v)const;
+		/*
+		GL::Vertex& operator-(Vertex& v)const;
+		GL::Vertex& operator-=(Vertex& v)const;*/
 	};
 	/*
 	bool operator==(const GL::Vertice & v1, const GL::Vertice & v2)

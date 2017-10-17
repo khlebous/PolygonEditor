@@ -6,7 +6,7 @@ GL::Edge::Edge()
 {
 	points = vector<GL::Point>();
 }
-GL::Edge::Edge(GL::Vertice v1, GL::Vertice v2)
+GL::Edge::Edge(GL::Vertex v1, GL::Vertex v2)
 {
 	int x1 = v1.GetX();
 	int y1 = v1.GetY();

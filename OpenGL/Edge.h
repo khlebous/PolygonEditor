@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "Vertice.h"
+#include "Vertex.h"
 #include "Point.h"
 
 using namespace std;
@@ -13,7 +13,7 @@ namespace GL
 
 	public:
 		Edge();
-		Edge(GL::Vertice v1, GL::Vertice v2);
+		Edge(GL::Vertex v1, GL::Vertex v2);
 		~Edge();
 
 		void Draw();

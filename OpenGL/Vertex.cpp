@@ -1,25 +1,25 @@
-#include "Vertice.h"
+#include "Vertex.h"
 
-GL::Vertice::Vertice()
+GL::Vertex::Vertex()
 {
 	x = -1;
 	y = -1;
 }
-GL::Vertice::~Vertice()
+GL::Vertex::~Vertex()
 {
 }
-GL::Vertice::Vertice(int _x, int _y)
+GL::Vertex::Vertex(int _x, int _y)
 {
 	x = _x;
 	y = _y;
 }
-GL::Vertice::Vertice(GL::Point p)
+GL::Vertex::Vertex(GL::Point p)
 {
 	x = p.x;
 	y = p.y;
 }
 
-void GL::Vertice::Draw()
+void GL::Vertex::Draw()
 {
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glPointSize(4);
@@ -29,7 +29,7 @@ void GL::Vertice::Draw()
 	glFlush();
 	glutPostRedisplay();
 }
-void GL::Vertice::HighlightVertice()
+void GL::Vertex::HighlightVertex()
 {
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glPointSize(4);
@@ -38,18 +38,18 @@ void GL::Vertice::HighlightVertice()
 	glEnd();
 	glFlush();
 }
-void GL::Vertice::UnhighlightVertice()
+void GL::Vertex::UnhighlightVertex()
 {
 	Draw();
 }
 
-void GL::Vertice::Move(int _x, int _y)
+void GL::Vertex::Move(int _x, int _y)
 {
 	x = _x; 
 	y = _y;
 }
 
-bool GL::Vertice::operator==(Vertice & v) const
+bool GL::Vertex::operator==(Vertex & v) const
 {
 	if ((x == v.GetX()) && (y == v.GetY()))
 		return true;
@@ -57,7 +57,7 @@ bool GL::Vertice::operator==(Vertice & v) const
 		return false;
 }
 
-bool GL::Vertice::operator!=(Vertice & v) const
+bool GL::Vertex::operator!=(Vertex & v) const
 {
 	if ((x != v.GetX()) || (y != v.GetY()))
 		return true;
