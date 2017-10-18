@@ -10,11 +10,19 @@ namespace GL
 {
 	class Polygon
 	{
+		/*GL::Vertex v1 = GL::Vertex(0, 0);
+		GL::Vertex v2 = GL::Vertex(0, 3);
+		GL::Vertex v3 = GL::Vertex(4, 3);
+		GL::Vertex v4 = GL::Vertex(5, 0);
+		int xStep = 1;
+		int yStep = 1;*/
+
 		vector<GL::Vertex> vertices;
 		
 		list<int> vEdges; // vertical Edges
 		list<int> hEdges; // horizontal Edges
 		vector<pair<int, float>> angles;
+		//vector < pair<int, pair<GL::Point, GL::Point>>> vertNearSetAngle;
 
 		bool isLooped = false;
 		int maxDistToHighl = 5;
@@ -54,11 +62,12 @@ namespace GL
 	private:
 		bool CheckEdgeVetical(int n);
 		bool CheckEdgeHorizontal(int n);
-		bool CheckVertAngle(int n);
+		bool CheckVertAngled(int n);
 		//TODO how to name?
 		void CheckEdgeVH(int n, list<int>* v1, list <int>* v2, bool checkV);
 
 		void DeleteVertFromAngleVector(int n);
+		GL::Vertex LineIntersection(GL::Vertex v1, GL::Vertex v2, GL::Vertex v3, GL::Vertex v4);
 	};
 }
 

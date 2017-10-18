@@ -7,6 +7,7 @@ void GL::DrawPolygon(GL::Polygon * p, int highlightV, int highlightE)
 
 	vector<GL::Vertex> vertices = p->GetVertices();
 	size_t i = 0;
+	//TODO delete when 1 pkt
 	for (; i < vertices.size() - 1; i++)
 	{
 		GL::DrawVertice(vertices[i]);
