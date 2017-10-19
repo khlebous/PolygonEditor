@@ -9,12 +9,13 @@ namespace GL
 		int C;
 	public:
 		LineCoefficients();
+		LineCoefficients(int _a, int _b, int _c);
 		LineCoefficients(GL::Vertex p1, GL::Vertex p2);
 
 		int GetA() { return A; }
 		int GetB() { return B; }
 		int GetC() { return C; }
 
-		void ChangeCoefficientsToParallelLine(int x, int y);
+		LineCoefficients FindParallelLine(int x, int y);
 	};
 }

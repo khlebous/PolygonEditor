@@ -60,6 +60,9 @@
     <ClCompile Include="LineCoefficient.cpp">
       <Filter>GraphicsLibrary\Point</Filter>
     </ClCompile>
+    <ClCompile Include="SetAngle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsLibrary.h">
@@ -84,6 +87,9 @@
       <Filter>GraphicsLibrary\Mouse</Filter>
     </ClInclude>
     <ClInclude Include="LineCoefficient.h">
+      <Filter>GraphicsLibrary\Point</Filter>
+    </ClInclude>
+    <ClInclude Include="SetAngle.h">
       <Filter>GraphicsLibrary\Point</Filter>
     </ClInclude>
   </ItemGroup>

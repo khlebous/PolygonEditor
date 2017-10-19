@@ -3,7 +3,7 @@
 #include <list>
 #include <map>
 #include "Edge.h"
-#include "LineCoefficient.h"
+#include "SetAngle.h"
 
 using namespace std;
 
@@ -22,9 +22,12 @@ namespace GL
 		
 		list<int> vEdges; // vertical Edges
 		list<int> hEdges; // horizontal Edges
-		vector<pair<int, float>> angles;
-		vector<pair<int, pair<LineCoefficients, LineCoefficients>>> linesNearVertWithSetAngle;
-		vector<pair<int,pair<LineCoefficients, LineCoefficients>>> linesNearVertWithSetAngle1;
+
+		vector<int> angles;
+	//	vector<pair<int, pair<LineCoefficients, LineCoefficients>>> linesNearVertWithSetAngle;
+	//	vector<pair<int,pair<LineCoefficients, LineCoefficients>>> linesNearNearVertWithSetAngle;
+
+		vector<SetAngle> setAngle;
 
 		bool isLooped = false;
 		int maxDistToHighl = 5;
@@ -42,7 +45,7 @@ namespace GL
 		int VertCount() { return vertices.size(); }
 		list<int> GetVEdges() { return vEdges; }
 		list<int> GetHEdges() { return hEdges; }
-		vector<pair<int, float>> GetAngles() { return angles; }
+		vector<int> GetAngles() { return angles; }
 
 		int CheckMouseNearVertice(int x, int y);
 		int CheckMouseNearEdge(int x, int y);
@@ -52,7 +55,7 @@ namespace GL
 		void DeleteVert(int n);
 		void MakeEdgeVertical(int n);
 		void MakeEdgeHorizontal(int n);
-		bool SetAngle(int n);
+		bool SetAngleFunction(int n);
 
 		void Loop();
 		bool IsLooped() { return isLooped; }
@@ -65,12 +68,11 @@ namespace GL
 		bool CheckEdgeVetical(int n);
 		bool CheckEdgeHorizontal(int n);
 		bool CheckAngleIsSetToVertex(int n);
+		void UpdateLineParametries();
 		//TODO how to name?
 		void CheckEdgeVH(int n, list<int>* v1, list <int>* v2, bool checkV);
 
 		void DeleteVertFromAngleVector(int n);
-		GL::Vertex LineIntersection(GL::Vertex v1, GL::Vertex v2, GL::Vertex v3, GL::Vertex v4);
-		GL::Vertex LineIntersection(GL::Vertex v1, GL::Vertex v2, GL::LineCoefficients lc2);
 		GL::Vertex LineIntersection(GL::LineCoefficients lc1, GL::LineCoefficients lc2);
 	};
 }

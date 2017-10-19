@@ -117,7 +117,7 @@ void Manager::keyboardFunc(unsigned char key, int x, int y)
 	{
 		Manager* mm = getInstance();
 		if (mm->highlightVertice != -1)
-			if (mm->polygon->SetAngle(mm->highlightVertice))
+			if (mm->polygon->SetAngleFunction(mm->highlightVertice))
 			{
 				GL::DrawPolygon(mm->polygon, mm->highlightVertice, mm->highlightEdge);
 				cout << "new draw\n";

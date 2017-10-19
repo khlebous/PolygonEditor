@@ -4,6 +4,13 @@ GL::LineCoefficients::LineCoefficients()
 {
 }
 
+GL::LineCoefficients::LineCoefficients(int _a, int _b, int _c)
+{
+	A = _a;
+	B = _b;
+	C = _c;
+}
+
 GL::LineCoefficients::LineCoefficients(GL::Vertex v1, GL::Vertex v2)
 {
 	A = v2.GetY() - v1.GetY();
@@ -11,9 +18,8 @@ GL::LineCoefficients::LineCoefficients(GL::Vertex v1, GL::Vertex v2)
 	C = A*v1.GetX() + B*v1.GetY();
 }
 
-void GL::LineCoefficients::ChangeCoefficientsToParallelLine(int x, int y)
+GL::LineCoefficients GL::LineCoefficients::FindParallelLine(int x, int y)
 {
-	C = (A*x + B*y);
-	//B = 1;
-	//A /= B;
+	int c = (A*x + B*y);
+	return GL::LineCoefficients(A, B, c);
 }

@@ -24,7 +24,7 @@ void GL::DrawPolygon(GL::Polygon * p, int highlightV, int highlightE)
 	for (auto it = hEdges.begin(); it != hEdges.end(); it++)
 		GL::DrawHorizSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
 	for (auto const &a : p->GetAngles()) 
-		GL::DrawAngleSign(p->GetVertex(a.first));
+		GL::DrawAngleSign(p->GetVertex(a));
 
 	if (highlightV != -1)
 		GL::DrawHighlightVertice(p->GetVertex(highlightV));
@@ -203,7 +203,7 @@ void GL::DrawHorizSign(GL::Vertex v1, GL::Vertex v2)
 void GL::DrawAngleSign(GL::Vertex v1)
 {
 	glColor3f(0.0f, 0.3f, 1.0f);
-	glPointSize(6);
+	glPointSize(8);
 	glBegin(GL_POINTS);
 	glVertex2i(v1.GetX(), v1.GetY());
 	glEnd();
