@@ -57,6 +57,9 @@
     <ClCompile Include="Manager.cpp">
       <Filter>GraphicsLibrary\Mouse</Filter>
     </ClCompile>
+    <ClCompile Include="LineCoefficient.cpp">
+      <Filter>GraphicsLibrary\Point</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsLibrary.h">
@@ -79,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="Manager.h">
       <Filter>GraphicsLibrary\Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="LineCoefficient.h">
+      <Filter>GraphicsLibrary\Point</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

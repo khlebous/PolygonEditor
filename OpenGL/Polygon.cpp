@@ -9,6 +9,8 @@ GL::Polygon::Polygon()
 	hEdges = list<int>();
 	angles = vector<pair<int, float>>();
 	//edges = vector<GL::Edge>();
+	linesNearVertWithSetAngle = vector<pair<int, pair<LineCoefficients, LineCoefficients>>>();
+	linesNearVertWithSetAngle1 = vector<pair<int, pair<LineCoefficients, LineCoefficients>>>();
 }
 GL::Polygon::~Polygon()
 {
@@ -30,7 +32,6 @@ int GL::Polygon::CheckMouseNearVertice(int x, int y)
 			return i;
 		i++;
 	}
-
 	return -1;
 }
 double Distance(double x1, double y1, double x2, double y2)
@@ -65,6 +66,7 @@ int GL::Polygon::CheckMouseNearEdge(int x, int y)
 
 void GL::Polygon::MoveVertex(int vertNum, int x, int y)
 {
+
 	// TODO del
 	GL::Vertex v = vertices[vertNum];
 	int xOffset = x - v.GetX();
@@ -89,28 +91,58 @@ void GL::Polygon::MoveVertex(int vertNum, int x, int y)
 			vertices[e2].Move(vertices[e2].GetX(), y);
 	}
 
+
 	if (isLooped || ((vertNum != 0) && (vertNum + 1 != vertices.size())))
 	{
-		if (CheckVertAngled(vertNum - 1))
+		if (CheckAngleIsSetToVertex(vertNum - 1))
 		{
 
 		}
-		if (CheckVertAngled(vertNum))
+		if (CheckAngleIsSetToVertex(vertNum))
 		{
-			cout << "oX= " << xOffset << " oY= " << yOffset << "\n";
-			GL::Vertex v0 = vOffset + v;
-			GL::Vertex v1 = vertices[e1];
-			GL::Vertex v2 = vertices[e2];
-			GL::Vertex v3 = v2+vOffset;
-			GL::Vertex vIntersection = LineIntersection(v0, v3,
-				v2, vertices[(e2 + 1) % vertices.size()]);
-			vertices[e2].Move(vIntersection.GetX(), vIntersection.GetY());
-			GL::Vertex v4 = v1 + vOffset;
-			GL::Vertex vIntersection2 = LineIntersection(v0, v4,
-				v1, vertices[(e1 - 1+vertices.size()) % vertices.size()]);
-			vertices[e1].Move(vIntersection2.GetX(), vIntersection2.GetY());
+			pair<LineCoefficients, LineCoefficients>* lc1 = nullptr;
+			for (auto& el : linesNearVertWithSetAngle1)
+				if (el.first == vertNum)
+				{
+					lc1 = &(el.second);
+					break;
+				}
+			if (lc1 == nullptr)
+				throw std::exception();
+			(*lc1).first.ChangeCoefficientsToParallelLine(x, y);
+			(*lc1).second.ChangeCoefficientsToParallelLine(x, y);
+			pair<LineCoefficients, LineCoefficients>* lc = nullptr;
+			for (auto& el : linesNearVertWithSetAngle)
+				if (el.first == vertNum)
+				{
+					lc = &(el.second);
+					break;
+				}
+			if (lc == nullptr)
+				throw std::exception();
+			else
+			{
+
+				//cout << "oX= " << xOffset << " oY= " << yOffset << "\n";
+				GL::Vertex v0 = vOffset + v;
+				GL::Vertex v1 = vertices[e1];
+				GL::Vertex v2 = vertices[e2];
+				GL::Vertex v3 = v2 + vOffset;
+				GL::Vertex v4 = v1 + vOffset;
+				int param = 5;
+
+				/*GL::Vertex vIntersection = LineIntersection(v0, v3, lc->second);
+				vertices[e2].Move(vIntersection.GetX(), vIntersection.GetY());
+				GL::Vertex vIntersection2 = LineIntersection(v0, v4, lc->first);
+				vertices[e1].Move(vIntersection2.GetX(), vIntersection2.GetY());*/
+				
+				GL::Vertex vIntersection = LineIntersection(lc1->second, lc->second);
+				vertices[e2].Move(vIntersection.GetX(), vIntersection.GetY());
+				GL::Vertex vIntersection2 = LineIntersection(lc1->first, lc->first);
+				vertices[e1].Move(vIntersection2.GetX(), vIntersection2.GetY());
+			}
 		}
-		if (CheckVertAngled(vertNum + 1))
+		if (CheckAngleIsSetToVertex(vertNum + 1))
 		{
 
 		}
@@ -174,7 +206,7 @@ bool GL::Polygon::SetAngle(int n)
 {
 	if (!isLooped)
 		return false;
-	if (CheckVertAngled(n))
+	if (CheckAngleIsSetToVertex(n))
 	{
 		DeleteVertFromAngleVector(n);
 		return false;
@@ -183,7 +215,7 @@ bool GL::Polygon::SetAngle(int n)
 	int n1 = (n - 1 + vertices.size()) % vertices.size();
 	if (isLooped || (n != 0 && (n + 1) != vertices.size()))
 	{
-		if (CheckVertAngled(n1) || CheckVertAngled((n + 1) % vertices.size()))
+		if (CheckAngleIsSetToVertex(n1) || CheckAngleIsSetToVertex((n + 1) % vertices.size()))
 			return false;
 		if (CheckEdgeVetical(n1) || CheckEdgeHorizontal(n1)
 			|| CheckEdgeVetical(n) || CheckEdgeHorizontal(n))
@@ -205,6 +237,13 @@ bool GL::Polygon::SetAngle(int n)
 		//cout << "Your angle: " << a << " degrees\n\n";
 
 		angles.push_back(make_pair(n, angle));
+		LineCoefficients lc1 = LineCoefficients(v1, GetVertex((n - 2 + vertices.size()) % vertices.size()));
+		LineCoefficients lc2 = LineCoefficients(v2, GetVertex((n + 2) % vertices.size()));
+		linesNearVertWithSetAngle.push_back(make_pair(n, make_pair(lc1, lc2)));
+
+		LineCoefficients lc3 = LineCoefficients(v, v1);
+		LineCoefficients lc4 = LineCoefficients(v, v2);
+		linesNearVertWithSetAngle1.push_back(make_pair(n, make_pair(lc3, lc4)));
 
 		return true;
 	}
@@ -217,8 +256,6 @@ void GL::Polygon::Loop()
 	if (VertCount() < 3)
 		return;
 	isLooped = true;
-	//AddEdge(GetVertex(0), GetVertex(VertCount() - 1));
-	//GetEdge(EdgCount() - 1).Draw();
 }
 
 bool GL::Polygon::CheckEdgeVetical(int n)
@@ -248,7 +285,7 @@ void GL::Polygon::CheckEdgeVH(int n, list<int>* v1, list<int>* v2, bool checkV)
 		(*v1).remove(n);
 		return;
 	}
-	if (CheckVertAngled(n) || CheckVertAngled((n + 1) % vertices.size()))
+	if (CheckAngleIsSetToVertex(n) || CheckAngleIsSetToVertex((n + 1) % vertices.size()))
 		return;
 	{
 		if (isLooped || (n != 0))
@@ -322,40 +359,84 @@ GL::Vertex GL::Polygon::LineIntersection(GL::Vertex v1, GL::Vertex v2, GL::Verte
 	else
 	{
 		double x = (B2*C1 - B1*C2) / det;
+		//double y = (A1*C2 - A2*C1) / det;
+		double y = x*v4.GetY() / v4.GetX();
+		cout << "x= " << x << " y= " << y << "\n";
+		int y1 = round(y);
+		return GL::Point(round(x), round(y));
+	}
+	return GL::Point(-1, -1);
+}
+
+GL::Vertex GL::Polygon::LineIntersection(GL::LineCoefficients lc1, GL::LineCoefficients lc2)
+{
+	int A1 = lc1.GetA();
+	int B1 = lc1.GetB();
+	int C1 = lc1.GetC();
+
+	int A2 = lc2.GetA();
+	int B2 = lc2.GetB();
+	int C2 = lc2.GetC();
+	cout << "A2 = " << A2;
+	cout << " B2 = " << B2;
+	cout << " C1 = " << C1 << "\n";
+
+	double det = A1*B2 - A2*B1;
+	cout << " det = " << det << "\n";
+
+	if (det == 0)
+	{
+		//return v1;
+	}
+	else
+	{
+		double x = (B2*C1 - B1*C2) / det;
 		double y = (A1*C2 - A2*C1) / det;
 		//double y = x*v4.GetY() / v4.GetX();
 		cout << "x= " << x << " y= " << y << "\n";
 		int y1 = round(y);
 		return GL::Point(round(x), round(y));
 	}
-	/*float x12 = v1.GetX() - v2.GetX();
-	float x34 = v3.GetX() - v4.GetX();
-	float y12 = v1.GetY() - v2.GetY();
-	float y34 = v3.GetY() - v4.GetY();
-
-	float c = x12 * y34 - y12 * x34;
-
-	if (fabs(c) < 0.01)
-	{
-		// No intersection
-		//return false;
-	}
-	else
-	{
-		// Intersection
-		float a = v1.GetX() * v2.GetY() - v1.GetY() * v2.GetX();
-		float b = v3.GetX() * v4.GetY() - v3.GetY() * v4.GetX();
-
-		float x = (a * x34 - b * x12) / c;
-		float y = (a * y34 - b * y12) / c;
-
-		return GL::Point((int)x, (int)y);
-
-	}*/
 	return GL::Point(-1, -1);
 }
 
-bool GL::Polygon::CheckVertAngled(int n)
+GL::Vertex GL::Polygon::LineIntersection(GL::Vertex v1, GL::Vertex v2, GL::LineCoefficients lc2)
+{
+	//cout << " v1 = " << v1;
+	//cout << " v2 = " << v2;
+	//cout << "v3 = " << v3;
+	//cout << "v4 = " << v4;
+	int A1 = v2.GetY() - v1.GetY();
+	int B1 = v1.GetX() - v2.GetX();
+	int C1 = A1*v1.GetX() + B1*v1.GetY();
+
+	int A2 = lc2.GetA();
+	int B2 = lc2.GetB();
+	int C2 = lc2.GetC();
+	cout << "A2 = " << A2;
+	cout << " B2 = " << B2;
+	cout << " C1 = " << C1 << "\n";
+
+	double det = A1*B2 - A2*B1;
+	cout << " det = " << det << "\n";
+
+	if (det == 0)
+	{
+		//return v1;
+	}
+	else
+	{
+		double x = (B2*C1 - B1*C2) / det;
+		double y = (A1*C2 - A2*C1) / det;
+		//double y = x*v4.GetY() / v4.GetX();
+		cout << "x= " << x << " y= " << y << "\n";
+		int y1 = round(y);
+		return GL::Point(round(x), round(y));
+	}
+	return GL::Point(-1, -1);
+}
+
+bool GL::Polygon::CheckAngleIsSetToVertex(int n)
 {
 	for (auto& a : angles)
 		if (a.first == n)

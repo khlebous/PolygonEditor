@@ -119,6 +119,7 @@
     <ClCompile Include="Edge.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="GraphicsLibrary.cpp" />
+    <ClCompile Include="LineCoefficient.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Manager.cpp" />
     <ClCompile Include="Point.cpp" />
@@ -129,6 +130,7 @@
     <ClInclude Include="Edge.h" />
     <ClInclude Include="ExternVariables.h" />
     <ClInclude Include="GraphicsLibrary.h" />
+    <ClInclude Include="LineCoefficient.h" />
     <ClInclude Include="Manager.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Polygon.h" />
