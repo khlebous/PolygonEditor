@@ -3,19 +3,20 @@
 void GL::DrawPolygon(GL::Polygon * p, int highlightV, int highlightE)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-
-
 	vector<GL::Vertex> vertices = p->GetVertices();
-	size_t i = 0;
-	//TODO delete when 1 pkt
-	for (; i < vertices.size() - 1; i++)
+	int i = 0;
+	auto size = (int)vertices.size() - 1;
+	for (; i < size; i++)
 	{
 		GL::DrawVertice(vertices[i]);
 		GL::DrawEdge(vertices[i], vertices[i + 1]);
 	}
-	DrawVertice(vertices[i]);
-	if (p->IsLooped())
-		GL::DrawEdge(vertices[i], vertices[0]);
+	if (size != -1)
+	{
+		DrawVertice(vertices[i]);
+		if (p->IsLooped())
+			GL::DrawEdge(vertices[i], vertices[0]);
+	}
 
 	list<int> vEdges = p->GetVEdges();
 	for (auto it = vEdges.begin(); it != vEdges.end(); it++)
@@ -23,8 +24,8 @@ void GL::DrawPolygon(GL::Polygon * p, int highlightV, int highlightE)
 	list<int> hEdges = p->GetHEdges();
 	for (auto it = hEdges.begin(); it != hEdges.end(); it++)
 		GL::DrawHorizSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
-	for (auto const &a : p->GetAngles()) 
-		GL::DrawAngleSign(p->GetVertex(a));
+	for (auto const &a : p->GetAngles())
+		GL::DrawAngleSign(p->GetVertex(a.GetVertexNumber()));
 
 	if (highlightV != -1)
 		GL::DrawHighlightVertice(p->GetVertex(highlightV));
@@ -116,8 +117,6 @@ void GL::DrawEdge(GL::Vertex v1, GL::Vertex v2)
 		glVertex2i(p.x, p.y);
 	glEnd();
 	glFlush();
-	//glutSwapBuffers();
-
 }
 void GL::DrawHighlightEdge(GL::Vertex v1, GL::Vertex v2)
 {
@@ -175,7 +174,6 @@ void GL::DrawHighlightEdge(GL::Vertex v1, GL::Vertex v2)
 	//glutSwapBuffers();
 
 }
-
 void GL::DrawVertSign(GL::Vertex v1, GL::Vertex v2)
 {
 	int x = (v1.GetX() + v2.GetX()) / 2;

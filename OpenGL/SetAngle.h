@@ -22,8 +22,8 @@ public:
 		GL::LineCoefficients _right1,
 		GL::LineCoefficients _right2);
 
-	int GetVertexNumber() { return n; }
-
+	int GetVertexNumber() const { return n; }
+	void SetVertNumber(int _n) { n = _n; }
 	GL::LineCoefficients GetLC_L1() { return left1; }
 	GL::LineCoefficients GetLC_L2() { return left2; }
 	GL::LineCoefficients GetLC_R1() { return right1; }

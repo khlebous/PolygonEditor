@@ -69,8 +69,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\Anastasia\Documents\Visual Studio 2015\Projects\OpenGL\OpenGL\Includes;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Anastasia\Documents\Visual Studio 2015\Projects\OpenGL\OpenGL\Libraries;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\OpenGL\Includes;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\OpenGL\Libraries;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

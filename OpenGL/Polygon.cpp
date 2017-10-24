@@ -7,7 +7,6 @@ GL::Polygon::Polygon()
 	vertices = vector<GL::Vertex>();
 	vEdges = list<int>();
 	hEdges = list<int>();
-	angles = vector<int>();
 	setAngle = vector<SetAngle>();
 }
 GL::Polygon::~Polygon()
@@ -15,10 +14,7 @@ GL::Polygon::~Polygon()
 	vertices.clear();
 	vEdges.clear();
 	hEdges.clear();
-	angles.clear();
-	//for each (Edge v in edges)
-	//	v.~Edge();
-	//edges.clear();
+	setAngle.clear();
 }
 
 int GL::Polygon::CheckMouseNearVertice(int x, int y)
@@ -95,6 +91,23 @@ void GL::Polygon::MoveVertex(int vertNum, int x, int y)
 				GL::Vertex vIntersection = LineIntersection(sa->GetLC_R1(), sa->GetLC_R2());
 				vertices[l1].Move(vIntersection.GetX(), vIntersection.GetY());
 			}
+			/*else if (CheckAngleIsSetToVertex(r1))
+			{
+				SetAngle* sa = nullptr;
+				for (auto& el : setAngle)
+				{
+					if (el.GetVertexNumber() == r1)
+					{
+						sa = &el;
+						break;
+					}
+				}
+				sa->SetLC_L1(sa->GetLC_L1().FindParallelLine(x, y));
+				sa->SetLC_L2(sa->GetLC_L2().FindParallelLine(x, y));
+				GL::Vertex vIntersection = LineIntersection(sa->GetLC_R1(), sa->GetLC_L1());
+				vertices[r1].Move(vIntersection.GetX(), vIntersection.GetY());
+				vertices[l1].Move(vertices[l1].GetX(), y);
+			}*/
 			else
 				vertices[l1].Move(x, vertices[l1].GetY());
 		}
@@ -115,6 +128,23 @@ void GL::Polygon::MoveVertex(int vertNum, int x, int y)
 				GL::Vertex vIntersection = LineIntersection(sa->GetLC_R1(), sa->GetLC_R2());
 				vertices[l1].Move(vIntersection.GetX(), vIntersection.GetY());
 			}
+			/*else if (CheckAngleIsSetToVertex(r1))
+			{
+				SetAngle* sa = nullptr;
+				for (auto& el : setAngle)
+				{
+					if (el.GetVertexNumber() == r1)
+					{
+						sa = &el;
+						break;
+					}
+				}
+				sa->SetLC_L1(sa->GetLC_L1().FindParallelLine(x, y));
+				sa->SetLC_L2(sa->GetLC_L2().FindParallelLine(x, y));
+				GL::Vertex vIntersection = LineIntersection(sa->GetLC_R1(), sa->GetLC_L1());
+				vertices[r1].Move(vIntersection.GetX(), vIntersection.GetY());
+				vertices[l1].Move(vertices[l1].GetX(), y);
+			}*/
 			else
 				vertices[l1].Move(vertices[l1].GetX(), y);
 
@@ -140,6 +170,23 @@ void GL::Polygon::MoveVertex(int vertNum, int x, int y)
 				GL::Vertex vIntersection = LineIntersection(sa->GetLC_L1(), sa->GetLC_L2());
 				vertices[r1].Move(vIntersection.GetX(), vIntersection.GetY());
 			}
+			/*	else if (CheckAngleIsSetToVertex(l1))
+				{
+					SetAngle* sa = nullptr;
+					for (auto& el : setAngle)
+					{
+						if (el.GetVertexNumber() == l1)
+						{
+							sa = &el;
+							break;
+						}
+					}
+					sa->SetLC_R1(sa->GetLC_R1().FindParallelLine(x, y));
+					sa->SetLC_R2(sa->GetLC_R2().FindParallelLine(x, y));
+					GL::Vertex vIntersection = LineIntersection(sa->GetLC_L1(), sa->GetLC_R1());
+					vertices[l1].Move(vIntersection.GetX(), vIntersection.GetY());
+					vertices[r1].Move(x, vertices[r1].GetY());
+				}*/
 			else
 				vertices[r1].Move(x, vertices[r1].GetY());
 		}
@@ -160,6 +207,23 @@ void GL::Polygon::MoveVertex(int vertNum, int x, int y)
 				GL::Vertex vIntersection = LineIntersection(sa->GetLC_L1(), sa->GetLC_L2());
 				vertices[r1].Move(vIntersection.GetX(), vIntersection.GetY());
 			}
+			/*else if (CheckAngleIsSetToVertex(l1))
+			{
+				SetAngle* sa = nullptr;
+				for (auto& el : setAngle)
+				{
+					if (el.GetVertexNumber() == l1)
+					{
+						sa = &el;
+						break;
+					}
+				}
+				sa->SetLC_R1(sa->GetLC_R1().FindParallelLine(x, y));
+				sa->SetLC_R2(sa->GetLC_R2().FindParallelLine(x, y));
+				GL::Vertex vIntersection = LineIntersection(sa->GetLC_L1(), sa->GetLC_R1());
+				vertices[l1].Move(vIntersection.GetX(), vIntersection.GetY());
+				vertices[r1].Move(x, vertices[r1].GetY());
+			}*/
 			else
 				vertices[r1].Move(vertices[r1].GetX(), y);
 		}
@@ -246,50 +310,70 @@ void GL::Polygon::MoveVertex(int vertNum, int x, int y)
 
 	}
 	vertices[vertNum].Move(x, y);
-	//UpdateLineParametries();
+}
+void GL::Polygon::MovePolygon(int xOffset, int yOffset)
+{
+	GL::Vertex vOffset = GL::Vertex(xOffset, yOffset);
+	for (GL::Vertex &v : vertices)
+	{
+		v = v +vOffset;
+	}
 }
 void GL::Polygon::AddVert(int n, int x, int y)
 {
 	vEdges.remove(n);
 	hEdges.remove(n);
-	DeleteVertFromAngleVector(n);
-	DeleteVertFromAngleVector(n + 1);
+	//DeleteVertFromAngleVector(n);
+	//DeleteVertFromAngleVector(n + 1);
+	DeleteSetAngle(n);
+	DeleteSetAngle(n + 1);
 
 	vertices.insert(vertices.begin() + n + 1, GL::Vertex(x, y));
 	for (auto it = vEdges.begin(); it != vEdges.end(); ++it)
 		if ((*it) >= n)
-			(*it)++;
+			*it = ((*it+1) % vertices.size());
 	for (auto it = hEdges.begin(); it != hEdges.end(); ++it)
 		if ((*it) >= n)
-			(*it)++;
-	for (auto it = angles.begin(); it != angles.end(); ++it)
+			*it = ((*it + 1) % vertices.size());
+	/*for (auto it = angles.begin(); it != angles.end(); ++it)
 		if (*it > n)
-			(*it)++;
+			(((*it)++)%vertices.size());*/
+	for (auto& el : setAngle)
+		if (el.GetVertexNumber() > n)
+			el.SetVertNumber((n++) % vertices.size());
+
+	UpdateLineParametries();
 }
 void GL::Polygon::DeleteVert(int n)
 {
 	if (isLooped && vertices.size() < 4)
-		return;
+	{
+		isLooped = false;
+		//return;
+	}
 	int n1 = (n - 1 + vertices.size()) % vertices.size();
 	vEdges.remove(n1);
 	vEdges.remove(n);
 	hEdges.remove(n1);
 	hEdges.remove(n);
-	DeleteVertFromAngleVector(n1);
+	/*DeleteVertFromAngleVector(n1);
 	DeleteVertFromAngleVector(n);
-	DeleteVertFromAngleVector((n + 1) % vertices.size());
+	DeleteVertFromAngleVector((n + 1) % vertices.size());*/
+	DeleteSetAngle(n1);
+	DeleteSetAngle(n);
+	DeleteSetAngle((n + 1) % vertices.size());
 
 	vertices.erase(vertices.begin() + n);
 	for (auto it = vEdges.begin(); it != vEdges.end(); ++it)
 		if ((*it) > n)
-			(*it)--;
+			*it = (*it -1 + vertices.size())%vertices.size();
 	for (auto it = hEdges.begin(); it != hEdges.end(); ++it)
 		if ((*it) > n)
-			(*it)--;
+			*it = (*it - 1 + vertices.size()) % vertices.size();
 
-	for (auto it = angles.begin(); it != angles.end(); ++it)
-		if ((*it) > n)
-			(*it)--;
+	//for (auto it = angles.begin(); it != angles.end(); ++it)
+	//	if ((*it) > n)
+	//		(*it)--;
 }
 //TODO return true/false
 void GL::Polygon::MakeEdgeVertical(int n)
@@ -306,7 +390,8 @@ bool GL::Polygon::SetAngleFunction(int n)
 		return false;
 	if (CheckAngleIsSetToVertex(n))
 	{
-		DeleteVertFromAngleVector(n);
+		/*DeleteVertFromAngleVector(n);*/
+		DeleteSetAngle(n);
 		return false;
 	}
 
@@ -338,7 +423,7 @@ bool GL::Polygon::SetAngleFunction(int n)
 		int l2 = (n - 2 + vertices.size()) % vertices.size();
 		int r2 = (n + 2) % vertices.size();
 
-		angles.push_back(n);
+		//angles.push_back(n);
 		SetAngle as = SetAngle(n, angle,
 			LineCoefficients(v, v_l1), LineCoefficients(v_l1, GetVertex(l2)),
 			LineCoefficients(v, v_r1), LineCoefficients(v_r1, GetVertex(r2)));
@@ -348,6 +433,20 @@ bool GL::Polygon::SetAngleFunction(int n)
 	}
 	return false;
 
+}
+
+bool GL::Polygon::IsInside(int x, int y)
+{
+	int i, j, nvert = vertices.size();
+	bool c = false;
+
+	for (i = 0, j = nvert - 1; i < nvert; j = i++) 
+	{
+		if ((vertices[i].GetY() > y) != (vertices[j].GetY() > y) &&
+			x <= (vertices[j].GetX() - vertices[i].GetX()) * (y - vertices[i].GetY()) / (vertices[j].GetY() - vertices[i].GetY()) + vertices[i].GetX())
+			c = !c;
+	}
+	return c;
 }
 
 void GL::Polygon::Loop()
@@ -420,18 +519,32 @@ void GL::Polygon::CheckEdgeVH(int n, list<int>* v1, list<int>* v2, bool checkV)
 		UpdateLineParametries();
 	}
 }
-void GL::Polygon::DeleteVertFromAngleVector(int n)
+//void GL::Polygon::DeleteVertFromAngleVector(int n)
+//{
+//	auto itr = angles.begin();
+//	while (itr != angles.end())
+//	{
+//		if ((*itr) == n)
+//		{
+//			angles.erase(itr++);
+//			return;
+//		}
+//		else
+//			++itr;
+//	}
+//}
+void GL::Polygon::DeleteSetAngle(int n)
 {
-	auto itr = angles.begin();
-	while (itr != angles.end())
+	auto it = setAngle.begin();
+	while (it != setAngle.end())
 	{
-		if ((*itr) == n)
+		if ((*it).GetVertexNumber() == n)
 		{
-			angles.erase(itr++);
+			setAngle.erase(it++);
 			return;
 		}
 		else
-			++itr;
+			++it;
 	}
 }
 GL::Vertex GL::Polygon::LineIntersection(GL::LineCoefficients lc1, GL::LineCoefficients lc2)
@@ -455,16 +568,16 @@ GL::Vertex GL::Polygon::LineIntersection(GL::LineCoefficients lc1, GL::LineCoeff
 		double x = (B2*C1 - B1*C2) / det;
 		double y = (A1*C2 - A2*C1) / det;
 		//double y = x*v4.GetY() / v4.GetX();
-		cout << "x= " << x << " y= " << y << "\n";
-		int y1 = round(y);
+		//cout << "x= " << x << " y= " << y << "\n";
+		//int y1 = round(y);
 		return GL::Vertex(round(x), round(y));
 	}
 	return GL::Vertex(-1, -1);
 }
 bool GL::Polygon::CheckAngleIsSetToVertex(int n)
 {
-	for (auto& a : angles)
-		if (a == n)
+	for (auto& a : setAngle)
+		if (a.GetVertexNumber() == n)
 			return true;
 	return false;
 }
