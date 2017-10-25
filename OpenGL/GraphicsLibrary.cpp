@@ -25,8 +25,8 @@ void GL::DrawPolygon(GL::Polygon * p, int highlightV, int highlightE)
 	for (auto it = hEdges.begin(); it != hEdges.end(); it++)
 		GL::DrawHorizSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
 	for (auto const &a : p->GetAngles())
-		GL::DrawAngleSign(p->GetVertex(a.GetVertexNumber()));
-
+		GL::DrawAngleSign(p->GetVertex(a.first));
+		
 	if (highlightV != -1)
 		GL::DrawHighlightVertice(p->GetVertex(highlightV));
 	else if (highlightE != -1)

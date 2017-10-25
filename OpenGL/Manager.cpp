@@ -68,7 +68,7 @@ void Manager::keyboardFunc(unsigned char key, int x, int y)
 		if (mm->highlightEdge != -1)
 		{
 			GL::Polygon* polygon = getInstance()->polygon;
-			polygon->AddVert(mm->highlightEdge, x, WINDOW_WIDTH - y);
+			polygon->AddVertAtEdge(mm->highlightEdge, x, WINDOW_WIDTH - y);
 			GL::DrawPolygon(polygon, mm->highlightVertice, mm->highlightEdge);
 		}
 		break;
