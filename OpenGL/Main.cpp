@@ -34,7 +34,7 @@ int main(int argc, char** argv)
 	glutMouseFunc(Manager::mouseFunc);
 	glutPassiveMotionFunc(Manager::mousePassiveFunc);
 	glutKeyboardUpFunc(Manager::keyboardFunc);
-	glutMotionFunc(Manager::motionFunc);
+	
 
 	initGL();
 	glutMainLoop();
@@ -43,64 +43,3 @@ void display(void)
 {
 	
 }
-/*int x=-1; int y=-1; bool isDisp = false;
-void mouse(int button, int state, int _x, int _y)
-{
-	if ((button == GLUT_LEFT_BUTTON) && (state == GLUT_DOWN))
-	{
-		isDisp = true;
-		glutIdleFunc(idle);
-	}
-	else if ((button == GLUT_LEFT_BUTTON) && (state == GLUT_UP))
-	{
-		isDisp = false;
-		glutIdleFunc(NULL);
-	}
-}
-void mouse2(int _x, int _y)
-{
-	x = _x;
-	y = WINDOW_WIDTH - _y;
-}
-void idle(void)
-{
-	if (isDisp)
-	{
-		glClear(GL_COLOR_BUFFER_BIT);
-		glColor3f(1.0f, 0.0f, 1.0f);
-		glPointSize(4);
-		glBegin(GL_POINTS);
-		glVertex2i(x, y);
-		glEnd();
-		glFlush();
-		glutSwapBuffers();
-	}
-	else
-	{
-		glClear(GL_COLOR_BUFFER_BIT);
-		glFlush();
-		glutSwapBuffers();
-	}
-
-}
-void display(void)
-{
-	/*if (isDisp)
-	{
-
-	glClear(GL_COLOR_BUFFER_BIT);
-	glColor3f(1.0f, 0.0f, 1.0f);
-	glPointSize(4);
-	glBegin(GL_POINTS);
-	glVertex2i(x, y);
-	glEnd();
-	glFlush();
-	glutSwapBuffers();
-	}
-	else
-	{
-		glClear(GL_COLOR_BUFFER_BIT);
-		glFlush();
-		glutSwapBuffers();
-	}
-}*/

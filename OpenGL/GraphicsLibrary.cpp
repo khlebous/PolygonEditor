@@ -1,20 +1,21 @@
 #include"GraphicsLibrary.h"
-
 void GL::DrawPolygon(GL::Polygon * p, int highlightV, int highlightE)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-
-
 	vector<GL::Vertex> vertices = p->GetVertices();
-	size_t i = 0;
-	for (; i < vertices.size() - 1; i++)
+	int i = 0;
+	auto size = (int)vertices.size() - 1;
+	for (; i < size; i++)
 	{
 		GL::DrawVertice(vertices[i]);
 		GL::DrawEdge(vertices[i], vertices[i + 1]);
 	}
-	DrawVertice(vertices[i]);
-	if (p->IsLooped())
-		GL::DrawEdge(vertices[i], vertices[0]);
+	if (size != -1)
+	{
+		DrawVertice(vertices[i]);
+		if (p->IsLooped())
+			GL::DrawEdge(vertices[i], vertices[0]);
+	}
 
 	list<int> vEdges = p->GetVEdges();
 	for (auto it = vEdges.begin(); it != vEdges.end(); it++)
@@ -22,11 +23,14 @@ void GL::DrawPolygon(GL::Polygon * p, int highlightV, int highlightE)
 	list<int> hEdges = p->GetHEdges();
 	for (auto it = hEdges.begin(); it != hEdges.end(); it++)
 		GL::DrawHorizSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
-	for (auto const &a : p->GetAngles()) 
+	for (auto const &a : p->GetAngles())
 		GL::DrawAngleSign(p->GetVertex(a.first));
-
+		
 	if (highlightV != -1)
+	{
 		GL::DrawHighlightVertice(p->GetVertex(highlightV));
+		std::cout << "heilight vert " << highlightV << '\n';
+	}
 	else if (highlightE != -1)
 		GL::DrawHighlightEdge(p->GetVertex(highlightE), p->GetVertex((highlightE + 1) % vertices.size()));
 
@@ -115,8 +119,6 @@ void GL::DrawEdge(GL::Vertex v1, GL::Vertex v2)
 		glVertex2i(p.x, p.y);
 	glEnd();
 	glFlush();
-	//glutSwapBuffers();
-
 }
 void GL::DrawHighlightEdge(GL::Vertex v1, GL::Vertex v2)
 {
@@ -174,7 +176,6 @@ void GL::DrawHighlightEdge(GL::Vertex v1, GL::Vertex v2)
 	//glutSwapBuffers();
 
 }
-
 void GL::DrawVertSign(GL::Vertex v1, GL::Vertex v2)
 {
 	int x = (v1.GetX() + v2.GetX()) / 2;
@@ -202,7 +203,7 @@ void GL::DrawHorizSign(GL::Vertex v1, GL::Vertex v2)
 void GL::DrawAngleSign(GL::Vertex v1)
 {
 	glColor3f(0.0f, 0.3f, 1.0f);
-	glPointSize(6);
+	glPointSize(8);
 	glBegin(GL_POINTS);
 	glVertex2i(v1.GetX(), v1.GetY());
 	glEnd();

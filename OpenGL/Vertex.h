@@ -1,7 +1,8 @@
 #pragma once
 #include "Point.h"
 #include <GL/glut.h> 
-
+#include <ostream>
+using namespace std;
 namespace GL
 {
 	//TODO Vetex
@@ -28,6 +29,8 @@ namespace GL
 
 		bool operator==(Vertex& v)const;
 		bool operator!=(Vertex& v)const;
+		Vertex operator+(const Vertex&) const;
+		friend ostream& operator<<(ostream& os, const Vertex& v);
 		/*
 		GL::Vertex& operator-(Vertex& v)const;
 		GL::Vertex& operator-=(Vertex& v)const;*/

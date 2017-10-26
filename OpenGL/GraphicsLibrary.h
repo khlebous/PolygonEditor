@@ -1,8 +1,7 @@
 #pragma once
 #include "Polygon.h"
- 
+#include <iostream>
 #include <vector>
-
 using namespace std;
 
 namespace GL
