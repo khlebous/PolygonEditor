@@ -1,5 +1,4 @@
 #include"GraphicsLibrary.h"
-
 void GL::DrawPolygon(GL::Polygon * p, int highlightV, int highlightE)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -28,7 +27,10 @@ void GL::DrawPolygon(GL::Polygon * p, int highlightV, int highlightE)
 		GL::DrawAngleSign(p->GetVertex(a.first));
 		
 	if (highlightV != -1)
+	{
 		GL::DrawHighlightVertice(p->GetVertex(highlightV));
+		std::cout << "heilight vert " << highlightV << '\n';
+	}
 	else if (highlightE != -1)
 		GL::DrawHighlightEdge(p->GetVertex(highlightE), p->GetVertex((highlightE + 1) % vertices.size()));
 

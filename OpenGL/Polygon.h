@@ -56,7 +56,7 @@ namespace GL
 		bool CheckEdgeVetical(int n);
 		bool CheckEdgeHorizontal(int n);
 		//TODO how to name?
-		bool CheckEdgeVH(int n, list<int>* v1, list <int>* v2, bool checkV);
+		void CheckEdgeVH(int n, list<int>* v1, list <int>* v2, bool checkV);
 		
 		bool CheckAngleIsSetToVertex(int n);
 		void UpdateAllEdgeCoeff();
