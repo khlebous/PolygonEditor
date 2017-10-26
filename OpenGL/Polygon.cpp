@@ -2,7 +2,6 @@
 #include <math.h>
 #include <iostream>
 #define PI 3.14159265
-#include "GraphicsLibrary.h"
 GL::Polygon::Polygon()
 {
 	vertices = vector<GL::Vertex>();
@@ -91,8 +90,7 @@ void GL::Polygon::MoveVertex(int n, int x, int y)
 {
 	if (!isLooped)
 		return;
-	bool _myBool1 = false;
-	bool _myBool2 = false;
+	bool changes = false;
 	// TODO del
 	GL::Vertex v = vertices[n];
 	int xOffset = x - v.GetX();
@@ -106,29 +104,23 @@ void GL::Polygon::MoveVertex(int n, int x, int y)
 
 	if (CheckEdgeVetical(l1))
 	{
+		changes = true;
+		edgeCoeff[l1] = edgeCoeff[l1].FindParallelLine(x, y);
 		if (CheckAngleIsSetToVertex(l2))
 		{
-			edgeCoeff[l1] = edgeCoeff[l1].FindParallelLine(x, y);
 			GL::Vertex vIntersection = LineIntersection(edgeCoeff[l2], edgeCoeff[l1]);
 			vertices[l1].Move(vIntersection.GetX(), vIntersection.GetY());
 		}
 		else
-		{
 			vertices[l1].Move(x, vertices[l1].GetY());
-			
-			GL::DrawPolygon(this);
-		}
 
+		edgeCoeff[n] = edgeCoeff[n].FindParallelLine(x, y);
 		if (CheckEdgeHorizontal(n))
 		{
 			if (CheckAngleIsSetToVertex(r2))
 			{
-				edgeCoeff[n] = edgeCoeff[n].FindParallelLine(x, y);
 				GL::Vertex vIntersection = LineIntersection(edgeCoeff[n], edgeCoeff[r1]);
 				vertices[r1].Move(vIntersection.GetX(), vIntersection.GetY());
-				
-				GL::DrawPolygon(this);
-
 			}
 			else
 				vertices[r1].Move(vertices[r1].GetX(), y);
@@ -142,21 +134,21 @@ void GL::Polygon::MoveVertex(int n, int x, int y)
 	}
 	if (CheckEdgeVetical(n))
 	{
-		_myBool2 = true;
+		changes = true;
+		edgeCoeff[n] = edgeCoeff[n].FindParallelLine(x, y);
 		if (CheckAngleIsSetToVertex(r2))
 		{
-			edgeCoeff[n] = edgeCoeff[n].FindParallelLine(x, y);
 			GL::Vertex vIntersection = LineIntersection(edgeCoeff[n], edgeCoeff[r1]);
 			vertices[r1].Move(vIntersection.GetX(), vIntersection.GetY());
 		}
 		else
 			vertices[r1].Move(x, vertices[r1].GetY());
 
+		edgeCoeff[l1] = edgeCoeff[l1].FindParallelLine(x, y);
 		if (CheckEdgeHorizontal(l1))
 		{
 			if (CheckAngleIsSetToVertex(l2))
 			{
-				edgeCoeff[l1] = edgeCoeff[l1].FindParallelLine(x, y);
 				GL::Vertex vIntersection = LineIntersection(edgeCoeff[l1], edgeCoeff[l2]);
 				vertices[l1].Move(vIntersection.GetX(), vIntersection.GetY());
 			}
@@ -172,20 +164,21 @@ void GL::Polygon::MoveVertex(int n, int x, int y)
 	}
 	if (CheckEdgeHorizontal(l1))
 	{
+		changes = true;
+		edgeCoeff[l1] = edgeCoeff[l1].FindParallelLine(x, y);
 		if (CheckAngleIsSetToVertex(l2))
 		{
-			edgeCoeff[l1] = edgeCoeff[l1].FindParallelLine(x, y);
 			GL::Vertex vIntersection = LineIntersection(edgeCoeff[l2], edgeCoeff[l1]);
 			vertices[l1].Move(vIntersection.GetX(), vIntersection.GetY());
 		}
 		else
 			vertices[l1].Move(vertices[l1].GetX(), y);
 
+		edgeCoeff[n] = edgeCoeff[n].FindParallelLine(x, y);
 		if (CheckEdgeVetical(n))
 		{
 			if (CheckAngleIsSetToVertex(r2))
 			{
-				edgeCoeff[n] = edgeCoeff[n].FindParallelLine(x, y);
 				GL::Vertex vIntersection = LineIntersection(edgeCoeff[n], edgeCoeff[r1]);
 				vertices[r1].Move(vIntersection.GetX(), vIntersection.GetY());
 			}
@@ -201,35 +194,26 @@ void GL::Polygon::MoveVertex(int n, int x, int y)
 	}
 	if (CheckEdgeHorizontal(n))
 	{
-		//_myBool = true;
+		changes = true;
+		edgeCoeff[n] = edgeCoeff[n].FindParallelLine(x, y);
 		if (CheckAngleIsSetToVertex(r2))
 		{
-			edgeCoeff[n] = edgeCoeff[n].FindParallelLine(x, y);
 			GL::Vertex vIntersection = LineIntersection(edgeCoeff[n], edgeCoeff[r1]);
 			vertices[r1].Move(vIntersection.GetX(), vIntersection.GetY());
-
-			GL::DrawPolygon(this);
-
 		}
 		else
 			vertices[r1].Move(vertices[r1].GetX(), y);
 
+		edgeCoeff[l1] = edgeCoeff[l1].FindParallelLine(x, y);
 		if (CheckEdgeVetical(l1))
 		{
 			if (CheckAngleIsSetToVertex(l2))
 			{
-				edgeCoeff[l1] = edgeCoeff[l1].FindParallelLine(x, y);
 				GL::Vertex vIntersection = LineIntersection(edgeCoeff[l1], edgeCoeff[l2]);
 				vertices[l1].Move(vIntersection.GetX(), vIntersection.GetY());
 			}
 			else
-			{
 				vertices[l1].Move(x, vertices[l1].GetY());
-				
-				
-				GL::DrawPolygon(this);
-
-			}
 		}
 		else if (CheckAngleIsSetToVertex(l1))
 		{
@@ -241,12 +225,14 @@ void GL::Polygon::MoveVertex(int n, int x, int y)
 
 	if (CheckAngleIsSetToVertex(l1))
 	{
+		changes = true;
 		edgeCoeff[l1] = edgeCoeff[l1].FindParallelLine(x, y);
-		GL::Vertex vIntersection = LineIntersection(edgeCoeff[l1],edgeCoeff[l2]);
+		GL::Vertex vIntersection = LineIntersection(edgeCoeff[l1], edgeCoeff[l2]);
 		vertices[l1].Move(vIntersection.GetX(), vIntersection.GetY());
 	}
 	if (CheckAngleIsSetToVertex(n))
 	{
+		changes = true;
 		edgeCoeff[l1] = edgeCoeff[l1].FindParallelLine(x, y);
 		GL::Vertex vIntersection1 = LineIntersection(edgeCoeff[l1], edgeCoeff[l2]);
 		vertices[l1].Move(vIntersection1.GetX(), vIntersection1.GetY());
@@ -257,6 +243,7 @@ void GL::Polygon::MoveVertex(int n, int x, int y)
 	}
 	if (CheckAngleIsSetToVertex(r1))
 	{
+		changes = true;
 		edgeCoeff[n] = edgeCoeff[n].FindParallelLine(x, y);
 		GL::Vertex vIntersection = LineIntersection(edgeCoeff[n], edgeCoeff[r1]);
 		vertices[r1].Move(vIntersection.GetX(), vIntersection.GetY());
@@ -264,10 +251,14 @@ void GL::Polygon::MoveVertex(int n, int x, int y)
 
 
 	vertices[n].Move(x, y);
-	edgeCoeff[l1] = edgeCoeff[l1].FindParallelLine(x, y);
-	edgeCoeff[n] = edgeCoeff[n].FindParallelLine(x, y);
-	/*UpdateEdgeCoeff(n);
-	UpdateEdgeCoeff(l1);*/
+	if (!changes)
+	{
+		/*edgeCoeff[l1] = edgeCoeff[l1].FindParallelLine(x, y);
+		edgeCoeff[n] = edgeCoeff[n].FindParallelLine(x, y);
+*/
+		UpdateEdgeCoeff(n);
+		UpdateEdgeCoeff(l1);
+	}
 }
 void GL::Polygon::AddVertAtEdge(int n, int x, int y)
 {
