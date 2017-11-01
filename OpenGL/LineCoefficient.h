@@ -7,6 +7,7 @@ namespace GL
 		int A;
 		int B;
 		int C;
+
 	public:
 		LineCoefficients();
 		LineCoefficients(int _a, int _b, int _c);
@@ -15,7 +16,6 @@ namespace GL
 		int GetA() { return A; }
 		int GetB() { return B; }
 		int GetC() { return C; }
-
 		LineCoefficients FindParallelLine(int x, int y);
 	};
 }

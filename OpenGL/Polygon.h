@@ -16,14 +16,13 @@ namespace GL
 		list<int> hEdges; // horizontal Edges
 		vector<LineCoefficients> edgeCoeff;
 		vector<pair<int, float>> vertSetAngle;
-		//vector<SetAngle> setAngle;
-
 		bool isLooped = false;
-		int maxDistToHighl = 5;
-
 	public:
 		Polygon();
 		~Polygon();
+
+		list<int> vTmpEdges; // vertical temporary Edges
+		list<int> hTmpEdges; // horizontal temporary Edges
 
 		void AddVertex(int x, int y){ AddVertex(GL::Point(x, y)); }
 		void AddVertex(GL::Point p);
@@ -33,6 +32,8 @@ namespace GL
 		int VertCount() { return vertices.size(); }
 		list<int> GetVEdges() { return vEdges; }
 		list<int> GetHEdges() { return hEdges; }
+		list<int> GetVEdgesTmp() { return vTmpEdges; }
+		list<int> GetHEdgesTmp() { return hTmpEdges; }
 		vector<pair<int, float>>  GetAngles() { return vertSetAngle; }
 
 		int CheckMouseNearVertice(int x, int y);
@@ -47,6 +48,8 @@ namespace GL
 
 		void MakeEdgeVertical(int n);
 		void MakeEdgeHorizontal(int n);
+		bool EdgeNearVertical(int n);
+		bool EdgeNearHorizontal(int n);
 
 		bool SetAngleFunction(int n);
 
@@ -55,13 +58,11 @@ namespace GL
 	private:
 		bool CheckEdgeVetical(int n);
 		bool CheckEdgeHorizontal(int n);
-		//TODO how to name?
 		void CheckEdgeVH(int n, list<int>* v1, list <int>* v2, bool checkV);
 		
 		bool CheckAngleIsSetToVertex(int n);
 		void UpdateAllEdgeCoeff();
 		void UpdateEdgeCoeff(int n);
-		//void DeleteVertFromAngleVector(int n);
 		void DeleteSetAngle(int n);
 		
 		double Distance(double x1, double y1, double x2, double y2);

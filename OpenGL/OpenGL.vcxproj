@@ -116,7 +116,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Edge.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="GraphicsLibrary.cpp" />
     <ClCompile Include="LineCoefficient.cpp" />
@@ -124,18 +123,15 @@
     <ClCompile Include="Manager.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Polygon.cpp" />
-    <ClCompile Include="SetAngle.cpp" />
     <ClCompile Include="Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Edge.h" />
     <ClInclude Include="ExternVariables.h" />
     <ClInclude Include="GraphicsLibrary.h" />
     <ClInclude Include="LineCoefficient.h" />
     <ClInclude Include="Manager.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Polygon.h" />
-    <ClInclude Include="SetAngle.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

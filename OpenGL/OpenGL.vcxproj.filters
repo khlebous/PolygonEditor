@@ -22,14 +22,14 @@
     <Filter Include="GraphicsLibrary\Point">
       <UniqueIdentifier>{63b69871-80f5-4e2d-8ec0-e69ca2fbff7c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GraphicsLibrary\Mouse">
-      <UniqueIdentifier>{4daad2d5-22a1-41ab-a1a0-2824cd3328a8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GraphicsLibrary\Vertice">
       <UniqueIdentifier>{ab2a087e-ebd9-498e-8e1c-c38b316d4841}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GraphicsLibrary\Edge">
-      <UniqueIdentifier>{377a76f2-6249-4397-ab2f-d46dc526c4fe}</UniqueIdentifier>
+    <Filter Include="GraphicsLibrary\LineCoefficient">
+      <UniqueIdentifier>{888d2d0a-9039-481e-a716-37a78ba96861}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GraphicsLibrary\Manager">
+      <UniqueIdentifier>{4daad2d5-22a1-41ab-a1a0-2824cd3328a8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -42,12 +42,6 @@
     <ClCompile Include="Polygon.cpp">
       <Filter>Polygon</Filter>
     </ClCompile>
-    <ClCompile Include="Point.cpp">
-      <Filter>GraphicsLibrary\Point</Filter>
-    </ClCompile>
-    <ClCompile Include="Edge.cpp">
-      <Filter>GraphicsLibrary\Edge</Filter>
-    </ClCompile>
     <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -55,41 +49,35 @@
       <Filter>GraphicsLibrary\Vertice</Filter>
     </ClCompile>
     <ClCompile Include="Manager.cpp">
-      <Filter>GraphicsLibrary\Mouse</Filter>
+      <Filter>GraphicsLibrary\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="LineCoefficient.cpp">
+    <ClCompile Include="Point.cpp">
       <Filter>GraphicsLibrary\Point</Filter>
     </ClCompile>
-    <ClCompile Include="SetAngle.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="LineCoefficient.cpp">
+      <Filter>GraphicsLibrary\LineCoefficient</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsLibrary.h">
       <Filter>GraphicsLibrary</Filter>
     </ClInclude>
-    <ClInclude Include="Polygon.h">
-      <Filter>Polygon</Filter>
-    </ClInclude>
-    <ClInclude Include="Point.h">
-      <Filter>GraphicsLibrary\Point</Filter>
-    </ClInclude>
     <ClInclude Include="ExternVariables.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Edge.h">
-      <Filter>GraphicsLibrary\Edge</Filter>
     </ClInclude>
     <ClInclude Include="Vertex.h">
       <Filter>GraphicsLibrary\Vertice</Filter>
     </ClInclude>
     <ClInclude Include="Manager.h">
-      <Filter>GraphicsLibrary\Mouse</Filter>
+      <Filter>GraphicsLibrary\Manager</Filter>
     </ClInclude>
     <ClInclude Include="LineCoefficient.h">
-      <Filter>GraphicsLibrary\Point</Filter>
+      <Filter>GraphicsLibrary\LineCoefficient</Filter>
     </ClInclude>
-    <ClInclude Include="SetAngle.h">
+    <ClInclude Include="Polygon.h">
+      <Filter>Polygon</Filter>
+    </ClInclude>
+    <ClInclude Include="Point.h">
       <Filter>GraphicsLibrary\Point</Filter>
     </ClInclude>
   </ItemGroup>

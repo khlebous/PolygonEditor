@@ -33,7 +33,7 @@ int GL::Polygon::CheckMouseNearVertice(int x, int y)
 	int i = 0;
 	for (GL::Vertex& v : vertices)
 	{
-		if ((abs(v.GetX() - x) < maxDistToHighl) && (abs(v.GetY() - y) < maxDistToHighl))
+		if ((abs(v.GetX() - x) < 5) && (abs(v.GetY() - y) < 5))
 			return i;
 		i++;
 	}
@@ -50,7 +50,7 @@ int GL::Polygon::CheckMouseNearEdge(int x, int y)
 			Distance(vertices[i + 1].GetX(), vertices[i + 1].GetY(), x, y)
 			< Distance(vertices[i].GetX(), vertices[i].GetY(),
 				vertices[i + 1].GetX(), vertices[i + 1].GetY())
-			+ maxDistToHighl)
+			+ 5)
 			return i;
 	}
 	if (isLooped)
@@ -59,7 +59,7 @@ int GL::Polygon::CheckMouseNearEdge(int x, int y)
 			Distance(vertices[0].GetX(), vertices[0].GetY(), x, y)
 			< Distance(vertices[i].GetX(), vertices[i].GetY(),
 				vertices[0].GetX(), vertices[0].GetY())
-			+ maxDistToHighl)
+			+ 5)
 			return i;
 	}
 	return -1;
@@ -91,7 +91,6 @@ void GL::Polygon::MoveVertex(int n, int x, int y)
 	if (!isLooped)
 		return;
 	bool changes = false;
-	// TODO del
 	GL::Vertex v = vertices[n];
 	int xOffset = x - v.GetX();
 	int yOffset = y - v.GetY();
@@ -249,16 +248,13 @@ void GL::Polygon::MoveVertex(int n, int x, int y)
 		vertices[r1].Move(vIntersection.GetX(), vIntersection.GetY());
 	}
 
-
 	vertices[n].Move(x, y);
 	if (!changes)
 	{
-		/*edgeCoeff[l1] = edgeCoeff[l1].FindParallelLine(x, y);
-		edgeCoeff[n] = edgeCoeff[n].FindParallelLine(x, y);
-*/
 		UpdateEdgeCoeff(n);
 		UpdateEdgeCoeff(l1);
 	}
+
 }
 void GL::Polygon::AddVertAtEdge(int n, int x, int y)
 {
@@ -286,8 +282,6 @@ void GL::Polygon::DeleteVert(int n)
 {
 	if (isLooped && vertices.size() < 4)
 	{
-		//TODO 
-		//isLooped = false;
 		return;
 	}
 	int n1 = (n - 1 + vertices.size()) % vertices.size();
@@ -306,13 +300,16 @@ void GL::Polygon::DeleteVert(int n)
 	for (auto it = hEdges.begin(); it != hEdges.end(); ++it)
 		if ((*it) > n)
 			*it = (*it - 1 + vertices.size()) % vertices.size();
+	for (auto it = vertSetAngle.begin(); it != vertSetAngle.end(); ++it)
+		if ((*it).first > n)
+			(*it).first = ((*it).first - 1 + vertices.size()) % vertices.size();
 
+	n1 = (n - 1 + vertices.size()) % vertices.size();
 	edgeCoeff.erase(edgeCoeff.begin() + n);
-	edgeCoeff[n1] = LineCoefficients(vertices[n1], vertices[n]);
+	edgeCoeff[n1] = LineCoefficients(vertices[n1], vertices[n%vertices.size()]);
 }
 
 //edge
-//TODO return true/false
 void GL::Polygon::MakeEdgeVertical(int n)
 {
 	CheckEdgeVH(n, &vEdges, &hEdges, true);
@@ -320,6 +317,25 @@ void GL::Polygon::MakeEdgeVertical(int n)
 void GL::Polygon::MakeEdgeHorizontal(int n)
 {
 	CheckEdgeVH(n, &hEdges, &vEdges, false);
+}
+
+bool GL::Polygon::EdgeNearVertical(int n)
+{
+	int n1 = (n + 1) % vertices.size();
+	if (fabs(vertices[n].GetX() - vertices[n1].GetX()) < 5)
+		return true;
+	else
+		return false;
+}
+
+bool GL::Polygon::EdgeNearHorizontal(int n)
+{
+
+	int n1 = (n + 1) % vertices.size();
+	if (fabs( vertices[n].GetY() - vertices[n1].GetY()) < 5)
+		return true;
+	else
+		return false;
 }
 
 //angle
@@ -352,14 +368,7 @@ bool GL::Polygon::SetAngleFunction(int n)
 		float angle = acos((dot / (sqrt(x1*x1 + y1*y1)*sqrt(x2*x2 + y2*y2))))* 180.0 / PI;
 
 		std::cin.clear();
-		//cout << "angle : " << angle << "\n";
-		//cout << "Enter angle\n";
-		//float a;
-		//cin >> a;
-		//cout << "Your angle: " << a << " degrees\n\n";
-
-		int l2 = (n - 2 + vertices.size()) % vertices.size();
-		int r2 = (n + 2) % vertices.size();
+		cout << "angle : " << angle << "\n";
 
 		vertSetAngle.push_back(make_pair(n, angle));
 		return true;
@@ -537,7 +546,6 @@ GL::Vertex GL::Polygon::LineIntersection(GL::LineCoefficients lc1, GL::LineCoeff
 
 	if (det == 0)
 	{
-		//return v_l1;
 	}
 	else
 	{
@@ -547,4 +555,3 @@ GL::Vertex GL::Polygon::LineIntersection(GL::LineCoefficients lc1, GL::LineCoeff
 	}
 	return GL::Vertex(-1, -1);
 }
-

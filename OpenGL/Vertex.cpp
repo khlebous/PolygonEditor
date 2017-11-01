@@ -19,30 +19,6 @@ GL::Vertex::Vertex(GL::Point p)
 	y = p.y;
 }
 
-void GL::Vertex::Draw()
-{
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glPointSize(4);
-	glBegin(GL_POINTS);
-	glVertex2i(x, y);
-	glEnd();
-	glFlush();
-	glutPostRedisplay();
-}
-void GL::Vertex::HighlightVertex()
-{
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glPointSize(4);
-	glBegin(GL_POINTS);
-	glVertex2i(x, y);
-	glEnd();
-	glFlush();
-}
-void GL::Vertex::UnhighlightVertex()
-{
-	Draw();
-}
-
 void GL::Vertex::Move(int _x, int _y)
 {
 	x = _x; 
