@@ -10,6 +10,7 @@ GL::Polygon::Polygon()
 
 	vertSetAngle = vector<pair<int, float>>();
 	edgeCoeff = vector<LineCoefficients>();
+
 }
 GL::Polygon::~Polygon()
 {
@@ -66,6 +67,8 @@ int GL::Polygon::CheckMouseNearEdge(int x, int y)
 }
 bool GL::Polygon::IsInside(int x, int y)
 {
+	if (!isLooped)
+		return false;
 	int i, j, nvert = vertices.size();
 	bool c = false;
 

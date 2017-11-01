@@ -1,7 +1,22 @@
 #include"GraphicsLibrary.h"
-void GL::DrawPolygon(GL::Polygon * p, GL::Polygon * p1, int highlightV, int highlightE)
+void GL::DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, int highlightE)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
+	
+	for (int i = 0; i < p.size(); i++)
+		GL::DrawPolygon(p[i]);
+
+	if (highlightV != -1)
+		GL::DrawHighlightVertice(p[highlightP]->GetVertex(highlightV));
+	else if (highlightE != -1)
+		GL::DrawHighlightEdge(p[highlightP]->GetVertex(highlightE), 
+							  p[highlightP]->GetVertex(highlightE + 1));
+
+	glutSwapBuffers();
+}
+
+void GL::DrawPolygon(GL::Polygon * p)
+{
 	vector<GL::Vertex> vertices = p->GetVertices();
 	int i = 0;
 	auto size = (int)vertices.size() - 1;
@@ -17,7 +32,7 @@ void GL::DrawPolygon(GL::Polygon * p, GL::Polygon * p1, int highlightV, int high
 			GL::DrawEdge(vertices[i], vertices[0]);
 	}
 
-	list<int> vEdges = p->GetVEdges();
+	/*list<int> vEdges = p->GetVEdges();
 	for (auto it = vEdges.begin(); it != vEdges.end(); it++)
 		GL::DrawVertSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
 	list<int> hEdges = p->GetHEdges();
@@ -25,39 +40,15 @@ void GL::DrawPolygon(GL::Polygon * p, GL::Polygon * p1, int highlightV, int high
 		GL::DrawHorizSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
 	for (auto const &a : p->GetAngles())
 		GL::DrawAngleSign(p->GetVertex(a.first));
-
-	list<int> vEdgesTmp = p->GetVEdgesTmp();
+	*/
+	/*list<int> vEdgesTmp = p->GetVEdgesTmp();
 	for (auto it = vEdgesTmp.begin(); it != vEdgesTmp.end(); it++)
 		GL::DrawVertSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
 	list<int> hEdgesTmp = p->GetHEdgesTmp();
 	for (auto it = hEdgesTmp.begin(); it != hEdgesTmp.end(); it++)
 		GL::DrawHorizSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
-
-	if (highlightV != -1)
-		GL::DrawHighlightVertice(p->GetVertex(highlightV));
-	else if (highlightE != -1)
-		GL::DrawHighlightEdge(p->GetVertex(highlightE), p->GetVertex((highlightE + 1) % vertices.size()));
-
-	//draw second
-	if (p1 != nullptr)
-	{
-		vector<GL::Vertex> vertices1 = p1->GetVertices();
-		int i = 0;
-		auto size = (int)vertices1.size() - 1;
-		for (; i < size; i++)
-		{
-			GL::DrawVertice(vertices1[i]);
-			GL::DrawEdge(vertices1[i], vertices1[i + 1]);
-		}
-		if (size != -1)
-		{
-			DrawVertice(vertices1[i]);
-			if (p1->IsLooped())
-				GL::DrawEdge(vertices1[i], vertices1[0]);
-		}
-	}
-
-	glutSwapBuffers();
+*/
+	
 }
 
 void GL::DrawVertice(GL::Vertex v)
