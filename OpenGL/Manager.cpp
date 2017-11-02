@@ -48,7 +48,7 @@ void Manager::mouseFunc(int button, int state, int x, int y)
 		//GL::Polygon* polygon2 = mm->polygon2;
 		vector<GL::Polygon*> p = mm->polygons;
 		if (mm->highlightVertice != -1)
-			p[mm->highlightPolygon]->MoveVertex(mm->highlightVertice, x, y);
+			mm->polygons[mm->highlightPolygon]->MoveVertex(mm->highlightVertice, x, y);
 		for (int i = 0; i < p.size(); i++)
 		{
 			if (p[i]->IsInside(x, y))
@@ -65,10 +65,12 @@ void Manager::mouseFunc(int button, int state, int x, int y)
 		}
 		else
 		{
-			if (p.size() == 0)
-				mm->polygons.push_back(&GL::Polygon());
-			p = mm->polygons;
-			mm->NewVertexAndEdge(p[p.size() - 1], x, y);
+			//if (p.size() == 0)
+			//{
+			//	mm->polygons.push_back(&GL::Polygon());
+				//p = mm->polygons;
+			//}
+			mm->NewVertexAndEdge(x, y);
 		}
 	}
 }
@@ -223,31 +225,53 @@ void Manager::motionFuncRight(int x, int y)
 
 //=====================================================
 //private
-void Manager::NewVertexAndEdge(GL::Polygon *polygon, int x, int y)
+void Manager::NewVertexAndEdge(int x, int y)
 {
+	GL::Polygon *p;
+	if (polygons.size() == 0)
+		p = nullptr;
+	else
+		p = polygons[polygons.size() - 1];
 	//if (polygon == nullptr)
 	//	*polygon = GL::Polygon();
 	//GL::Polygon* polygon = getInstance()->polygon;
-	if ((polygon->VertCount() > 0) && (highlightVertice == 0))
+	if (p != nullptr)
 	{
-		polygon->Loop();
-		GL::DrawPolygons(polygons, -1, -1, -1);
-		return;
+		if ((p->VertCount() > 0) && (highlightVertice == 0) && (highlightPolygon == (polygons.size() - 1)))
+		{
+			if (p->Loop())
+			{
+				GL::DrawPolygons(polygons, -1, -1, -1);
+				return;
+			}
+		}
+		else if (!(p->IsLooped()))
+		{
+			p->AddVertex(x, y);
+			GL::DrawPolygons(polygons, -1, -1, -1);
+			return;
+		}
 	}
+	//else
+	//{
+	GL::Polygon* pp = new GL::Polygon();
+	polygons.push_back(pp);
+	polygons[polygons.size() - 1]->AddVertex(x, y);
+	//}
 
 	/*if (polygon->CheckMouseNearVertice(x, y) != -1)
 	{
 		return;
 	}*/
-	polygon->AddVertex(x, y);
+
 	//if (polygon->VertCount() > 1)
 	GL::DrawPolygons(polygons, -1, -1, -1);
 }
 
 bool Manager::CheckVertices(int x, int y)
 {
-	int v=-1;
-	int p=-1;
+	int v = -1;
+	int p = -1;
 	for (int i = 0; i < polygons.size(); i++)
 	{
 		v = polygons[i]->CheckMouseNearVertice(x, y);
@@ -271,14 +295,14 @@ bool Manager::CheckVertices(int x, int y)
 	{
 		highlightVertice = v;
 		highlightPolygon = p;
-		GL::DrawPolygons(polygons,highlightPolygon, highlightVertice, highlightEdge);
+		GL::DrawPolygons(polygons, highlightPolygon, highlightVertice, highlightEdge);
 	}
 	return true;
 }
 void Manager::CheckEdges(int x, int y)
 {
-	int e=-1;
-	int p=-1;
+	int e = -1;
+	int p = -1;
 	for (int i = 0; i < polygons.size(); i++)
 	{
 		if (-1 != (e = polygons[i]->CheckMouseNearEdge(x, y)))

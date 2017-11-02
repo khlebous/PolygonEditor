@@ -30,7 +30,7 @@ public:
 	static void motionFuncRight(int x, int y);
 
 private:
-	void NewVertexAndEdge(GL::Polygon* p, int x, int y);
+	void NewVertexAndEdge(int x, int y);
 	bool CheckVertices(int x, int y);
 	void CheckEdges(int x, int y);
 };

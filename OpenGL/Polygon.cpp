@@ -2,7 +2,7 @@
 #include <math.h>
 #include <iostream>
 #define PI 3.14159265
-GL::Polygon::Polygon()
+GL::Polygon::Polygon():isLooped(0)
 {
 	vertices = vector<GL::Vertex>();
 	vEdges = list<int>();
@@ -10,7 +10,7 @@ GL::Polygon::Polygon()
 
 	vertSetAngle = vector<pair<int, float>>();
 	edgeCoeff = vector<LineCoefficients>();
-
+	//isLooped = false;
 }
 GL::Polygon::~Polygon()
 {
@@ -22,9 +22,9 @@ GL::Polygon::~Polygon()
 	edgeCoeff.clear();
 }
 
-void GL::Polygon::AddVertex(GL::Point p)
+void GL::Polygon::AddVertex(GL::Vertex p)
 {
-	vertices.push_back(GL::Vertex(p));
+	vertices.push_back(p);
 	if (vertices.size() > 1)
 		edgeCoeff.push_back(LineCoefficients(vertices[vertices.size() - 1], vertices[vertices.size() - 2]));
 }
@@ -54,7 +54,7 @@ int GL::Polygon::CheckMouseNearEdge(int x, int y)
 			+ 5)
 			return i;
 	}
-	if (isLooped)
+	if (isLooped==1)
 	{
 		if (Distance(vertices[i].GetX(), vertices[i].GetY(), x, y) +
 			Distance(vertices[0].GetX(), vertices[0].GetY(), x, y)
@@ -67,7 +67,7 @@ int GL::Polygon::CheckMouseNearEdge(int x, int y)
 }
 bool GL::Polygon::IsInside(int x, int y)
 {
-	if (!isLooped)
+	if (isLooped==0)
 		return false;
 	int i, j, nvert = vertices.size();
 	bool c = false;
@@ -80,18 +80,19 @@ bool GL::Polygon::IsInside(int x, int y)
 	}
 	return c;
 }
-void GL::Polygon::Loop()
+bool GL::Polygon::Loop()
 {
-	if (VertCount() < 3)
-		return;
-	isLooped = true;
+	if ((VertCount() < 3) || (isLooped==1))
+		return false;
+	isLooped = 1;
 	edgeCoeff.push_back(LineCoefficients(vertices[vertices.size() - 1], vertices[0]));
+	return true;
 }
 
 //vert
 void GL::Polygon::MoveVertex(int n, int x, int y)
 {
-	if (!isLooped)
+	if (isLooped==0)
 		return;
 	bool changes = false;
 	GL::Vertex v = vertices[n];
@@ -344,7 +345,7 @@ bool GL::Polygon::EdgeNearHorizontal(int n)
 //angle
 bool GL::Polygon::SetAngleFunction(int n)
 {
-	if (!isLooped)
+	if (isLooped==0)
 		return false;
 	if (CheckAngleIsSetToVertex(n))
 	{
@@ -354,7 +355,7 @@ bool GL::Polygon::SetAngleFunction(int n)
 
 	int l1 = (n - 1 + vertices.size()) % vertices.size();
 	int r1 = (n + 1) % vertices.size();
-	if (isLooped || (n != 0 && (n + 1) != vertices.size()))
+	if ((isLooped==1) || (n != 0 && (n + 1) != vertices.size()))
 	{
 		if (CheckAngleIsSetToVertex(l1) || CheckAngleIsSetToVertex(r1))
 			return false;
@@ -422,13 +423,13 @@ void GL::Polygon::CheckEdgeVH(int n, list<int>* v1, list<int>* v2, bool checkV)
 	if (CheckAngleIsSetToVertex(n) || CheckAngleIsSetToVertex((n + 1) % vertices.size()))
 		return;;
 	{
-		if (isLooped || (n != 0))
+		if ((isLooped==1) || (n != 0))
 		{
 			it = std::find((*v1).begin(), (*v1).end(), (n - 1 + vertices.size()) % vertices.size());
 			if (it != (*v1).end())
 				return;
 		}
-		if (isLooped || (n + 1 != vertices.size() - 1))
+		if ((isLooped==1) || (n + 1 != vertices.size() - 1))
 		{
 			it = std::find((*v1).begin(), (*v1).end(), (n + 1) % vertices.size());
 			if (it != (*v1).end())
