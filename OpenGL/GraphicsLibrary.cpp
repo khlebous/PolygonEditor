@@ -2,15 +2,18 @@
 void GL::DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, int highlightE)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-	
+
 	for (int i = 0; i < p.size(); i++)
 		GL::DrawPolygon(p[i]);
 
-	if (highlightV != -1)
-		GL::DrawHighlightVertice(p[highlightP]->GetVertex(highlightV));
-	else if (highlightE != -1)
-		GL::DrawHighlightEdge(p[highlightP]->GetVertex(highlightE), 
-							  p[highlightP]->GetVertex(highlightE + 1));
+	if (highlightP != -1)
+	{
+		if (highlightV != -1)
+			GL::DrawHighlightVertice(p[highlightP]->GetVertex(highlightV));
+		else if (highlightE != -1)
+			GL::DrawHighlightEdge(p[highlightP]->GetVertex(highlightE),
+				p[highlightP]->GetVertex(highlightE + 1));
+	}
 
 	glutSwapBuffers();
 }
@@ -48,7 +51,7 @@ void GL::DrawPolygon(GL::Polygon * p)
 	for (auto it = hEdgesTmp.begin(); it != hEdgesTmp.end(); it++)
 		GL::DrawHorizSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
 */
-	
+
 }
 
 void GL::DrawVertice(GL::Vertex v)

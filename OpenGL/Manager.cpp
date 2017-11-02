@@ -48,7 +48,9 @@ void Manager::mouseFunc(int button, int state, int x, int y)
 		//GL::Polygon* polygon2 = mm->polygon2;
 		vector<GL::Polygon*> p = mm->polygons;
 		if (mm->highlightVertice != -1)
+		{
 			mm->polygons[mm->highlightPolygon]->MoveVertex(mm->highlightVertice, x, y);
+		}
 		for (int i = 0; i < p.size(); i++)
 		{
 			if (p[i]->IsInside(x, y))
@@ -65,11 +67,6 @@ void Manager::mouseFunc(int button, int state, int x, int y)
 		}
 		else
 		{
-			//if (p.size() == 0)
-			//{
-			//	mm->polygons.push_back(&GL::Polygon());
-				//p = mm->polygons;
-			//}
 			mm->NewVertexAndEdge(x, y);
 		}
 	}
