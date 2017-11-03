@@ -16,7 +16,7 @@ namespace GL
 		list<int> hEdges; // horizontal Edges
 		vector<LineCoefficients> edgeCoeff;
 		vector<pair<int, float>> vertSetAngle;
-		bool isLooped = false;
+		int isLooped;
 	public:
 		Polygon();
 		~Polygon();
@@ -24,8 +24,8 @@ namespace GL
 		list<int> vTmpEdges; // vertical temporary Edges
 		list<int> hTmpEdges; // horizontal temporary Edges
 
-		void AddVertex(int x, int y){ AddVertex(GL::Point(x, y)); }
-		void AddVertex(GL::Point p);
+		void AddVertex(int x, int y){ AddVertex(GL::Vertex(x, y)); }
+		void AddVertex(GL::Vertex p);
 
 		vector<GL::Vertex> GetVertices(){ return vertices; }
 		GL::Vertex GetVertex(int index){ return vertices[(index+vertices.size())%vertices.size()]; }
@@ -39,8 +39,8 @@ namespace GL
 		int CheckMouseNearVertice(int x, int y);
 		int CheckMouseNearEdge(int x, int y);
 		bool IsInside(int x, int y);
-		void Loop();
-		bool IsLooped() { return isLooped; }
+		bool Loop();
+		bool IsLooped() { return isLooped==1; }
 
 		void MoveVertex(int vertNum, int x, int y);
 		void AddVertAtEdge(int n, int x, int y);

@@ -16,8 +16,10 @@ int main(int argc, char** argv)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(0.0, WINDOW_HEIGHT, 0.0, WINDOW_WIDTH);
+
 	glutMouseFunc(Manager::mouseFunc);
 	glutPassiveMotionFunc(Manager::mousePassiveFunc);
 	glutKeyboardUpFunc(Manager::keyboardFunc);
+
 	glutMainLoop();
 }

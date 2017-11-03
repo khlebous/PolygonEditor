@@ -7,12 +7,16 @@ Manager* Manager::instance = NULL;
 
 Manager::Manager()
 {
-	polygon = new GL::Polygon;
-	polygon2 = new GL::Polygon;
+	polygons = vector<GL::Polygon*>();
+	//polygon = new GL::Polygon;
+	//polygon2 = new GL::Polygon;
 	highlightVertice = -1;
 	highlightEdge = -1;
+	highlightPolygon = -1;
+
 	_x = -1;
 	_y = -1;
+	_nr = -1;
 }
 
 Manager* Manager::getInstance()
@@ -21,10 +25,12 @@ Manager* Manager::getInstance()
 		instance = new Manager;
 	return instance;
 }
-
 Manager::~Manager()
 {
-	polygon->~Polygon();
+	for (auto &p : polygons)
+		p->~Polygon();
+	polygons.clear();
+	//polygon->~Polygon();
 }
 
 void Manager::mouseFunc(int button, int state, int x, int y)
@@ -35,22 +41,42 @@ void Manager::mouseFunc(int button, int state, int x, int y)
 	}
 	else if ((button == GLUT_LEFT_BUTTON) && (state == GLUT_DOWN))
 	{
+		y = WINDOW_WIDTH - y;
 		glutMotionFunc(Manager::motionFuncLeft);
 		Manager* mm = getInstance();
-		GL::Polygon* polygon = mm->polygon;
-		GL::Polygon* polygon2 = mm->polygon2;
-		if (polygon->IsLooped() && (mm->highlightVertice != -1))
-			polygon->MoveVertex(mm->highlightVertice, x, WINDOW_WIDTH - y);
-		else if (polygon->IsLooped() && polygon->IsInside(x, WINDOW_WIDTH - y))
+		//GL::Polygon* polygon = mm->polygon;
+		//GL::Polygon* polygon2 = mm->polygon2;
+		vector<GL::Polygon*> p = mm->polygons;
+
+		//loop
+		if (mm->highlightVertice == 0)
+		{
+			if (mm->polygons[mm->highlightPolygon]->Loop())
+			{
+				GL::DrawPolygons(mm->polygons, mm->highlightPolygon, mm->highlightVertice, -1);
+				return;
+			}
+		}
+		//move polygon
+		for (int i = 0; i < p.size(); i++)
+		{
+			if (p[i]->IsInside(x, y))
+			{
+				mm->_nr = i;
+				break;
+			}
+			mm->_nr = -1;
+		}
+		if (-1 != mm->_nr)
 		{
 			glutMotionFunc(Manager::motionFuncRight);
 			mm->_x = x;
-			mm->_y = WINDOW_WIDTH - y;
+			mm->_y = y;
 		}
-		else if (!polygon->IsLooped())
-			mm->NewVerticeAndEdge(polygon, x, WINDOW_WIDTH - y);
-		else if (!polygon2->IsLooped())
-			mm->NewVerticeAndEdge(polygon2, x, WINDOW_WIDTH - y);
+		else if(mm->highlightVertice == -1)
+			mm->NewVertexAndEdge(x, y);
+		else
+			mm->polygons[mm->highlightPolygon]->MoveVertex(mm->highlightVertice, x, y);
 	}
 }
 
@@ -73,9 +99,9 @@ void Manager::keyboardFunc(unsigned char key, int x, int y)
 		Manager* mm = getInstance();
 		if (mm->highlightEdge != -1)
 		{
-			GL::Polygon* polygon = getInstance()->polygon;
+			GL::Polygon* polygon = mm->polygons[mm->highlightPolygon];
 			polygon->AddVertAtEdge(mm->highlightEdge, x, WINDOW_WIDTH - y);
-			GL::DrawPolygon(polygon, getInstance()->polygon2, mm->highlightVertice, mm->highlightEdge);
+			GL::DrawPolygons(mm->polygons, mm->highlightPolygon, mm->highlightVertice, mm->highlightEdge);
 		}
 		break;
 	}
@@ -84,28 +110,22 @@ void Manager::keyboardFunc(unsigned char key, int x, int y)
 		Manager* mm = getInstance();
 		if (mm->highlightVertice != -1)
 		{
-			GL::Polygon* polygon = getInstance()->polygon;
+			GL::Polygon* polygon = mm->polygons[mm->highlightPolygon];
 			polygon->DeleteVert(mm->highlightVertice);
 			mm->highlightVertice = -1;
-			GL::DrawPolygon(polygon, getInstance()->polygon2, mm->highlightVertice, mm->highlightEdge);
+			GL::DrawPolygons(mm->polygons, mm->highlightPolygon, mm->highlightVertice, mm->highlightEdge);
 		}
 		break;
 	}
 	case 'l': // loop polygon
 	{
 		Manager* mm = getInstance();
-		GL::Polygon* polygon = mm->polygon;
-		GL::Polygon* polygon2 = mm->polygon2;
-		if (!polygon->IsLooped())
-		{
-			polygon->Loop();
-		}
-		else if (!polygon2->IsLooped())
-		{
-			mm->polygon2->Loop();
-		}
-		GL::DrawPolygon(polygon, getInstance()->polygon2, mm->highlightVertice, mm->highlightEdge);
-
+		//GL::Polygon* polygon = mm->polygon;
+		//GL::Polygon* polygon2 = mm->polygon2;
+		GL::Polygon* p = mm->polygons[mm->polygons.size() - 1];
+		if (!p->IsLooped())
+			p->Loop();
+		GL::DrawPolygons(mm->polygons, mm->highlightPolygon, mm->highlightVertice, mm->highlightEdge);
 		break;
 	}
 	case 'v': // try to make edge vertical
@@ -113,10 +133,9 @@ void Manager::keyboardFunc(unsigned char key, int x, int y)
 		Manager* mm = getInstance();
 		if (mm->highlightEdge != -1)
 		{
-			GL::Polygon* polygon = getInstance()->polygon;
-			polygon->MakeEdgeVertical(mm->highlightEdge);
-			GL::DrawPolygon(polygon, mm->polygon2, mm->highlightVertice, mm->highlightEdge);
-
+			GL::Polygon* p = mm->polygons[mm->highlightPolygon];
+			p->MakeEdgeVertical(mm->highlightEdge);
+			GL::DrawPolygons(mm->polygons, mm->highlightPolygon, mm->highlightVertice, mm->highlightEdge);
 		}
 		break;
 	}
@@ -125,9 +144,9 @@ void Manager::keyboardFunc(unsigned char key, int x, int y)
 		Manager* mm = getInstance();
 		if (mm->highlightEdge != -1)
 		{
-			GL::Polygon* polygon = getInstance()->polygon;
+			GL::Polygon* polygon = mm->polygons[mm->highlightPolygon];
 			polygon->MakeEdgeHorizontal(mm->highlightEdge);
-			GL::DrawPolygon(polygon, mm->polygon2, mm->highlightVertice, mm->highlightEdge);
+			GL::DrawPolygons(mm->polygons, mm->highlightPolygon, mm->highlightVertice, mm->highlightEdge);
 		}
 		break;
 	}
@@ -135,8 +154,8 @@ void Manager::keyboardFunc(unsigned char key, int x, int y)
 	{
 		Manager* mm = getInstance();
 		if (mm->highlightVertice != -1)
-			if (mm->polygon->SetAngleFunction(mm->highlightVertice))
-				GL::DrawPolygon(mm->polygon, mm->polygon2, mm->highlightVertice, mm->highlightEdge);
+			if (mm->polygons[mm->highlightPolygon]->SetAngleFunction(mm->highlightVertice))
+				GL::DrawPolygons(mm->polygons, mm->highlightPolygon, mm->highlightVertice, mm->highlightEdge);
 		break;
 	}
 	case 'c': // checkbox
@@ -154,10 +173,9 @@ void Manager::keyboardFunc(unsigned char key, int x, int y)
 void Manager::motionFuncLeft(int _x, int _y)
 {
 	Manager* mm = getInstance();
-	GL::Polygon* p = mm->polygon;
 	if (mm->highlightVertice != -1)
 	{
-		if (mm->checkBox)
+		/*if (mm->checkBox)
 		{
 			if (p->EdgeNearVertical(mm->highlightVertice))
 			{
@@ -192,78 +210,125 @@ void Manager::motionFuncLeft(int _x, int _y)
 			}
 			else
 				p->hTmpEdges = list<int>();
-		}
+		}*/
 
-
+		GL::Polygon* p = mm->polygons[mm->highlightPolygon];
 		p->MoveVertex(mm->highlightVertice, _x, WINDOW_WIDTH - _y);
 	}
-	GL::DrawPolygon(mm->polygon, mm->polygon2);
+	GL::DrawPolygons(mm->polygons, -1, -1, -1);
 }
 
 void Manager::motionFuncRight(int x, int y)
 {
+	y = WINDOW_WIDTH - y;
 	Manager* mm = getInstance();
-	mm->polygon->MovePolygon(x - mm->_x, WINDOW_WIDTH - y - mm->_y);
+	mm->polygons[mm->_nr]->MovePolygon(x - mm->_x, y - mm->_y);
 	mm->_x = x;
-	mm->_y = WINDOW_WIDTH - y;
-	GL::DrawPolygon(mm->polygon, mm->polygon2);
+	mm->_y = y;
+	GL::DrawPolygons(mm->polygons, -1, -1, -1);
 }
 
 //=====================================================
 //private
-void Manager::NewVerticeAndEdge(GL::Polygon *polygon, int x, int y)
+void Manager::NewVertexAndEdge(int x, int y)
 {
+	GL::Polygon *p;
+	if (polygons.size() == 0)
+		p = nullptr;
+	else
+		p = polygons[polygons.size() - 1];
+	//if (polygon == nullptr)
+	//	*polygon = GL::Polygon();
 	//GL::Polygon* polygon = getInstance()->polygon;
-	if (polygon->VertCount() > 0)
-		if ((highlightVertice==0) && (!polygon->IsLooped()))
+	if (p != nullptr)
+	{
+		if ((p->VertCount() > 0) && (highlightVertice == 0) && (highlightPolygon == (polygons.size() - 1)))
 		{
-			polygon->Loop();
-			GL::DrawPolygon(getInstance()->polygon, getInstance()->polygon2);
+			if (p->Loop())
+			{
+				GL::DrawPolygons(polygons, -1, -1, -1);
+				return;
+			}
+		}
+		else if (!(p->IsLooped()))
+		{
+			p->AddVertex(x, y);
+			GL::DrawPolygons(polygons, -1, -1, -1);
 			return;
 		}
+	}
+	//else
+	//{
+	GL::Polygon* pp = new GL::Polygon();
+	polygons.push_back(pp);
+	polygons[polygons.size() - 1]->AddVertex(x, y);
+	//}
 
-	if (polygon->CheckMouseNearVertice(x, y) != -1)
+	/*if (polygon->CheckMouseNearVertice(x, y) != -1)
 	{
 		return;
-	}
-	polygon->AddVertex(x, y);
-	if (polygon->VertCount() > 1)
-		GL::DrawPolygon(getInstance()->polygon, getInstance()->polygon2);
+	}*/
+
+	//if (polygon->VertCount() > 1)
+	GL::DrawPolygons(polygons, -1, -1, -1);
 }
 
 bool Manager::CheckVertices(int x, int y)
 {
-	int v = polygon->CheckMouseNearVertice(x, y);
+	int v = -1;
+	int p = -1;
+	for (int i = 0; i < polygons.size(); i++)
+	{
+		v = polygons[i]->CheckMouseNearVertice(x, y);
+		if (-1 != v)
+		{
+			p = i;
+			break;
+		}
+	}
 	if (v == -1)
 	{
 		if (highlightVertice != -1)
 		{
 			highlightVertice = -1;
-			GL::DrawPolygon(polygon, getInstance()->polygon2, highlightVertice, highlightEdge);
+			highlightPolygon = -1;
 		}
+		GL::DrawPolygons(polygons, highlightPolygon, highlightVertice, highlightEdge);
 		return false;
 	}
-	else if (highlightVertice != v)
+	if ((highlightVertice != v) || (highlightPolygon != p))
 	{
 		highlightVertice = v;
-		GL::DrawPolygon(polygon, getInstance()->polygon2, highlightVertice, highlightEdge);
+		highlightPolygon = p;
+		GL::DrawPolygons(polygons, highlightPolygon, highlightVertice, highlightEdge);
 	}
 	return true;
 }
 void Manager::CheckEdges(int x, int y)
 {
-	int e = polygon->CheckMouseNearEdge(x, y);
+	int e = -1;
+	int p = -1;
+	for (int i = 0; i < polygons.size(); i++)
+	{
+		if (-1 != (e = polygons[i]->CheckMouseNearEdge(x, y)))
+		{
+			p = i;
+			break;
+		}
+	}
 	if (e == -1)
 	{
 		if (highlightEdge != -1)
 		{
 			highlightEdge = -1;
-			GL::DrawPolygon(polygon, getInstance()->polygon2, highlightVertice, highlightEdge);
+			highlightPolygon = -1;
+			GL::DrawPolygons(polygons, highlightPolygon, highlightVertice, highlightEdge);
 		}
 	}
-	else if (highlightEdge != e)
+	else if ((highlightEdge != e) || (highlightPolygon != p))
 	{
 		highlightEdge = e;
-		GL::DrawPolygon(polygon, getInstance()->polygon2, highlightVertice, highlightEdge);
+		highlightPolygon = p;
+		GL::DrawPolygons(polygons, highlightPolygon, highlightVertice, highlightEdge);
 	}
 }
