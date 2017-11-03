@@ -47,10 +47,17 @@ void Manager::mouseFunc(int button, int state, int x, int y)
 		//GL::Polygon* polygon = mm->polygon;
 		//GL::Polygon* polygon2 = mm->polygon2;
 		vector<GL::Polygon*> p = mm->polygons;
-		if (mm->highlightVertice != -1)
+
+		//loop
+		if (mm->highlightVertice == 0)
 		{
-			mm->polygons[mm->highlightPolygon]->MoveVertex(mm->highlightVertice, x, y);
+			if (mm->polygons[mm->highlightPolygon]->Loop())
+			{
+				GL::DrawPolygons(mm->polygons, mm->highlightPolygon, mm->highlightVertice, -1);
+				return;
+			}
 		}
+		//move polygon
 		for (int i = 0; i < p.size(); i++)
 		{
 			if (p[i]->IsInside(x, y))
@@ -58,6 +65,7 @@ void Manager::mouseFunc(int button, int state, int x, int y)
 				mm->_nr = i;
 				break;
 			}
+			mm->_nr = -1;
 		}
 		if (-1 != mm->_nr)
 		{
@@ -65,10 +73,10 @@ void Manager::mouseFunc(int button, int state, int x, int y)
 			mm->_x = x;
 			mm->_y = y;
 		}
-		else
-		{
+		else if(mm->highlightVertice == -1)
 			mm->NewVertexAndEdge(x, y);
-		}
+		else
+			mm->polygons[mm->highlightPolygon]->MoveVertex(mm->highlightVertice, x, y);
 	}
 }
 
