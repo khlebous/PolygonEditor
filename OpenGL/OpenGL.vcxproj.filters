@@ -22,14 +22,14 @@
     <Filter Include="GraphicsLibrary\Point">
       <UniqueIdentifier>{63b69871-80f5-4e2d-8ec0-e69ca2fbff7c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GraphicsLibrary\Vertice">
-      <UniqueIdentifier>{ab2a087e-ebd9-498e-8e1c-c38b316d4841}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GraphicsLibrary\LineCoefficient">
       <UniqueIdentifier>{888d2d0a-9039-481e-a716-37a78ba96861}</UniqueIdentifier>
     </Filter>
     <Filter Include="GraphicsLibrary\Manager">
       <UniqueIdentifier>{4daad2d5-22a1-41ab-a1a0-2824cd3328a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GraphicsLibrary\Vertex">
+      <UniqueIdentifier>{ab2a087e-ebd9-498e-8e1c-c38b316d4841}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -46,7 +46,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Vertex.cpp">
-      <Filter>GraphicsLibrary\Vertice</Filter>
+      <Filter>GraphicsLibrary\Vertex</Filter>
     </ClCompile>
     <ClCompile Include="Manager.cpp">
       <Filter>GraphicsLibrary\Manager</Filter>
@@ -66,7 +66,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Vertex.h">
-      <Filter>GraphicsLibrary\Vertice</Filter>
+      <Filter>GraphicsLibrary\Vertex</Filter>
     </ClInclude>
     <ClInclude Include="Manager.h">
       <Filter>GraphicsLibrary\Manager</Filter>
@@ -79,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="Point.h">
       <Filter>GraphicsLibrary\Point</Filter>
+    </ClInclude>
+    <ClInclude Include="AET.h">
+      <Filter>GraphicsLibrary</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

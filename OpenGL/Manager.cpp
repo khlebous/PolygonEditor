@@ -44,8 +44,6 @@ void Manager::mouseFunc(int button, int state, int x, int y)
 		y = WINDOW_WIDTH - y;
 		glutMotionFunc(Manager::motionFuncLeft);
 		Manager* mm = getInstance();
-		//GL::Polygon* polygon = mm->polygon;
-		//GL::Polygon* polygon2 = mm->polygon2;
 		vector<GL::Polygon*> p = mm->polygons;
 
 		//loop
@@ -237,12 +235,9 @@ void Manager::NewVertexAndEdge(int x, int y)
 		p = nullptr;
 	else
 		p = polygons[polygons.size() - 1];
-	//if (polygon == nullptr)
-	//	*polygon = GL::Polygon();
-	//GL::Polygon* polygon = getInstance()->polygon;
 	if (p != nullptr)
 	{
-		if ((p->VertCount() > 0) && (highlightVertice == 0) && (highlightPolygon == (polygons.size() - 1)))
+		/*if ((p->VertCount() > 0) && (highlightVertice == 0) && (highlightPolygon == (polygons.size() - 1)))
 		{
 			if (p->Loop())
 			{
@@ -250,7 +245,8 @@ void Manager::NewVertexAndEdge(int x, int y)
 				return;
 			}
 		}
-		else if (!(p->IsLooped()))
+		else */
+		if (!(p->IsLooped()))
 		{
 			p->AddVertex(x, y);
 			GL::DrawPolygons(polygons, -1, -1, -1);

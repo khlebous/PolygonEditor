@@ -126,6 +126,7 @@
     <ClCompile Include="Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AET.h" />
     <ClInclude Include="ExternVariables.h" />
     <ClInclude Include="GraphicsLibrary.h" />
     <ClInclude Include="LineCoefficient.h" />

@@ -1,10 +1,98 @@
 #include"GraphicsLibrary.h"
+#include <algorithm>  
+#include "AET.h"
+
+struct less_than_key
+{
+	inline bool operator() (const GL::Vertex& struct1, const GL::Vertex& struct2)
+	{
+		return (struct1.GetY() < struct2.GetY());
+	}
+};
+void GL::FillPolygon(GL::Polygon * p)
+{
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glPointSize(1);
+	glBegin(GL_POINTS);
+	vector<GL::Vertex> v = p->GetVertices();
+	int size = v.size();
+	for (int i = 0; i < size; i++)
+		v[i].nr = i;
+	std::sort(v.begin(), v.end(), less_than_key());
+	int* indexes = new int[size];
+	//int indexes[3];
+	for (int i = 0; i < v.size(); i++)
+		indexes[i] = v[i].nr;
+	v = p->GetVertices();
+	int ymin = v[indexes[0]].GetY();
+	int ymax = v[indexes[size - 1]].GetY();
+	vector<GL::Vertex> vPrev = vector<GL::Vertex>();
+	vPrev.push_back(v[indexes[0]]);
+	vector<GL::AET> AET = vector<GL::AET>();
+	for (int k = ymin + 1; k < ymax; k++)
+	{
+		for (int i = 0; i < vPrev.size(); i++)
+		{
+			GL::Vertex v_prev = v[indexes[(i - 1 + size) % size]];
+			if (v_prev.GetY() >= vPrev[i].GetY())
+				AET.push_back(GL::AET(vPrev[i],v_prev));
+			else //(v_prev.GetY() < vPrev[i].GetY())
+			{
+				int j = 0;
+				for (j = 0; j < AET.size(); j++)
+				{
+					if ((v_prev == AET[i].v1) && (vPrev[i] == AET[i].v2) || 
+						(v_prev == AET[i].v2) && (vPrev[i] == AET[i].v1))
+						break;
+				}
+				AET.erase(AET.begin() + j);
+			}
+
+			GL::Vertex v_next = v[indexes[(i + 1) % size]];
+			if (v_next.GetY() >= vPrev[i].GetY())
+				AET.push_back(GL::AET(vPrev[i],v_next));
+			else //(v_prev.GetY() < vPrev[i].GetY())
+			{
+				int j = 0;
+				for (j = 0; j < AET.size(); j++)
+				{
+					if ((v_next == AET[i].v1) && (vPrev[i] == AET[i].v2) ||
+						(v_next == AET[i].v2) && (vPrev[i] == AET[i].v1))
+						break;
+				}
+				AET.erase(AET.begin() + j);
+			}
+			std::sort(AET.begin(), AET.end());
+			for (int l = 0; l < AET.size(); l++)
+			{
+				
+				int cos = AET[l].x;
+				while (cos < AET[(l + 1)%AET.size()].x)
+					glVertex2i(cos++, k);
+				
+			}
+			for (int l = 0; l < AET.size(); l++)
+			{
+				AET[l].x += AET[l].m;
+			}
+		}
+
+	}
+	glEnd();
+	glFlush();
+//	delete indexes;
+}
+
 void GL::DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, int highlightE)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	for (int i = 0; i < p.size(); i++)
+	{
 		GL::DrawPolygon(p[i]);
+		if (p[i]->IsLooped())
+			GL::FillPolygon(p[i]);
+	}
 
 	if (highlightP != -1)
 	{
@@ -17,7 +105,6 @@ void GL::DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, in
 
 	glutSwapBuffers();
 }
-
 void GL::DrawPolygon(GL::Polygon * p)
 {
 	vector<GL::Vertex> vertices = p->GetVertices();
