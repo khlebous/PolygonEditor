@@ -11,6 +11,7 @@ struct less_than_key
 };
 void GL::FillPolygon(GL::Polygon * p)
 {
+	//glColor3f(1.0f, 1.0f, 1.0f);
 	glColor3f(0.0f, 0.5f, 1.0f);
 	glPointSize(1);
 	glBegin(GL_POINTS);
@@ -29,7 +30,7 @@ void GL::FillPolygon(GL::Polygon * p)
 	int ymax = v[indexes[size - 1]].GetY();
 	vector<GL::AET> AET = vector<GL::AET>();
 	int vIndex = 0;
-	for (int k = ymin + 1; k < ymax; k++)
+	for (int k = ymin; k <= ymax; k++)
 	{
 		vector<GL::Vertex> vPrev = vector<GL::Vertex>();
 		while (v[indexes[vIndex]].GetY() == k - 1)
@@ -37,9 +38,9 @@ void GL::FillPolygon(GL::Polygon * p)
 		for (int i = 0; i < vPrev.size(); i++)
 		{
 			GL::Vertex v_prev = v[(vPrev[i].nr - 1 + size) % size];
-			if (v_prev.GetY() >= vPrev[i].GetY())
+			if (v_prev.GetY() > vPrev[i].GetY())
 				AET.push_back(GL::AET(v_prev, vPrev[i]));
-			else //(v_prev.GetY() < vPrev[i].GetY())
+			else if (v_prev.GetY() < vPrev[i].GetY())
 			{
 				int j = 0;
 				for (j = 0; j < AET.size(); j++)
@@ -52,9 +53,9 @@ void GL::FillPolygon(GL::Polygon * p)
 			}
 
 			GL::Vertex v_next = v[(vPrev[i].nr + 1) % size];
-			if (v_next.GetY() >= vPrev[i].GetY())
-				AET.push_back(GL::AET(v_next,vPrev[i]));
-			else //(v_prev.GetY() < vPrev[i].GetY())
+			if (v_next.GetY() > vPrev[i].GetY())
+				AET.push_back(GL::AET(v_next, vPrev[i]));
+			else if (v_next.GetY() < vPrev[i].GetY())
 			{
 				int j = 0;
 				for (j = 0; j < AET.size(); j++)
@@ -68,12 +69,12 @@ void GL::FillPolygon(GL::Polygon * p)
 		}
 		vPrev.clear();
 		std::sort(AET.begin(), AET.end());
-		for (int l = 0; l < AET.size(); l+=2)
+		for (int l = 0; l < AET.size(); l += 2)
 		{
 
 			int cos = AET[l].x;
-			while (cos < AET[l + 1].x)
-				glVertex2i(cos++, k);
+			while (cos <= (int)round(AET[l + 1].x))
+				glVertex2i((int)round(cos++), (int)round(k));
 
 		}
 		for (int l = 0; l < AET.size(); l++)
@@ -83,7 +84,14 @@ void GL::FillPolygon(GL::Polygon * p)
 	}
 	glEnd();
 	glFlush();
-	//	delete indexes;
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glPointSize(4);
+	glBegin(GL_POINTS);
+	for (int q=0; q < size; q++)
+		glVertex2i(v[q].GetX(), v[q].GetY());
+	glEnd();
+	glFlush();
+		delete indexes;
 }
 
 void GL::DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, int highlightE)
@@ -92,9 +100,10 @@ void GL::DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, in
 
 	for (int i = 0; i < p.size(); i++)
 	{
-		GL::DrawPolygon(p[i]);
 		if (p[i]->IsLooped())
 			GL::FillPolygon(p[i]);
+		else
+			GL::DrawPolygon(p[i]);
 	}
 
 	if (highlightP != -1)
