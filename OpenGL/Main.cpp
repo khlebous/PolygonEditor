@@ -5,7 +5,8 @@
 using namespace std;
 const int WINDOW_HEIGHT = 600;
 const int WINDOW_WIDTH = 300;
-
+void display() {
+}
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
@@ -20,6 +21,6 @@ int main(int argc, char** argv)
 	glutMouseFunc(Manager::mouseFunc);
 	glutPassiveMotionFunc(Manager::mousePassiveFunc);
 	glutKeyboardUpFunc(Manager::keyboardFunc);
-
+	glutDisplayFunc(display);
 	glutMainLoop();
 }

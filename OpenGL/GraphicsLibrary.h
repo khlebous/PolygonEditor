@@ -6,6 +6,8 @@ using namespace std;
 
 namespace GL
 {
+	void FillPolygon(GL::Polygon* p);
+	// L1
 	void DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, int highlightE);
 	void DrawPolygon(GL::Polygon* p);
 
@@ -19,5 +21,4 @@ namespace GL
 	void DrawVertSign(GL::Vertex v1, GL::Vertex v2);
 	void DrawHorizSign(GL::Vertex v1, GL::Vertex v2);
 	void DrawAngleSign(GL::Vertex v1);
-
 }

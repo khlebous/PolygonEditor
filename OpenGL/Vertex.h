@@ -11,7 +11,9 @@ namespace GL
 		int x;
 		int y;
 
+
 	public:
+		int nr;
 		Vertex();
 		~Vertex();
 		Vertex(int _x, int _y);
