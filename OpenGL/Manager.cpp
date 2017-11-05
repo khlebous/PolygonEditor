@@ -8,6 +8,12 @@ Manager* Manager::instance = NULL;
 Manager::Manager()
 {
 	polygons = vector<GL::Polygon*>();
+	GL::Polygon* pp = new GL::Polygon();
+	/*pp->AddVertex(200, 150);
+	pp->AddVertex(300, 200);
+	pp->AddVertex(400, 50);
+	pp->AddVertex(240,15);
+	polygons.push_back(pp);*/
 	//polygon = new GL::Polygon;
 	//polygon2 = new GL::Polygon;
 	highlightVertice = -1;

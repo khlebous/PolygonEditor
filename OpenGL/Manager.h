@@ -29,8 +29,8 @@ public:
 	static void motionFuncLeft(int x, int y);
 	static void motionFuncRight(int x, int y);
 
-private:
 	void NewVertexAndEdge(int x, int y);
+private:
 	bool CheckVertices(int x, int y);
 	void CheckEdges(int x, int y);
 };

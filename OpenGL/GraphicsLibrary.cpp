@@ -11,7 +11,7 @@ struct less_than_key
 };
 void GL::FillPolygon(GL::Polygon * p)
 {
-	glColor3f(1.0f, 1.0f, 1.0f);
+	glColor3f(0.0f, 0.5f, 1.0f);
 	glPointSize(1);
 	glBegin(GL_POINTS);
 	vector<GL::Vertex> v = p->GetVertices();
@@ -20,67 +20,70 @@ void GL::FillPolygon(GL::Polygon * p)
 		v[i].nr = i;
 	std::sort(v.begin(), v.end(), less_than_key());
 	int* indexes = new int[size];
-	//int indexes[3];
 	for (int i = 0; i < v.size(); i++)
 		indexes[i] = v[i].nr;
 	v = p->GetVertices();
+	for (int i = 0; i < size; i++)
+		v[i].nr = i;
 	int ymin = v[indexes[0]].GetY();
 	int ymax = v[indexes[size - 1]].GetY();
-	vector<GL::Vertex> vPrev = vector<GL::Vertex>();
-	vPrev.push_back(v[indexes[0]]);
 	vector<GL::AET> AET = vector<GL::AET>();
+	int vIndex = 0;
 	for (int k = ymin + 1; k < ymax; k++)
 	{
+		vector<GL::Vertex> vPrev = vector<GL::Vertex>();
+		while (v[indexes[vIndex]].GetY() == k - 1)
+			vPrev.push_back(v[indexes[vIndex++]]);
 		for (int i = 0; i < vPrev.size(); i++)
 		{
-			GL::Vertex v_prev = v[indexes[(i - 1 + size) % size]];
+			GL::Vertex v_prev = v[(vPrev[i].nr - 1 + size) % size];
 			if (v_prev.GetY() >= vPrev[i].GetY())
-				AET.push_back(GL::AET(vPrev[i],v_prev));
+				AET.push_back(GL::AET(v_prev, vPrev[i]));
 			else //(v_prev.GetY() < vPrev[i].GetY())
 			{
 				int j = 0;
 				for (j = 0; j < AET.size(); j++)
 				{
-					if ((v_prev == AET[i].v1) && (vPrev[i] == AET[i].v2) || 
-						(v_prev == AET[i].v2) && (vPrev[i] == AET[i].v1))
+					if ((v_prev == AET[j].v1) && (vPrev[i] == AET[j].v2) ||
+						(v_prev == AET[j].v2) && (vPrev[i] == AET[j].v1))
 						break;
 				}
 				AET.erase(AET.begin() + j);
 			}
 
-			GL::Vertex v_next = v[indexes[(i + 1) % size]];
+			GL::Vertex v_next = v[(vPrev[i].nr + 1) % size];
 			if (v_next.GetY() >= vPrev[i].GetY())
-				AET.push_back(GL::AET(vPrev[i],v_next));
+				AET.push_back(GL::AET(v_next,vPrev[i]));
 			else //(v_prev.GetY() < vPrev[i].GetY())
 			{
 				int j = 0;
 				for (j = 0; j < AET.size(); j++)
 				{
-					if ((v_next == AET[i].v1) && (vPrev[i] == AET[i].v2) ||
-						(v_next == AET[i].v2) && (vPrev[i] == AET[i].v1))
+					if (((v_next == AET[j].v1) && (vPrev[i] == AET[j].v2)) ||
+						((v_next == AET[j].v2) && (vPrev[i] == AET[j].v1)))
 						break;
 				}
 				AET.erase(AET.begin() + j);
-			}
-			std::sort(AET.begin(), AET.end());
-			for (int l = 0; l < AET.size(); l++)
-			{
-				
-				int cos = AET[l].x;
-				while (cos < AET[(l + 1)%AET.size()].x)
-					glVertex2i(cos++, k);
-				
-			}
-			for (int l = 0; l < AET.size(); l++)
-			{
-				AET[l].x += AET[l].m;
 			}
 		}
+		vPrev.clear();
+		std::sort(AET.begin(), AET.end());
+		for (int l = 0; l < AET.size(); l+=2)
+		{
 
+			int cos = AET[l].x;
+			while (cos < AET[l + 1].x)
+				glVertex2i(cos++, k);
+
+		}
+		for (int l = 0; l < AET.size(); l++)
+		{
+			AET[l].x += AET[l].m;
+		}
 	}
 	glEnd();
 	glFlush();
-//	delete indexes;
+	//	delete indexes;
 }
 
 void GL::DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, int highlightE)
