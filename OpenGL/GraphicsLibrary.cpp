@@ -12,7 +12,7 @@ struct less_than_key
 void GL::FillPolygon(GL::Polygon * p)
 {
 	//glColor3f(1.0f, 1.0f, 1.0f);
-	glColor3f(0.0f, 0.5f, 1.0f);
+	glColor3f(0.33f, 0.36f,0.36f);
 	glPointSize(1);
 	glBegin(GL_POINTS);
 	vector<GL::Vertex> v = p->GetVertices();
@@ -71,7 +71,6 @@ void GL::FillPolygon(GL::Polygon * p)
 		std::sort(AET.begin(), AET.end());
 		for (int l = 0; l < AET.size(); l += 2)
 		{
-
 			int cos = AET[l].x;
 			while (cos <= (int)round(AET[l + 1].x))
 				glVertex2i((int)round(cos++), (int)round(k));
@@ -84,19 +83,21 @@ void GL::FillPolygon(GL::Polygon * p)
 	}
 	glEnd();
 	glFlush();
-	glColor3f(1.0f, 1.0f, 1.0f);
+	glColor3f(0.13f, 0.168f, 0.18f);
+
+	//glColor3f(1.0f, 1.0f, 1.0f);
 	glPointSize(4);
 	glBegin(GL_POINTS);
 	for (int q=0; q < size; q++)
 		glVertex2i(v[q].GetX(), v[q].GetY());
 	glEnd();
-	glFlush();
+	//glFlush();
 		delete indexes;
 }
 
 void GL::DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, int highlightE)
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT);
 
 	for (int i = 0; i < p.size(); i++)
 	{
@@ -115,7 +116,7 @@ void GL::DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, in
 				p[highlightP]->GetVertex(highlightE + 1));
 	}
 
-	glutSwapBuffers();
+	//glutSwapBuffers();
 }
 void GL::DrawPolygon(GL::Polygon * p)
 {
@@ -155,17 +156,18 @@ void GL::DrawPolygon(GL::Polygon * p)
 
 void GL::DrawVertice(GL::Vertex v)
 {
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glPointSize(4);
+	glColor3f(0.13f, 0.168f, 0.18f);
+	glPointSize(6);
 	glBegin(GL_POINTS);
 	glVertex2i(v.GetX(), v.GetY());
 	glEnd();
-	glFlush();
+	//glFlush();
 }
 void GL::DrawHighlightVertice(GL::Vertex v)
 {
 	glColor3f(1.0f, 0.0f, 0.0f);
-	glPointSize(4);
+	//glColor3f(0.337f, 0.35f, 0.627f);
+	glPointSize(6);
 	glBegin(GL_POINTS);
 	glVertex2i(v.GetX(), v.GetY());
 	glEnd();
@@ -181,12 +183,13 @@ void GL::DrawEdge(GL::Vertex v1, GL::Vertex v2)
 	for (GL::Point& p : edge)
 		glVertex2i(p.x, p.y);
 	glEnd();
-	glFlush();
+	//glFlush();
 }
 void GL::DrawHighlightEdge(GL::Vertex v1, GL::Vertex v2)
 {
 	vector<GL::Point> edge = CalculateLinePixels(v1, v2);
-	glColor3f(1.0f, 0.0f, 0.0f);
+	glColor3f(0.13f, 0.168f, 0.18f);
+	//glColor3f(1.0f, 0.0f, 0.0f);
 	glPointSize(1);
 	glBegin(GL_POINTS);
 	for (GL::Point& p : edge)
