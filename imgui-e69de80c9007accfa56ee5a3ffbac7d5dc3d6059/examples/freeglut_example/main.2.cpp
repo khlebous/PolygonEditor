@@ -1,6 +1,7 @@
-﻿//#include <GL/glut.h> 
+//#include <GL/glut.h> 
 //#include "imgui\imgui.h"
 //#include <stdlib.h> 
+//#include "Manager.h"
 #include "ExternVariables.h"
 using namespace std;
 const int WINDOW_HEIGHT = 600;
@@ -15,11 +16,10 @@ const int WINDOW_WIDTH = 300;
 #include "imgui_impl_glut.h"
 
 #include <iostream>
-#include "Manager.h"
 using namespace std;
 
-unsigned int screenWidth = 1200;
-unsigned int screenHeight = 600;
+unsigned int screenWidth = 1280;
+unsigned int screenHeight = 720;
 bool show_test_window = true;
 bool show_another_window = false;
 
@@ -30,37 +30,26 @@ void drawGUI()
 	// 1. Show a simple window
 	// Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
 	{
-		static ImVec4 color = ImColor(114, 144, 154, 200);
-		static bool hdr = false;
-		static bool alpha_preview = true;
-		static bool alpha_half_preview = false;
-		static bool options_menu = true;
-		int misc_flags = (hdr ? ImGuiColorEditFlags_HDR : 0) | (alpha_half_preview ? ImGuiColorEditFlags_AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0)) | (options_menu ? 0 : ImGuiColorEditFlags_NoOptions);
 		static float f = 0.0f;
-		ImGui::SetWindowPos(ImVec2(0, 0));
-		ImGui::SetWindowSize(ImVec2(300, 600));
-		ImGui::Text("Color of light source");
-		ImGui::ColorEdit3("MyColor##1", (float*)&color, misc_flags);
-		//ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-		//if (ImGui::Button("Settings Window")) show_test_window ^= 1;
-		//if (ImGui::Button("Another Window")) show_another_window ^= 1;
-		//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		ImGui::Text("Hello, world!");
+		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+		if (ImGui::Button("Test Window")) show_test_window ^= 1;
+		if (ImGui::Button("Another Window")) show_another_window ^= 1;
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	}
 
 	// 2. Show another simple window, this time using an explicit Begin/End pair
-	/*if (show_another_window)
+	if (show_another_window)
 	{
 		ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Another Window", &show_another_window);
 		ImGui::Text("Hello");
 		ImGui::End();
-	}*/
+	}
 
 	// 3. Show the ImGui test window. Most of the sample code is in ImGui::ShowTestWindow()
-	//if (show_test_window)
+	if (show_test_window)
 	{
-		ImGui::SetNextWindowPos(ImVec2(0, 100));
-		ImGui::SetNextWindowSize(ImVec2(300, 500));
 		ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiSetCond_FirstUseEver);
 		ImGui::ShowTestWindow(&show_test_window);
 	}
@@ -189,13 +178,9 @@ int main(int argc, char **argv)
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE | GLUT_MULTISAMPLE);
 
-	glutInitWindowSize(screenWidth, screenHeight);
-	glutInitWindowPosition(50, 50);
-	glutCreateWindow("PolygonEditor");
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluOrtho2D(0.0, WINDOW_HEIGHT, 0.0, WINDOW_WIDTH);
-	Manager* m = Manager::getInstance();
+	glutInitWindowSize(1280, 720);
+	glutInitWindowPosition(200, 200);
+	glutCreateWindow("imgui FreeGlut Example");
 
 	// callback
 	glutDisplayFunc(drawScene);
@@ -204,11 +189,6 @@ int main(int argc, char **argv)
 	glutMouseFunc(mouseCallback);
 	glutMotionFunc(mouseDragCallback);
 	glutPassiveMotionFunc(mouseMoveCallback);
-
-	/*glutMouseFunc(Manager::mouseFunc);
-	glutPassiveMotionFunc(Manager::mousePassiveFunc);
-	glutKeyboardUpFunc(Manager::keyboardFunc);
-	glutDisplayFunc(drawScene);*/
 
 	init();
 	glutMainLoop();

@@ -1,19 +1,29 @@
+#include "GL/glew.h"
+#include "GL/freeglut.h"
+
+#include "IMGUI/imgui.h"
+#include "imgui_impl_glut.h"
+
 #include "ExternVariables.h"
 #include "Manager.h"
 #include "GraphicsLibrary.h"
 #include <iostream>
 using namespace std;
+unsigned int screenWidth2 = 1200;
+unsigned int screenHeight2 = 600;
+bool show_test_window2 = true;
+
 Manager* Manager::instance = NULL;
 
 Manager::Manager()
 {
 	polygons = vector<GL::Polygon*>();
 	GL::Polygon* pp = new GL::Polygon();
-	pp->AddVertex(200, 150);
+	/*pp->AddVertex(200, 150);
 	pp->AddVertex(300, 200);
 	pp->AddVertex(400, 50);
 	pp->AddVertex(240,15);
-	polygons.push_back(pp);
+	polygons.push_back(pp);*/
 	highlightVertice = -1;
 	highlightEdge = -1;
 	highlightPolygon = -1;
@@ -84,6 +94,7 @@ void Manager::mouseFunc(int button, int state, int x, int y)
 
 void Manager::mousePassiveFunc(int x, int y)
 {
+	y = WINDOW_WIDTH - y;
 	Manager* mm = getInstance();
 	if (!mm->CheckVertices(x, WINDOW_WIDTH - y))
 		mm->CheckEdges(x, WINDOW_WIDTH - y);
@@ -331,4 +342,34 @@ void Manager::CheckEdges(int x, int y)
 		highlightPolygon = p;
 		GL::DrawPolygons(polygons, highlightPolygon, highlightVertice, highlightEdge);
 	}
+}
+
+void Manager::drawGUI()
+{
+	ImGui_ImplGLUT_NewFrame(screenWidth2, screenHeight2);
+
+	// 1. Show a simple window
+	// Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
+	{
+		static ImVec4 color = ImColor(114, 144, 154, 200);
+		static bool hdr = false;
+		static bool alpha_preview = true;
+		static bool alpha_half_preview = false;
+		static bool options_menu = true;
+		int misc_flags = (hdr ? ImGuiColorEditFlags_HDR : 0) | (alpha_half_preview ? ImGuiColorEditFlags_AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0)) | (options_menu ? 0 : ImGuiColorEditFlags_NoOptions);
+		static float f = 0.0f;
+		ImGui::SetWindowPos(ImVec2(0, 0));
+		ImGui::SetWindowSize(ImVec2(300, 600));
+		ImGui::Text("Color of light source");
+		ImGui::ColorEdit3("MyColor##1", (float*)&color, misc_flags);
+	}
+
+	{
+		ImGui::SetNextWindowPos(ImVec2(0, 100));
+		ImGui::SetNextWindowSize(ImVec2(300, 500));
+		ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiSetCond_FirstUseEver);
+		ImGui::ShowTestWindow(&show_test_window2);
+	}
+
+	ImGui::Render();
 }

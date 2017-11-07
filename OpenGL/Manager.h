@@ -33,4 +33,6 @@ public:
 private:
 	bool CheckVertices(int x, int y);
 	void CheckEdges(int x, int y);
+
+	void drawGUI();
 };

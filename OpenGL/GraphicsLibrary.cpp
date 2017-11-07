@@ -71,7 +71,6 @@ void GL::FillPolygon(GL::Polygon * p)
 		std::sort(AET.begin(), AET.end());
 		for (int l = 0; l < AET.size(); l += 2)
 		{
-
 			int cos = AET[l].x;
 			while (cos <= (int)round(AET[l + 1].x))
 				glVertex2i((int)round(cos++), (int)round(k));
