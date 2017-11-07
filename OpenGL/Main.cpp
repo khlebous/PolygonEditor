@@ -169,7 +169,7 @@ void mouseMoveCallback(int x, int y)
 // initialize ogl and imgui
 void init()
 {
-	//glEnable(GL_MULTISAMPLE);
+	glEnable(GL_MULTISAMPLE);
 	glClearColor(0.447f, 0.565f, 0.604f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -180,8 +180,8 @@ int main(int argc, char **argv)
 {
 	glutInit(&argc, argv);
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
-	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE | GLUT_MULTISAMPLE);
-
+	//glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE );
+	glutInitDisplayMode(GLUT_DOUBLE);
 	glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	glutInitWindowPosition(50, 50);
 	glutCreateWindow("PolygonEditor");
@@ -196,7 +196,7 @@ int main(int argc, char **argv)
 	glutPassiveMotionFunc(Manager::mousePassiveFunc);
 	//glutReshapeFunc(reshape);
 	//glutKeyboardFunc(keyboardCallback);
-	
+
 	//glutDisplayFunc(drawScene);
 
 	/**/
