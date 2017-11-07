@@ -3,8 +3,8 @@
 //#include <stdlib.h> 
 #include "ExternVariables.h"
 using namespace std;
+const int WINDOW_WIDTH = 1200;
 const int WINDOW_HEIGHT = 600;
-const int WINDOW_WIDTH = 300;
 // ImGui - standalone example application for Glut + OpenGL, using programmable pipeline
 // If you are new to ImGui, see examples/README.txt and documentation at the top of imgui.cpp.
 
@@ -18,14 +18,14 @@ const int WINDOW_WIDTH = 300;
 #include "Manager.h"
 using namespace std;
 
-unsigned int screenWidth = 1200;
-unsigned int screenHeight = 600;
+//unsigned int screenWidth = 1200;
+//unsigned int screenHeight = 600;
 bool show_test_window = true;
 bool show_another_window = false;
 
 void drawGUI()
 {
-	ImGui_ImplGLUT_NewFrame(screenWidth, screenHeight);
+	ImGui_ImplGLUT_NewFrame(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	// 1. Show a simple window
 	// Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
@@ -78,7 +78,6 @@ void drawScene()
 
 	glutSwapBuffers();
 }
-
 bool keyboardEvent(unsigned char nChar, int nX, int nY)
 {
 	ImGuiIO& io = ImGui::GetIO();
@@ -87,7 +86,6 @@ bool keyboardEvent(unsigned char nChar, int nX, int nY)
 
 	return true;
 }
-
 bool mouseEvent(int button, int state, int x, int y)
 {
 	ImGuiIO& io = ImGui::GetIO();
@@ -117,30 +115,28 @@ bool mouseEvent(int button, int state, int x, int y)
 
 	return true;
 }
-
-void reshape(int w, int h)
-{
-	screenWidth = w;
-	screenHeight = h;
-
-	glViewport(0, 0, screenWidth, screenHeight);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	if (screenWidth > screenHeight)
-	{
-		float fWidth(screenWidth / screenHeight);
-		float fOffset((fWidth - 1.0f)*0.5f);
-		gluOrtho2D(0 - fOffset, fWidth - fOffset, 1.0f, 0.0f);
-	}
-	else
-	{
-		float fHeight(screenWidth / screenHeight);
-		float fOffset((fHeight - 1.0f)*0.5f);
-		gluOrtho2D(0, 1.0f, fHeight - fOffset, 0 - fOffset);
-	}
-	glMatrixMode(GL_MODELVIEW);
-}
-
+//void reshape(int w, int h)
+//{
+//	WINDOW_WIDTH = w;
+//	screenHeight = h;
+//
+//	glViewport(0, 0, screenWidth, screenHeight);
+//	glMatrixMode(GL_PROJECTION);
+//	glLoadIdentity();
+//	if (screenWidth > screenHeight)
+//	{
+//		float fWidth(screenWidth / screenHeight);
+//		float fOffset((fWidth - 1.0f)*0.5f);
+//		gluOrtho2D(0 - fOffset, fWidth - fOffset, 1.0f, 0.0f);
+//	}
+//	else
+//	{
+//		float fHeight(screenWidth / screenHeight);
+//		float fOffset((fHeight - 1.0f)*0.5f);
+//		gluOrtho2D(0, 1.0f, fHeight - fOffset, 0 - fOffset);
+//	}
+//	glMatrixMode(GL_MODELVIEW);
+//}
 void keyboardCallback(unsigned char nChar, int x, int y)
 {
 	if (keyboardEvent(nChar, x, y))
@@ -148,7 +144,6 @@ void keyboardCallback(unsigned char nChar, int x, int y)
 		glutPostRedisplay();
 	}
 }
-
 void mouseCallback(int button, int state, int x, int y)
 {
 	if (mouseEvent(button, state, x, y))
@@ -156,7 +151,6 @@ void mouseCallback(int button, int state, int x, int y)
 		glutPostRedisplay();
 	}
 }
-
 void mouseDragCallback(int x, int y)
 {
 	ImGuiIO& io = ImGui::GetIO();
@@ -164,7 +158,6 @@ void mouseDragCallback(int x, int y)
 
 	glutPostRedisplay();
 }
-
 void mouseMoveCallback(int x, int y)
 {
 	ImGuiIO& io = ImGui::GetIO();
@@ -176,7 +169,7 @@ void mouseMoveCallback(int x, int y)
 // initialize ogl and imgui
 void init()
 {
-	glEnable(GL_MULTISAMPLE);
+	//glEnable(GL_MULTISAMPLE);
 	glClearColor(0.447f, 0.565f, 0.604f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -189,26 +182,24 @@ int main(int argc, char **argv)
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE | GLUT_MULTISAMPLE);
 
-	glutInitWindowSize(screenWidth, screenHeight);
+	glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	glutInitWindowPosition(50, 50);
 	glutCreateWindow("PolygonEditor");
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(0.0, WINDOW_HEIGHT, 0.0, WINDOW_WIDTH);
+	gluOrtho2D(0.0, WINDOW_WIDTH, 0.0, WINDOW_HEIGHT);
 	Manager* m = Manager::getInstance();
 
 	// callback
-	glutDisplayFunc(drawScene);
-	glutReshapeFunc(reshape);
-	glutKeyboardFunc(keyboardCallback);
-	glutMouseFunc(mouseCallback);
-	glutMotionFunc(mouseDragCallback);
-	glutPassiveMotionFunc(mouseMoveCallback);
-
-	/*glutMouseFunc(Manager::mouseFunc);
+	//glutDisplayFunc(drawScene);
+	glutDisplayFunc(Manager::drawScene);
 	glutPassiveMotionFunc(Manager::mousePassiveFunc);
-	glutKeyboardUpFunc(Manager::keyboardFunc);
-	glutDisplayFunc(drawScene);*/
+	//glutReshapeFunc(reshape);
+	//glutKeyboardFunc(keyboardCallback);
+	
+	//glutDisplayFunc(drawScene);
+
+	/**/
 
 	init();
 	glutMainLoop();

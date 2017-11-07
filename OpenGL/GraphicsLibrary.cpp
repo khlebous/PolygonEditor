@@ -89,13 +89,13 @@ void GL::FillPolygon(GL::Polygon * p)
 	for (int q=0; q < size; q++)
 		glVertex2i(v[q].GetX(), v[q].GetY());
 	glEnd();
-	glFlush();
+	//glFlush();
 		delete indexes;
 }
 
 void GL::DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, int highlightE)
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT);
 
 	for (int i = 0; i < p.size(); i++)
 	{
@@ -114,7 +114,7 @@ void GL::DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, in
 				p[highlightP]->GetVertex(highlightE + 1));
 	}
 
-	glutSwapBuffers();
+	//glutSwapBuffers();
 }
 void GL::DrawPolygon(GL::Polygon * p)
 {
@@ -154,12 +154,12 @@ void GL::DrawPolygon(GL::Polygon * p)
 
 void GL::DrawVertice(GL::Vertex v)
 {
-	glColor3f(1.0f, 1.0f, 1.0f);
+	glColor3f(0.0f, 0.0f, 0.0f);
 	glPointSize(4);
 	glBegin(GL_POINTS);
 	glVertex2i(v.GetX(), v.GetY());
 	glEnd();
-	glFlush();
+	//glFlush();
 }
 void GL::DrawHighlightVertice(GL::Vertex v)
 {
@@ -180,13 +180,13 @@ void GL::DrawEdge(GL::Vertex v1, GL::Vertex v2)
 	for (GL::Point& p : edge)
 		glVertex2i(p.x, p.y);
 	glEnd();
-	glFlush();
+	//glFlush();
 }
 void GL::DrawHighlightEdge(GL::Vertex v1, GL::Vertex v2)
 {
 	vector<GL::Point> edge = CalculateLinePixels(v1, v2);
 	glColor3f(1.0f, 0.0f, 0.0f);
-	glPointSize(1);
+	glPointSize(2);
 	glBegin(GL_POINTS);
 	for (GL::Point& p : edge)
 		glVertex2i(p.x, p.y);
