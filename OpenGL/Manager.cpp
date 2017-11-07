@@ -4,13 +4,11 @@
 #include "IMGUI/imgui.h"
 #include "imgui_impl_glut.h"
 
-#include "ExternVariables.h"
+#include "global_variable.h"
 #include "Manager.h"
 #include "GraphicsLibrary.h"
 #include <iostream>
 using namespace std;
-//unsigned int screenWidth2 = 1200;
-//unsigned int screenHeight2 = 600;
 bool show_test_window2 = true;
 
 Manager* Manager::instance = NULL;
@@ -19,10 +17,9 @@ Manager::Manager()
 {
 	polygons = vector<GL::Polygon*>();
 	GL::Polygon* pp = new GL::Polygon();
-	/*pp->AddVertex(200, 150);
-	pp->AddVertex(300, 200);
-	pp->AddVertex(400, 50);*/
-	//pp->AddVertex(240,15);
+	pp->AddVertex(500, 200);
+	pp->AddVertex(300, 300);
+	pp->AddVertex(400, 500);
 	polygons.push_back(pp);
 	highlightVertice = -1;
 	highlightEdge = -1;
@@ -349,17 +346,25 @@ void Manager::drawGUI()
 	// 1. Show a simple window
 	// Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
 	{
-		static ImVec4 color = ImColor(114, 144, 154, 200);
+		static ImVec4 color = ImColor((int)(polygonFillColorR*255), (int)(polygonFillColorG*255), (int)(polygonFillColorB*255));
 		static bool hdr = false;
 		static bool alpha_preview = true;
 		static bool alpha_half_preview = false;
 		static bool options_menu = true;
 		int misc_flags = (hdr ? ImGuiColorEditFlags_HDR : 0) | (alpha_half_preview ? ImGuiColorEditFlags_AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0)) | (options_menu ? 0 : ImGuiColorEditFlags_NoOptions);
 		static float f = 0.0f;
+		static int e = 0;
+		ImGui::Text("Color of light source");
 		ImGui::SetWindowPos(ImVec2(WINDOW_WIDTH - MENU_WIDTH, 0));
 		ImGui::SetWindowSize(ImVec2(MENU_WIDTH, WINDOW_HEIGHT));
-		ImGui::Text("Color of light source");
-		ImGui::ColorEdit3("##1", (float*)&color, misc_flags);
+		ImGui::RadioButton("Pick color", &e, 0); ImGui::SameLine();
+		if (ImGui::ColorEdit3("##1", (float*)&color, misc_flags))
+		{
+			polygonFillColorR = color.x;
+			polygonFillColorG = color.y;
+			polygonFillColorB = color.z;
+		}
+		ImGui::RadioButton("Pick texture", &e, 1); ImGui::SameLine();
 	}
 
 	/*{

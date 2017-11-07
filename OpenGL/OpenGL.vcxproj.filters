@@ -72,13 +72,13 @@
     <ClCompile Include="imgui\imgui_impl_glut.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="global_variable.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsLibrary.h">
       <Filter>GraphicsLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="ExternVariables.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Vertex.h">
       <Filter>GraphicsLibrary\Vertex</Filter>
@@ -118,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="imgui\imgui_impl_glut.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="global_variable.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

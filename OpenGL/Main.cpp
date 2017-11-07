@@ -1,11 +1,33 @@
 ﻿//#include <GL/glut.h> 
 //#include "imgui\imgui.h"
 //#include <stdlib.h> 
-#include "ExternVariables.h"
+#include "global_variable.h"
+
+#pragma region global_variable
 using namespace std;
 const int WINDOW_WIDTH = 1200;
 const int WINDOW_HEIGHT = 600;
-const int MENU_WIDTH = 300;
+const int MENU_WIDTH = 350;
+
+float vertexColorR = 0.13f;
+float vertexColorG = 0.168f;
+float vertexColorB = 0.18f;
+float vertexHColorR = 1.0f;
+float vertexHColorG = 0.0f;
+float vertexHColorB = 0.0f;
+
+extern float edgeColorR= 1.0f;
+extern float edgeColorG= 1.0f;
+extern float edgeColorB= 1.0f;
+extern float edgeHColorR = 0.13f;
+extern float edgeHColorG = 0.168f;
+extern float edgeHColorB = 0.18f;
+
+extern float polygonFillColorR = 0.33f;
+extern float polygonFillColorG = 0.36f;
+extern float polygonFillColorB = 0.35f;
+#pragma endregion
+
 // ImGui - standalone example application for Glut + OpenGL, using programmable pipeline
 // If you are new to ImGui, see examples/README.txt and documentation at the top of imgui.cpp.
 
