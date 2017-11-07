@@ -5,6 +5,7 @@
 using namespace std;
 const int WINDOW_WIDTH = 1200;
 const int WINDOW_HEIGHT = 600;
+const int MENU_WIDTH = 300;
 // ImGui - standalone example application for Glut + OpenGL, using programmable pipeline
 // If you are new to ImGui, see examples/README.txt and documentation at the top of imgui.cpp.
 

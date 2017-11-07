@@ -97,16 +97,18 @@ void Manager::mousePassiveFunc(int x, int y)
 {
 	y = WINDOW_HEIGHT - y;
 	Manager* mm = getInstance();
-	if ((x > 300) && (!mm->drawingArea))
+	if ((x < WINDOW_WIDTH - MENU_WIDTH))
 	{
-		mm->drawingArea = true;
-		if (!mm->CheckVertices(x,y))
+		if ((!mm->drawingArea))
+		{
+			mm->drawingArea = true;
+			glutMouseFunc(Manager::mouseFunc);
+			glutKeyboardUpFunc(Manager::keyboardFunc);
+		}
+		if (!mm->CheckVertices(x, y))
 			mm->CheckEdges(x, y);
-		glutMouseFunc(Manager::mouseFunc);
-		//glutPassiveMotionFunc(Manager::mousePassiveFunc);
-		glutKeyboardUpFunc(Manager::keyboardFunc);
 	}
-	else if((x<300) && (mm->drawingArea))
+	else if ((x >= WINDOW_WIDTH - MENU_WIDTH) && (mm->drawingArea))
 	{
 		mm->drawingArea = false;
 		glutMouseFunc(Manager::mouseCallback);
@@ -298,14 +300,16 @@ bool Manager::CheckVertices(int x, int y)
 			highlightVertice = -1;
 			highlightPolygon = -1;
 		}
-		GL::DrawPolygons(polygons, highlightPolygon, highlightVertice, highlightEdge);
+		//GL::DrawPolygons(polygons, highlightPolygon, highlightVertice, highlightEdge);
+		glutPostRedisplay();
 		return false;
 	}
 	if ((highlightVertice != v) || (highlightPolygon != p))
 	{
 		highlightVertice = v;
+		glutPostRedisplay();
 		highlightPolygon = p;
-		GL::DrawPolygons(polygons, highlightPolygon, highlightVertice, highlightEdge);
+		//GL::DrawPolygons(polygons, highlightPolygon, highlightVertice, highlightEdge);
 	}
 	return true;
 }
@@ -352,10 +356,10 @@ void Manager::drawGUI()
 		static bool options_menu = true;
 		int misc_flags = (hdr ? ImGuiColorEditFlags_HDR : 0) | (alpha_half_preview ? ImGuiColorEditFlags_AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0)) | (options_menu ? 0 : ImGuiColorEditFlags_NoOptions);
 		static float f = 0.0f;
-		ImGui::SetWindowPos(ImVec2(0, 0));
-		ImGui::SetWindowSize(ImVec2(300, 600));
+		ImGui::SetWindowPos(ImVec2(WINDOW_WIDTH - MENU_WIDTH, 0));
+		ImGui::SetWindowSize(ImVec2(MENU_WIDTH, WINDOW_HEIGHT));
 		ImGui::Text("Color of light source");
-		ImGui::ColorEdit3("MyColor##1", (float*)&color, misc_flags);
+		ImGui::ColorEdit3("##1", (float*)&color, misc_flags);
 	}
 
 	/*{
