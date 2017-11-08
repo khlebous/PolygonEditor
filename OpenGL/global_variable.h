@@ -23,3 +23,9 @@ extern float edgeHColorB;
 extern float polygonFillColorR;
 extern float polygonFillColorG;
 extern float polygonFillColorB;
+
+extern float lightColorR;
+extern float lightColorG;
+extern float lightColorB;
+
+extern bool isTexture;

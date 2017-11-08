@@ -75,6 +75,9 @@
     <ClCompile Include="global_variable.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="imgui\imguifilesystem.cpp">
+      <Filter>IMGUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsLibrary.h">
@@ -121,6 +124,12 @@
     </ClInclude>
     <ClInclude Include="global_variable.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\dirent_portable.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imguifilesystem.h">
+      <Filter>IMGUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

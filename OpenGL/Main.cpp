@@ -26,6 +26,12 @@ extern float edgeHColorB = 0.18f;
 extern float polygonFillColorR = 0.33f;
 extern float polygonFillColorG = 0.36f;
 extern float polygonFillColorB = 0.35f;
+
+extern float lightColorR =1.0f;
+extern float lightColorG = 1.0f;
+extern float lightColorB = 1.0f;
+
+extern bool isTexture = true;
 #pragma endregion
 
 // ImGui - standalone example application for Glut + OpenGL, using programmable pipeline

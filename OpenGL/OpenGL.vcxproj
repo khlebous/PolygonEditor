@@ -120,6 +120,7 @@
     <ClCompile Include="global_variable.cpp" />
     <ClCompile Include="GraphicsLibrary.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
+    <ClCompile Include="imgui\imguifilesystem.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
     <ClCompile Include="imgui\imgui_impl_glut.cpp" />
@@ -134,8 +135,10 @@
     <ClInclude Include="AET.h" />
     <ClInclude Include="global_variable.h" />
     <ClInclude Include="GraphicsLibrary.h" />
+    <ClInclude Include="imgui\dirent_portable.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
+    <ClInclude Include="imgui\imguifilesystem.h" />
     <ClInclude Include="imgui\imgui_impl_glut.h" />
     <ClInclude Include="imgui\imgui_internal.h" />
     <ClInclude Include="imgui\stb_rect_pack.h" />

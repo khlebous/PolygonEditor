@@ -15,7 +15,8 @@ struct less_than_key
 };
 void GL::FillPolygon(GL::Polygon * p)
 {
-	glColor3f(polygonFillColorR, polygonFillColorG, polygonFillColorB);
+	
+
 	glPointSize(1);
 	glBegin(GL_POINTS);
 	vector<GL::Vertex> v = p->GetVertices();
@@ -76,7 +77,12 @@ void GL::FillPolygon(GL::Polygon * p)
 		{
 			int cos = AET[l].x;
 			while (cos <= (int)round(AET[l + 1].x))
+			{
+				polygonFillColorR = (polygonFillColorR+0.01);
+				polygonFillColorR > 1 ? polygonFillColorR = 0: polygonFillColorR=polygonFillColorR;
+				glColor3f(polygonFillColorR, polygonFillColorG, polygonFillColorB);
 				glVertex2i((int)round(cos++), (int)round(k));
+			}
 
 		}
 		for (int l = 0; l < AET.size(); l++)

@@ -2,10 +2,7 @@
 //#include "imgui\imgui.h"
 //#include <stdlib.h> 
 //#include "Manager.h"
-#include "ExternVariables.h"
 using namespace std;
-const int WINDOW_HEIGHT = 600;
-const int WINDOW_WIDTH = 300;
 // ImGui - standalone example application for Glut + OpenGL, using programmable pipeline
 // If you are new to ImGui, see examples/README.txt and documentation at the top of imgui.cpp.
 

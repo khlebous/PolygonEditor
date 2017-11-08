@@ -253,7 +253,7 @@ void Manager::NewVertexAndEdge(int x, int y)
 		else */
 		if (!(p->IsLooped()))
 		{
-			p->AddVertex(x, y);
+			p->AddVertex(x, y); 
 			//GL::DrawPolygons(polygons, -1, -1, -1);
 			glutPostRedisplay();
 			return;
@@ -346,25 +346,45 @@ void Manager::drawGUI()
 	// 1. Show a simple window
 	// Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
 	{
-		static ImVec4 color = ImColor((int)(polygonFillColorR*255), (int)(polygonFillColorG*255), (int)(polygonFillColorB*255));
+		ImGui::SetWindowPos(ImVec2(WINDOW_WIDTH - MENU_WIDTH, 0));
+		ImGui::SetWindowSize(ImVec2(MENU_WIDTH, WINDOW_HEIGHT));
+
+		static ImVec4 fillColor = ImColor((int)(polygonFillColorR*255), (int)(polygonFillColorG*255), (int)(polygonFillColorB*255));
 		static bool hdr = false;
 		static bool alpha_preview = true;
 		static bool alpha_half_preview = false;
 		static bool options_menu = true;
 		int misc_flags = (hdr ? ImGuiColorEditFlags_HDR : 0) | (alpha_half_preview ? ImGuiColorEditFlags_AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0)) | (options_menu ? 0 : ImGuiColorEditFlags_NoOptions);
 		static float f = 0.0f;
-		static int e = 0;
 		ImGui::Text("Color of light source");
-		ImGui::SetWindowPos(ImVec2(WINDOW_WIDTH - MENU_WIDTH, 0));
-		ImGui::SetWindowSize(ImVec2(MENU_WIDTH, WINDOW_HEIGHT));
-		ImGui::RadioButton("Pick color", &e, 0); ImGui::SameLine();
-		if (ImGui::ColorEdit3("##1", (float*)&color, misc_flags))
+		static ImVec4 lightColor = ImColor((int)(lightColorR * 255), (int)(lightColorG * 255), (int)(lightColorB * 255));
+		if (ImGui::ColorEdit3("##2", (float*)&lightColor, misc_flags))
 		{
-			polygonFillColorR = color.x;
-			polygonFillColorG = color.y;
-			polygonFillColorB = color.z;
+			lightColorR = lightColor.x;
+			lightColorG = lightColor.y;
+			lightColorB = lightColor.z;
+		}
+		ImGui::Text("Vector to light source");
+		static int c = 0;
+		ImGui::RadioButton("Const[0,0,1]", &c, 0);
+		ImGui::RadioButton("Animated light", &c, 1);
+		ImGui::Text("Polygon fill");
+		static int e = 0;
+		if (ImGui::RadioButton("Pick Color", &e, 0))
+			isTexture = false;
+		else
+			isTexture = true;
+		ImGui::SameLine();
+		if (ImGui::ColorEdit3("##1", (float*)&fillColor, misc_flags))
+		{
+			polygonFillColorR = fillColor.x;
+			polygonFillColorG = fillColor.y;
+			polygonFillColorB = fillColor.z;
 		}
 		ImGui::RadioButton("Pick texture", &e, 1); ImGui::SameLine();
+		const char* listbox_items[] = { "Apple", "Banana", "Cherry"};
+		int listbox_item_current = 1;
+		ImGui::ListBox("listbox\n(single select)", &listbox_item_current, listbox_items, IM_ARRAYSIZE(listbox_items), 3);
 	}
 
 	/*{
