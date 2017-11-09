@@ -31,7 +31,7 @@ extern float lightColorR =1.0f;
 extern float lightColorG = 1.0f;
 extern float lightColorB = 1.0f;
 
-extern bool isTexture = true;
+extern bool isTexture = false;
 #pragma endregion
 
 // ImGui - standalone example application for Glut + OpenGL, using programmable pipeline

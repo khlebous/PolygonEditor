@@ -371,9 +371,7 @@ void Manager::drawGUI()
 		ImGui::Text("Polygon fill");
 		static int e = 0;
 		if (ImGui::RadioButton("Pick Color", &e, 0))
-			isTexture = false;
-		else
-			isTexture = true;
+			isTexture = !isTexture;
 		ImGui::SameLine();
 		if (ImGui::ColorEdit3("##1", (float*)&fillColor, misc_flags))
 		{
@@ -381,7 +379,9 @@ void Manager::drawGUI()
 			polygonFillColorG = fillColor.y;
 			polygonFillColorB = fillColor.z;
 		}
-		ImGui::RadioButton("Pick texture", &e, 1); ImGui::SameLine();
+		if (ImGui::RadioButton("Pick texture", &e, 1))
+			isTexture = !isTexture;
+		ImGui::SameLine();
 		const char* listbox_items[] = { "Apple", "Banana", "Cherry"};
 		int listbox_item_current = 1;
 		ImGui::ListBox("listbox\n(single select)", &listbox_item_current, listbox_items, IM_ARRAYSIZE(listbox_items), 3);

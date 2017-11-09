@@ -2,6 +2,7 @@
 #include <algorithm>  
 #include "AET.h"
 #include "global_variable.h"
+#include <SOIL/SOIL.h>
 
 const int VERTEX_POINT_SIZE = 6;
 const int EDGE_POINT_SIZE = 1;
@@ -15,8 +16,24 @@ struct less_than_key
 };
 void GL::FillPolygon(GL::Polygon * p)
 {
-	
+	int width, height;
+	unsigned char* image;
+	int imgPosX = 0;
+	int imgPOsY = 0;
+	//glBindTexture(GL_TEXTURE_2D, textures[0]);
+	//image = SOIL_load_image("2.png", &width, &height, 0, SOIL_LOAD_RGB);
+	image = SOIL_load_image("2.png", &width, &height, 0, SOIL_LOAD_RGB);
+	if (image == 0)
+		cout << "qwe\n";
 
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	/*for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < height; j++)
+		{
+			cout << (int)image[i + j * width]<<" ";
+		}
+	}*/
 	glPointSize(1);
 	glBegin(GL_POINTS);
 	vector<GL::Vertex> v = p->GetVertices();
@@ -78,8 +95,23 @@ void GL::FillPolygon(GL::Polygon * p)
 			int cos = AET[l].x;
 			while (cos <= (int)round(AET[l + 1].x))
 			{
-				polygonFillColorR = (polygonFillColorR+0.01);
-				polygonFillColorR > 1 ? polygonFillColorR = 0: polygonFillColorR=polygonFillColorR;
+				//polygonFillColorR = (polygonFillColorR+0.01);
+				//polygonFillColorR > 1 ? polygonFillColorR = 0: polygonFillColorR=polygonFillColorR;
+				if (isTexture)
+				{
+					int qq = (int)round(cos);
+					int ww = (int)round(k);
+					qq = qq% width - 1;
+					ww = ww%height - 1;
+					int thisNum = (qq + ww*width) * 3;
+					unsigned char r = image[thisNum + 0];
+					unsigned char g = image[thisNum + 1];
+					unsigned char b = image[thisNum + 2];
+					//cout << r << " " << g << " " << b << "\n";
+					polygonFillColorR = (float)r / 255;
+					polygonFillColorG = (float)g / 255;
+					polygonFillColorB = (float)b / 255;
+				}
 				glColor3f(polygonFillColorR, polygonFillColorG, polygonFillColorB);
 				glVertex2i((int)round(cos++), (int)round(k));
 			}
