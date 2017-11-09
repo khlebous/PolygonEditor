@@ -18,22 +18,11 @@ void GL::FillPolygon(GL::Polygon * p)
 {
 	int width, height;
 	unsigned char* image;
-	int imgPosX = 0;
-	int imgPOsY = 0;
-	//glBindTexture(GL_TEXTURE_2D, textures[0]);
-	//image = SOIL_load_image("2.png", &width, &height, 0, SOIL_LOAD_RGB);
-	image = SOIL_load_image("2.png", &width, &height, 0, SOIL_LOAD_RGB);
+	image = SOIL_load_image("1.jpg", &width, &height, 0, SOIL_LOAD_RGB);
 	if (image == 0)
 		cout << "qwe\n";
-
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-	/*for (int i = 0; i < width; i++)
-	{
-		for (int j = 0; j < height; j++)
-		{
-			cout << (int)image[i + j * width]<<" ";
-		}
-	}*/
+	int imgPosX = width/2;
+	int imgPOsY = 0;
 	glPointSize(1);
 	glBegin(GL_POINTS);
 	vector<GL::Vertex> v = p->GetVertices();
@@ -101,8 +90,8 @@ void GL::FillPolygon(GL::Polygon * p)
 				{
 					int qq = (int)round(cos);
 					int ww = (int)round(k);
-					qq = qq% width - 1;
-					ww = ww%height - 1;
+					qq = (width - qq% width + imgPosX)%width;
+					ww = height - ww%height -1;
 					int thisNum = (qq + ww*width) * 3;
 					unsigned char r = image[thisNum + 0];
 					unsigned char g = image[thisNum + 1];
