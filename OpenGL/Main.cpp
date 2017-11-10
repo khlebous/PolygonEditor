@@ -32,7 +32,8 @@ extern float lightColorG = 1.0f;
 extern float lightColorB = 1.0f;
 
 extern bool isTexture = false;
-extern char* testure;
+extern bool isNormalMap = false;
+//extern char* testure;
 
 extern float lightVectorX =0;
 extern float lightVectorY =0;

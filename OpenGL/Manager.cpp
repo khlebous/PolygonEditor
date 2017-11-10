@@ -368,7 +368,7 @@ void Manager::drawGUI()
 		ImGui::Text("------------------------------------------------");
 		ImGui::Text("Kolor obiektu");
 		static int rb2 = 0;
-		if (ImGui::RadioButton("Staly", &rb2, 0))
+		if (ImGui::RadioButton("Staly kolor", &rb2, 0))
 			isTexture = false;
 		ImGui::SameLine();
 		if (ImGui::ColorEdit3("##1", (float*)&fillColor, misc_flags))
@@ -386,12 +386,14 @@ void Manager::drawGUI()
 
 		}
 		ImGui::Text("------------------------------------------------");
-		ImGui::Text("Wektor normalny z zaburzeniem");
-		ImGui::Text("N'=N+D");
+		/*ImGui::Text("Wektor normalny z zaburzeniem");
+		ImGui::Text("N'=N+D");*/
 		ImGui::Text("N (wektor normalny przed zaburzeniem)");
 		static int rb3 = 0;
-		ImGui::RadioButton("Staly [0,0,1]", &rb3, 0);
-		ImGui::RadioButton("Z tekstury \"Normal Map\" TODO", &rb3, 1);
+		if (ImGui::RadioButton("Staly vector N [0,0,1]", &rb3, 0))
+			isNormalMap = false;
+		if (ImGui::RadioButton("Z tekstury \"Normal Map\" TODO", &rb3, 1))
+			isNormalMap = true;
 		ImGui::Text("------------------------------------------------");
 		ImGui::Text("Zaburzenie D");
 		static int rb4 = 0;

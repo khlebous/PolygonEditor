@@ -37,3 +37,4 @@ extern float normalVectorY;
 extern float normalVectorZ;
 
 extern bool isTexture;
+extern bool isNormalMap;

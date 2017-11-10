@@ -16,13 +16,30 @@ struct less_than_key
 };
 void GL::FillPolygon(GL::Polygon * p)
 {
-	int width, height;
-	unsigned char* image;
-	image = SOIL_load_image("1.jpg", &width, &height, 0, SOIL_LOAD_RGB);
-	if (image == 0)
-		cout << "qwe\n";
-	int imgPosX = width/2;
-	int imgPOsY = 0;
+	float thisPolygonFillColorR = polygonFillColorR;
+	float thisPolygonFillColorG = polygonFillColorG;
+	float thisPolygonFillColorB = polygonFillColorB;
+	float thisNormalVectorX = normalVectorX;
+	float thisNormalVectorY = normalVectorY;
+	float thisNormalVectorZ = normalVectorZ;
+
+	int textureWidth, textureHight;
+	unsigned char* texture = nullptr;
+	if (isTexture)
+	{
+		texture = SOIL_load_image("texture.jpg", &textureWidth, &textureHight, 0, SOIL_LOAD_RGB);
+		if (texture == 0)
+			cout << "Can't load texture\n";
+	}
+	int normalMapWidth, normalMapHeight;
+	unsigned char* normalMap = nullptr;
+	if (isNormalMap)
+	{
+		normalMap = SOIL_load_image("normal.jpg", &normalMapWidth, &normalMapHeight, 0, SOIL_LOAD_RGB);
+		if (normalMap == 0)
+			cout << "Can't load texture\n";
+	}
+
 	glPointSize(1);
 	glBegin(GL_POINTS);
 	vector<GL::Vertex> v = p->GetVertices();
@@ -88,25 +105,40 @@ void GL::FillPolygon(GL::Polygon * p)
 				{
 					int qq = (int)round(cos);
 					int ww = (int)round(k);
-					qq = width - qq% width;
-					ww = height - ww%height -1;
-					int thisNum = (qq + ww*width) * 3;
-					unsigned char r = image[thisNum + 0];
-					unsigned char g = image[thisNum + 1];
-					unsigned char b = image[thisNum + 2];
+					qq = textureWidth - qq% textureWidth;
+					ww = textureHight - ww%textureHight - 1;
+					int thisNum = (qq + ww*textureWidth) * 3;
+					unsigned char r = texture[thisNum + 0];
+					unsigned char g = texture[thisNum + 1];
+					unsigned char b = texture[thisNum + 2];
 					//cout << r << " " << g << " " << b << "\n";
-					polygonFillColorR = (float)r / 255;
-					polygonFillColorG = (float)g / 255;
-					polygonFillColorB = (float)b / 255;
+					thisPolygonFillColorR = (float)r / 255;
+					thisPolygonFillColorG = (float)g / 255;
+					thisPolygonFillColorB = (float)b / 255;
+				}
+				if (isNormalMap)
+				{
+					int qq = (int)round(cos);
+					int ww = (int)round(k);
+					qq = normalMapWidth - qq% normalMapWidth;
+					ww = normalMapHeight - ww%normalMapHeight - 1;
+					int thisNum = (qq + ww*normalMapWidth) * 3;
+					unsigned char r = normalMap[thisNum + 0];
+					unsigned char g = normalMap[thisNum + 1];
+					unsigned char b = normalMap[thisNum + 2];
+					//cout << r << " " << g << " " << b << "\n";
+					thisNormalVectorX = (float)r / 255;
+					thisNormalVectorY = (float)g / 255;
+					thisNormalVectorZ = (float)b / 255;
 				}
 				float cosinus =
-					normalVectorX*lightVectorX +
-					normalVectorY*lightVectorY +
-					normalVectorZ*lightVectorZ;
+					normalVectorX*thisNormalVectorX +
+					normalVectorY*thisNormalVectorY +
+					normalVectorZ*thisNormalVectorZ;
 				glColor3f(
-					lightColorR*polygonFillColorR*cosinus,
-					lightColorG*polygonFillColorG*cosinus,
-					lightColorB*polygonFillColorB*cosinus);
+					lightColorR*thisPolygonFillColorR*cosinus,
+					lightColorG*thisPolygonFillColorG*cosinus,
+					lightColorB*thisPolygonFillColorB*cosinus);
 				glVertex2i((int)round(cos++), (int)round(k));
 			}
 
