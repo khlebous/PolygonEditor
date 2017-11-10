@@ -32,6 +32,16 @@ extern float lightColorG = 1.0f;
 extern float lightColorB = 1.0f;
 
 extern bool isTexture = false;
+extern char* testure;
+
+extern float lightVectorX =0;
+extern float lightVectorY =0;
+extern float lightVectorZ =1;
+
+extern float normalVectorX=0;
+extern float normalVectorY=0;
+extern float normalVectorZ=1;
+
 #pragma endregion
 
 // ImGui - standalone example application for Glut + OpenGL, using programmable pipeline

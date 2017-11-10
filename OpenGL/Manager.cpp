@@ -10,6 +10,7 @@
 #include <iostream>
 using namespace std;
 bool show_test_window2 = true;
+int listbox_item_current = 0;
 
 Manager* Manager::instance = NULL;
 
@@ -89,7 +90,6 @@ void Manager::mouseFunc(int button, int state, int x, int y)
 			mm->polygons[mm->highlightPolygon]->MoveVertex(mm->highlightVertice, x, y);
 	}
 }
-
 void Manager::mousePassiveFunc(int x, int y)
 {
 	y = WINDOW_HEIGHT - y;
@@ -108,13 +108,13 @@ void Manager::mousePassiveFunc(int x, int y)
 	else if ((x >= WINDOW_WIDTH - MENU_WIDTH) && (mm->drawingArea))
 	{
 		mm->drawingArea = false;
-		glutMouseFunc(Manager::mouseCallback);
-		glutMotionFunc(Manager::mouseDragCallback);
-		glutKeyboardFunc(Manager::keyboardCallback);
+		glutMouseFunc(mouseCallback);
+		glutMotionFunc(mouseDragCallback);
+		glutKeyboardFunc(keyboardCallback);
+		glutPassiveMotionFunc(mouseMoveCallback);
 	}
 
 }
-
 void Manager::keyboardFunc(unsigned char key, int x, int y)
 {
 	switch (key)
@@ -194,7 +194,6 @@ void Manager::keyboardFunc(unsigned char key, int x, int y)
 	}
 	}
 }
-
 void Manager::motionFuncLeft(int _x, int _y)
 {
 	Manager* mm = getInstance();
@@ -206,7 +205,6 @@ void Manager::motionFuncLeft(int _x, int _y)
 	//GL::DrawPolygons(mm->polygons, -1, -1, -1);
 	drawScene();
 }
-
 void Manager::motionFuncRight(int x, int y)
 {
 	y = WINDOW_HEIGHT - y;
@@ -217,7 +215,6 @@ void Manager::motionFuncRight(int x, int y)
 	//GL::DrawPolygons(mm->polygons, -1, -1, -1);
 	drawScene();
 }
-
 void Manager::drawScene()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -225,8 +222,8 @@ void Manager::drawScene()
 
 	// draw gui
 	Manager* mm = getInstance();
-	mm->drawGUI();
 	GL::DrawPolygons(mm->polygons, mm->highlightPolygon, mm->highlightVertice, mm->highlightEdge);
+	mm->drawGUI();
 
 	glutSwapBuffers();
 }
@@ -253,7 +250,7 @@ void Manager::NewVertexAndEdge(int x, int y)
 		else */
 		if (!(p->IsLooped()))
 		{
-			p->AddVertex(x, y); 
+			p->AddVertex(x, y);
 			//GL::DrawPolygons(polygons, -1, -1, -1);
 			glutPostRedisplay();
 			return;
@@ -276,7 +273,6 @@ void Manager::NewVertexAndEdge(int x, int y)
 	//drawScene();
 	glutPostRedisplay();
 }
-
 bool Manager::CheckVertices(int x, int y)
 {
 	int v = -1;
@@ -349,14 +345,14 @@ void Manager::drawGUI()
 		ImGui::SetWindowPos(ImVec2(WINDOW_WIDTH - MENU_WIDTH, 0));
 		ImGui::SetWindowSize(ImVec2(MENU_WIDTH, WINDOW_HEIGHT));
 
-		static ImVec4 fillColor = ImColor((int)(polygonFillColorR*255), (int)(polygonFillColorG*255), (int)(polygonFillColorB*255));
+		static ImVec4 fillColor = ImColor((int)(polygonFillColorR * 255), (int)(polygonFillColorG * 255), (int)(polygonFillColorB * 255));
 		static bool hdr = false;
 		static bool alpha_preview = true;
 		static bool alpha_half_preview = false;
 		static bool options_menu = true;
 		int misc_flags = (hdr ? ImGuiColorEditFlags_HDR : 0) | (alpha_half_preview ? ImGuiColorEditFlags_AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0)) | (options_menu ? 0 : ImGuiColorEditFlags_NoOptions);
 		static float f = 0.0f;
-		ImGui::Text("Color of light source");
+		ImGui::Text("Kolor zrodla swiata");
 		static ImVec4 lightColor = ImColor((int)(lightColorR * 255), (int)(lightColorG * 255), (int)(lightColorB * 255));
 		if (ImGui::ColorEdit3("##2", (float*)&lightColor, misc_flags))
 		{
@@ -364,13 +360,15 @@ void Manager::drawGUI()
 			lightColorG = lightColor.y;
 			lightColorB = lightColor.z;
 		}
-		ImGui::Text("Vector to light source");
-		static int c = 0;
-		ImGui::RadioButton("Const[0,0,1]", &c, 0);
-		ImGui::RadioButton("Animated light", &c, 1);
-		ImGui::Text("Polygon fill");
-		static int e = 0;
-		if (ImGui::RadioButton("Pick Color", &e, 0))
+		ImGui::Text("------------------------------------------------");
+		ImGui::Text("Wektor do zrodla switala");
+		static int rb1 = 0;
+		ImGui::RadioButton("Staly [0,0,1]", &rb1, 0);
+		ImGui::RadioButton("Swiatlo animowane TODO", &rb1, 1);
+		ImGui::Text("------------------------------------------------");
+		ImGui::Text("Kolor obiektu");
+		static int rb2 = 0;
+		if (ImGui::RadioButton("Staly", &rb2, 0))
 			isTexture = false;
 		ImGui::SameLine();
 		if (ImGui::ColorEdit3("##1", (float*)&fillColor, misc_flags))
@@ -379,12 +377,26 @@ void Manager::drawGUI()
 			polygonFillColorG = fillColor.y;
 			polygonFillColorB = fillColor.z;
 		}
-		if (ImGui::RadioButton("Pick texture", &e, 1))
+		if (ImGui::RadioButton("Z tekstury", &rb2, 1))
 			isTexture = true;
 		ImGui::SameLine();
-		const char* listbox_items[] = { "Apple", "Banana", "Cherry"};
-		int listbox_item_current = 1;
-		ImGui::ListBox("listbox\n(single select)", &listbox_item_current, listbox_items, IM_ARRAYSIZE(listbox_items), 3);
+		const char* listbox_items[] = { "1.jpg", "2.png", "3.jpg" };
+		ImGui::ListBox("", &listbox_item_current, listbox_items, IM_ARRAYSIZE(listbox_items), 3);
+		{
+
+		}
+		ImGui::Text("------------------------------------------------");
+		ImGui::Text("Wektor normalny z zaburzeniem");
+		ImGui::Text("N'=N+D");
+		ImGui::Text("N (wektor normalny przed zaburzeniem)");
+		static int rb3 = 0;
+		ImGui::RadioButton("Staly [0,0,1]", &rb3, 0);
+		ImGui::RadioButton("Z tekstury \"Normal Map\" TODO", &rb3, 1);
+		ImGui::Text("------------------------------------------------");
+		ImGui::Text("Zaburzenie D");
+		static int rb4 = 0;
+		ImGui::RadioButton("Brak [0,0,0]", &rb4, 0);
+		ImGui::RadioButton("Z tekstury \"Height Map\" TODO", &rb4, 1);
 	}
 
 	/*{
@@ -396,7 +408,6 @@ void Manager::drawGUI()
 
 	ImGui::Render();
 }
-
 void Manager::mouseCallback(int button, int state, int x, int y)
 {
 	if (getInstance()->mouseEvent(button, state, x, y))
@@ -404,7 +415,6 @@ void Manager::mouseCallback(int button, int state, int x, int y)
 		glutPostRedisplay();
 	}
 }
-
 void Manager::mouseDragCallback(int x, int y)
 {
 	ImGuiIO& io = ImGui::GetIO();
@@ -412,15 +422,18 @@ void Manager::mouseDragCallback(int x, int y)
 
 	glutPostRedisplay();
 }
-
 void Manager::mouseMoveCallback(int x, int y)
 {
+	if ((x < WINDOW_WIDTH - MENU_WIDTH))
+	{
+		glutPassiveMotionFunc(mousePassiveFunc);
+		return;
+	}
 	ImGuiIO& io = ImGui::GetIO();
 	io.MousePos = ImVec2((float)x, (float)y);
 
 	glutPostRedisplay();
 }
-
 void Manager::keyboardCallback(unsigned char nChar, int x, int y)
 {
 	if (getInstance()->keyboardEvent(nChar, x, y))
@@ -428,7 +441,6 @@ void Manager::keyboardCallback(unsigned char nChar, int x, int y)
 		glutPostRedisplay();
 	}
 }
-
 bool Manager::mouseEvent(int button, int state, int x, int y)
 {
 	ImGuiIO& io = ImGui::GetIO();
@@ -458,7 +470,6 @@ bool Manager::mouseEvent(int button, int state, int x, int y)
 
 	return true;
 }
-
 bool Manager::keyboardEvent(unsigned char nChar, int nX, int nY)
 {
 	ImGuiIO& io = ImGui::GetIO();

@@ -84,13 +84,11 @@ void GL::FillPolygon(GL::Polygon * p)
 			int cos = AET[l].x;
 			while (cos <= (int)round(AET[l + 1].x))
 			{
-				//polygonFillColorR = (polygonFillColorR+0.01);
-				//polygonFillColorR > 1 ? polygonFillColorR = 0: polygonFillColorR=polygonFillColorR;
 				if (isTexture)
 				{
 					int qq = (int)round(cos);
 					int ww = (int)round(k);
-					qq = (width - qq% width + imgPosX)%width;
+					qq = width - qq% width;
 					ww = height - ww%height -1;
 					int thisNum = (qq + ww*width) * 3;
 					unsigned char r = image[thisNum + 0];
@@ -101,7 +99,14 @@ void GL::FillPolygon(GL::Polygon * p)
 					polygonFillColorG = (float)g / 255;
 					polygonFillColorB = (float)b / 255;
 				}
-				glColor3f(polygonFillColorR, polygonFillColorG, polygonFillColorB);
+				float cosinus =
+					normalVectorX*lightVectorX +
+					normalVectorY*lightVectorY +
+					normalVectorZ*lightVectorZ;
+				glColor3f(
+					lightColorR*polygonFillColorR*cosinus,
+					lightColorG*polygonFillColorG*cosinus,
+					lightColorB*polygonFillColorB*cosinus);
 				glVertex2i((int)round(cos++), (int)round(k));
 			}
 
@@ -112,15 +117,12 @@ void GL::FillPolygon(GL::Polygon * p)
 		}
 	}
 	glEnd();
-	glFlush();
-	//glColor3f(1.0f, 1.0f, 1.0f);
 	glColor3f(vertexColorR, vertexColorG, vertexColorB);
 	glPointSize(VERTEX_POINT_SIZE);
 	glBegin(GL_POINTS);
 	for (int q = 0; q < size; q++)
 		glVertex2i(v[q].GetX(), v[q].GetY());
 	glEnd();
-	//glFlush();
 	delete indexes;
 }
 
