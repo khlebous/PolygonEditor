@@ -16,13 +16,42 @@ struct less_than_key
 };
 void GL::FillPolygon(GL::Polygon * p)
 {
-	int width, height;
-	unsigned char* image;
-	image = SOIL_load_image("1.jpg", &width, &height, 0, SOIL_LOAD_RGB);
-	if (image == 0)
-		cout << "qwe\n";
-	int imgPosX = width/2;
-	int imgPOsY = 0;
+	float thisPolygonFillColorR = polygonFillColorR;
+	float thisPolygonFillColorG = polygonFillColorG;
+	float thisPolygonFillColorB = polygonFillColorB;
+	float thisNormalVectorX = normalVectorX;
+	float thisNormalVectorY = normalVectorY;
+	float thisNormalVectorZ = normalVectorZ;
+	float thisLightVectorX = lightVectorX;
+	float thisLightVectorY = lightVectorY;
+	float thisLightVectorZ = lightVectorZ;
+
+	int textureWidth, textureHight;
+	unsigned char* texture = nullptr;
+	if (isTexture)
+	{
+		texture = SOIL_load_image("bevel-texure.png", &textureWidth, &textureHight, 0, SOIL_LOAD_RGB);
+		if (texture == 0)
+			cout << "Can't load texture\n";
+	}
+	int normalMapWidth, normalMapHeight;
+	unsigned char* normalMap = nullptr;
+	if (isNormalMap)
+	{
+		normalMap = SOIL_load_image("bevelnormalmap.png", &normalMapWidth, &normalMapHeight, 0, SOIL_LOAD_RGB);
+		if (normalMap == 0)
+			cout << "Can't load texture\n";
+	}
+	if (isLightAnimated)
+	{
+		float cr = cosf(lightStep);
+		float sr = sinf(lightStep);
+		float xxx = thisLightVectorX;
+		float yyy = thisLightVectorY;
+		lightVectorX = cr * xxx - sr*yyy;
+		lightVectorY = sr * xxx + cr*yyy;
+		glutPostRedisplay();
+	}
 	glPointSize(1);
 	glBegin(GL_POINTS);
 	vector<GL::Vertex> v = p->GetVertices();
@@ -84,24 +113,56 @@ void GL::FillPolygon(GL::Polygon * p)
 			int cos = AET[l].x;
 			while (cos <= (int)round(AET[l + 1].x))
 			{
-				//polygonFillColorR = (polygonFillColorR+0.01);
-				//polygonFillColorR > 1 ? polygonFillColorR = 0: polygonFillColorR=polygonFillColorR;
 				if (isTexture)
 				{
 					int qq = (int)round(cos);
 					int ww = (int)round(k);
-					qq = (width - qq% width + imgPosX)%width;
-					ww = height - ww%height -1;
-					int thisNum = (qq + ww*width) * 3;
-					unsigned char r = image[thisNum + 0];
-					unsigned char g = image[thisNum + 1];
-					unsigned char b = image[thisNum + 2];
+					qq = textureWidth - qq% textureWidth;
+					ww = textureHight - ww%textureHight - 1;
+					int thisNum = (qq + ww*textureWidth) * 3;
+					unsigned char r = texture[thisNum + 0];
+					unsigned char g = texture[thisNum + 1];
+					unsigned char b = texture[thisNum + 2];
 					//cout << r << " " << g << " " << b << "\n";
-					polygonFillColorR = (float)r / 255;
-					polygonFillColorG = (float)g / 255;
-					polygonFillColorB = (float)b / 255;
+					thisPolygonFillColorR = (float)r / 255;
+					thisPolygonFillColorG = (float)g / 255;
+					thisPolygonFillColorB = (float)b / 255;
 				}
-				glColor3f(polygonFillColorR, polygonFillColorG, polygonFillColorB);
+				if (isNormalMap)
+				{
+					int qq = (int)round(cos);
+					int ww = (int)round(k);
+					qq = normalMapWidth - qq% normalMapWidth;
+					ww = normalMapHeight - ww%normalMapHeight - 1;
+					int thisNum = (qq + ww*normalMapWidth) * 3;
+					/*unsigned char r = normalMap[thisNum + 0];
+					unsigned char g = normalMap[thisNum + 1];
+					unsigned char b = normalMap[thisNum + 2];*/
+					unsigned char r = normalMap[thisNum + 0];
+					unsigned char g = normalMap[thisNum + 1];
+					unsigned char b = normalMap[thisNum + 2]; 
+					//cout << r << " " << g << " " << b << "\n";
+					thisNormalVectorX = (float)r / 128-1;
+					thisNormalVectorY = (float)g / 128-1;
+					thisNormalVectorZ = (float)b / 255;
+				}
+				float lightNorm = 1;
+				
+					float normNorm = 1;
+					normNorm=sqrt(thisNormalVectorX*thisNormalVectorX + thisNormalVectorY*thisNormalVectorY + thisNormalVectorZ*thisNormalVectorZ);
+
+				float cosinus =
+					(lightVectorX*thisNormalVectorX +
+						lightVectorY*thisNormalVectorY +
+						thisLightVectorZ*thisNormalVectorZ) / lightNorm/normNorm;
+				//if (cos < 0)
+				//	cos = 0;
+				if (cosinus < 0)
+					cosinus = 0;
+				glColor3f(
+					lightColorR*thisPolygonFillColorR*cosinus,
+					lightColorG*thisPolygonFillColorG*cosinus,
+					lightColorB*thisPolygonFillColorB*cosinus);
 				glVertex2i((int)round(cos++), (int)round(k));
 			}
 
@@ -112,15 +173,12 @@ void GL::FillPolygon(GL::Polygon * p)
 		}
 	}
 	glEnd();
-	glFlush();
-	//glColor3f(1.0f, 1.0f, 1.0f);
 	glColor3f(vertexColorR, vertexColorG, vertexColorB);
 	glPointSize(VERTEX_POINT_SIZE);
 	glBegin(GL_POINTS);
 	for (int q = 0; q < size; q++)
 		glVertex2i(v[q].GetX(), v[q].GetY());
 	glEnd();
-	//glFlush();
 	delete indexes;
 }
 

@@ -16,9 +16,9 @@ float vertexHColorR = 1.0f;
 float vertexHColorG = 0.0f;
 float vertexHColorB = 0.0f;
 
-extern float edgeColorR= 1.0f;
-extern float edgeColorG= 1.0f;
-extern float edgeColorB= 1.0f;
+extern float edgeColorR = 1.0f;
+extern float edgeColorG = 1.0f;
+extern float edgeColorB = 1.0f;
 extern float edgeHColorR = 0.13f;
 extern float edgeHColorG = 0.168f;
 extern float edgeHColorB = 0.18f;
@@ -27,11 +27,26 @@ extern float polygonFillColorR = 0.33f;
 extern float polygonFillColorG = 0.36f;
 extern float polygonFillColorB = 0.35f;
 
-extern float lightColorR =1.0f;
+extern float lightColorR = 1.0f;
 extern float lightColorG = 1.0f;
 extern float lightColorB = 1.0f;
 
 extern bool isTexture = false;
+extern bool isNormalMap = true;
+extern bool isLightAnimated = true;
+extern float lightRadius = 100;
+extern float lightAngle = 0;
+extern float lightStep = 0.15;
+//extern char* testure;
+
+extern float lightVectorX = 0.2;
+extern float lightVectorY = 0.6;
+extern float lightVectorZ = 1;
+
+extern float normalVectorX = 0;
+extern float normalVectorY = 0;
+extern float normalVectorZ = 1;
+
 #pragma endregion
 
 // ImGui - standalone example application for Glut + OpenGL, using programmable pipeline
@@ -209,7 +224,7 @@ int main(int argc, char **argv)
 {
 	glutInit(&argc, argv);
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
-	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE );
+	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
 	//glutInitDisplayMode(GLUT_DOUBLE);
 	glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	glutInitWindowPosition(50, 50);

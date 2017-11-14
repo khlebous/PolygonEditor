@@ -28,4 +28,18 @@ extern float lightColorR;
 extern float lightColorG;
 extern float lightColorB;
 
+extern float lightVectorX;
+extern float lightVectorY;
+extern float lightVectorZ;
+
+extern float normalVectorX;
+extern float normalVectorY;
+extern float normalVectorZ;
+
 extern bool isTexture;
+extern bool isNormalMap;
+
+extern bool isLightAnimated;
+extern float lightRadius;
+extern float lightAngle;
+extern float lightStep;
