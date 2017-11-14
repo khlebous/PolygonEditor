@@ -38,3 +38,8 @@ extern float normalVectorZ;
 
 extern bool isTexture;
 extern bool isNormalMap;
+
+extern bool isLightAnimated;
+extern float lightRadius;
+extern float lightAngle;
+extern float lightStep;

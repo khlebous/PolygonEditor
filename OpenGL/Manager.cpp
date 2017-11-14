@@ -18,9 +18,11 @@ Manager::Manager()
 {
 	polygons = vector<GL::Polygon*>();
 	GL::Polygon* pp = new GL::Polygon();
-	pp->AddVertex(500, 200);
-	pp->AddVertex(300, 300);
-	pp->AddVertex(400, 500);
+	pp->AddVertex(100, 100);
+	pp->AddVertex(500, 100);
+	pp->AddVertex(500, 500);
+	pp->AddVertex(100, 500);
+	pp->Loop();
 	polygons.push_back(pp);
 	highlightVertice = -1;
 	highlightEdge = -1;
@@ -377,14 +379,14 @@ void Manager::drawGUI()
 			polygonFillColorG = fillColor.y;
 			polygonFillColorB = fillColor.z;
 		}
-		if (ImGui::RadioButton("Z tekstury", &rb2, 1))
+		if (ImGui::RadioButton("Z tekstury TODO list", &rb2, 1))
 			isTexture = true;
 		ImGui::SameLine();
 		const char* listbox_items[] = { "1.jpg", "2.png", "3.jpg" };
-		ImGui::ListBox("", &listbox_item_current, listbox_items, IM_ARRAYSIZE(listbox_items), 3);
+		/*ImGui::ListBox("", &listbox_item_current, listbox_items, IM_ARRAYSIZE(listbox_items), 3);
 		{
 
-		}
+		}*/
 		ImGui::Text("------------------------------------------------");
 		/*ImGui::Text("Wektor normalny z zaburzeniem");
 		ImGui::Text("N'=N+D");*/
@@ -392,7 +394,7 @@ void Manager::drawGUI()
 		static int rb3 = 0;
 		if (ImGui::RadioButton("Staly vector N [0,0,1]", &rb3, 0))
 			isNormalMap = false;
-		if (ImGui::RadioButton("Z tekstury \"Normal Map\" TODO", &rb3, 1))
+		if (ImGui::RadioButton("Z tekstury \"Normal Map\" TODO list", &rb3, 1))
 			isNormalMap = true;
 		ImGui::Text("------------------------------------------------");
 		ImGui::Text("Zaburzenie D");

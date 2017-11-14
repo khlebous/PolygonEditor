@@ -22,12 +22,15 @@ void GL::FillPolygon(GL::Polygon * p)
 	float thisNormalVectorX = normalVectorX;
 	float thisNormalVectorY = normalVectorY;
 	float thisNormalVectorZ = normalVectorZ;
+	float thisLightVectorX = lightVectorX;
+	float thisLightVectorY = lightVectorY;
+	float thisLightVectorZ = lightVectorZ;
 
 	int textureWidth, textureHight;
 	unsigned char* texture = nullptr;
 	if (isTexture)
 	{
-		texture = SOIL_load_image("texture.jpg", &textureWidth, &textureHight, 0, SOIL_LOAD_RGB);
+		texture = SOIL_load_image("bevel-texure.png", &textureWidth, &textureHight, 0, SOIL_LOAD_RGB);
 		if (texture == 0)
 			cout << "Can't load texture\n";
 	}
@@ -35,11 +38,20 @@ void GL::FillPolygon(GL::Polygon * p)
 	unsigned char* normalMap = nullptr;
 	if (isNormalMap)
 	{
-		normalMap = SOIL_load_image("normal.jpg", &normalMapWidth, &normalMapHeight, 0, SOIL_LOAD_RGB);
+		normalMap = SOIL_load_image("bevelnormalmap.png", &normalMapWidth, &normalMapHeight, 0, SOIL_LOAD_RGB);
 		if (normalMap == 0)
 			cout << "Can't load texture\n";
 	}
-
+	if (isLightAnimated)
+	{
+		float cr = cosf(lightStep);
+		float sr = sinf(lightStep);
+		float xxx = thisLightVectorX;
+		float yyy = thisLightVectorY;
+		lightVectorX = cr * xxx - sr*yyy;
+		lightVectorY = sr * xxx + cr*yyy;
+		glutPostRedisplay();
+	}
 	glPointSize(1);
 	glBegin(GL_POINTS);
 	vector<GL::Vertex> v = p->GetVertices();
@@ -123,18 +135,30 @@ void GL::FillPolygon(GL::Polygon * p)
 					qq = normalMapWidth - qq% normalMapWidth;
 					ww = normalMapHeight - ww%normalMapHeight - 1;
 					int thisNum = (qq + ww*normalMapWidth) * 3;
+					/*unsigned char r = normalMap[thisNum + 0];
+					unsigned char g = normalMap[thisNum + 1];
+					unsigned char b = normalMap[thisNum + 2];*/
 					unsigned char r = normalMap[thisNum + 0];
 					unsigned char g = normalMap[thisNum + 1];
-					unsigned char b = normalMap[thisNum + 2];
+					unsigned char b = normalMap[thisNum + 2]; 
 					//cout << r << " " << g << " " << b << "\n";
-					thisNormalVectorX = (float)r / 255;
-					thisNormalVectorY = (float)g / 255;
+					thisNormalVectorX = (float)r / 128-1;
+					thisNormalVectorY = (float)g / 128-1;
 					thisNormalVectorZ = (float)b / 255;
 				}
+				float lightNorm = 1;
+				
+					float normNorm = 1;
+					normNorm=sqrt(thisNormalVectorX*thisNormalVectorX + thisNormalVectorY*thisNormalVectorY + thisNormalVectorZ*thisNormalVectorZ);
+
 				float cosinus =
-					normalVectorX*thisNormalVectorX +
-					normalVectorY*thisNormalVectorY +
-					normalVectorZ*thisNormalVectorZ;
+					(lightVectorX*thisNormalVectorX +
+						lightVectorY*thisNormalVectorY +
+						thisLightVectorZ*thisNormalVectorZ) / lightNorm/normNorm;
+				//if (cos < 0)
+				//	cos = 0;
+				if (cosinus < 0)
+					cosinus = 0;
 				glColor3f(
 					lightColorR*thisPolygonFillColorR*cosinus,
 					lightColorG*thisPolygonFillColorG*cosinus,
