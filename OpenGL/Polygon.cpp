@@ -391,6 +391,33 @@ void GL::Polygon::MovePolygon(int xOffset, int yOffset)
 	UpdateAllEdgeCoeff();
 }
 
+bool GL::Polygon::CheckConvex()
+{
+	if (!isLooped)
+		return false;
+	int n = vertices.size();
+	int i, j, k;
+	int flag = 0;
+	double z;
+
+	for (i = 0; i<n; i++) {
+		j = (i + 1) % n;
+		k = (i + 2) % n;
+		z = (vertices[j].GetX() - vertices[i].GetX()) * (vertices[k].GetY() - vertices[j].GetY());
+		z -= (vertices[j].GetY() - vertices[i].GetY()) * (vertices[k].GetX() - vertices[j].GetX());
+		if (z < 0)
+			flag |= 1;
+		else if (z > 0)
+			flag |= 2;
+		if (flag == 3)
+			return false;
+	}
+	if (flag != 0)
+		return true;
+	else
+		return false;
+}
+
 //================================================================
 //private
 bool GL::Polygon::CheckEdgeVetical(int n)

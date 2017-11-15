@@ -194,6 +194,12 @@ void Manager::keyboardFunc(unsigned char key, int x, int y)
 				drawScene();
 		break;
 	}
+	case 'c':
+	{
+		Manager* m = getInstance();
+		m->ClippingPolygons();
+		break;
+	}
 	}
 }
 void Manager::motionFuncLeft(int _x, int _y)
@@ -335,6 +341,32 @@ void Manager::CheckEdges(int x, int y)
 		highlightPolygon = p;
 		GL::DrawPolygons(polygons, highlightPolygon, highlightVertice, highlightEdge);
 	}
+}
+
+void Manager::ClippingPolygons()
+{
+	if (polygons.size() != 2)
+		return;
+	int convexNr = -1;
+	for (int i = 0; i < polygons.size(); i++)
+	{
+		if (polygons[i]->CheckConvex())
+		{
+			convexNr = i;
+			break;
+		}
+	}
+	if (convexNr == -1)
+		return;
+	for (int i = 0; i < polygons.size(); i++)
+	{
+		if (i != convexNr)
+			SutherlandHodgman(convexNr, i);
+	}
+}
+
+void Manager::SutherlandHodgman(int clipPolygon, int subjectPolygon)
+{
 }
 
 void Manager::drawGUI()

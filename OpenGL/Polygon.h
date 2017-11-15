@@ -54,7 +54,7 @@ namespace GL
 		bool SetAngleFunction(int n);
 
 		void MovePolygon(int xOffset, int yOffset);
-
+		bool CheckConvex();
 	private:
 		bool CheckEdgeVetical(int n);
 		bool CheckEdgeHorizontal(int n);
