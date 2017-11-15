@@ -1,5 +1,4 @@
 #pragma once
-#include "Point.h"
 #include <GL/glut.h> 
 #include <ostream>
 using namespace std;
@@ -17,7 +16,6 @@ namespace GL
 		Vertex();
 		~Vertex();
 		Vertex(int _x, int _y);
-		Vertex(GL::Point p);
 
 		void Move(int x, int y);
 

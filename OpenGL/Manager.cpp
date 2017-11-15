@@ -1,7 +1,7 @@
 #include "GL/glew.h"
 #include "GL/freeglut.h"
 
-#include "IMGUI/imgui.h"
+#include "imgui\imgui.h"
 #include "imgui_impl_glut.h"
 
 #include "global_variable.h"
@@ -20,8 +20,8 @@ Manager::Manager()
 	GL::Polygon* pp = new GL::Polygon();
 	pp->AddVertex(50, 50);
 	pp->AddVertex(700, 50);
-	pp->AddVertex(700, 700);
-	pp->AddVertex(50, 700);
+	pp->AddVertex(700, 500);
+	pp->AddVertex(50, 500);
 	pp->Loop();
 	polygons.push_back(pp);
 	highlightVertice = -1;
@@ -44,7 +44,6 @@ Manager::~Manager()
 	for (auto &p : polygons)
 		p->~Polygon();
 	polygons.clear();
-	//polygon->~Polygon();
 }
 
 void Manager::mouseFunc(int button, int state, int x, int y)
@@ -131,7 +130,6 @@ void Manager::keyboardFunc(unsigned char key, int x, int y)
 		{
 			GL::Polygon* polygon = mm->polygons[mm->highlightPolygon];
 			polygon->AddVertAtEdge(mm->highlightEdge, x, WINDOW_HEIGHT - y);
-			//GL::DrawPolygons(mm->polygons, mm->highlightPolygon, mm->highlightVertice, mm->highlightEdge);
 			drawScene();
 		}
 		break;
@@ -144,7 +142,6 @@ void Manager::keyboardFunc(unsigned char key, int x, int y)
 			GL::Polygon* polygon = mm->polygons[mm->highlightPolygon];
 			polygon->DeleteVert(mm->highlightVertice);
 			mm->highlightVertice = -1;
-			//GL::DrawPolygons(mm->polygons, mm->highlightPolygon, mm->highlightVertice, mm->highlightEdge);
 			drawScene();
 		}
 		break;
@@ -152,46 +149,10 @@ void Manager::keyboardFunc(unsigned char key, int x, int y)
 	case 'l': // loop polygon
 	{
 		Manager* mm = getInstance();
-		//GL::Polygon* polygon = mm->polygon;
-		//GL::Polygon* polygon2 = mm->polygon2;
 		GL::Polygon* p = mm->polygons[mm->polygons.size() - 1];
 		if (!p->IsLooped())
 			p->Loop();
-		//GL::DrawPolygons(mm->polygons, mm->highlightPolygon, mm->highlightVertice, mm->highlightEdge);
 		drawScene();
-		break;
-	}
-	case 'v': // try to make edge vertical
-	{
-		Manager* mm = getInstance();
-		if (mm->highlightEdge != -1)
-		{
-			GL::Polygon* p = mm->polygons[mm->highlightPolygon];
-			p->MakeEdgeVertical(mm->highlightEdge);
-			//GL::DrawPolygons(mm->polygons, mm->highlightPolygon, mm->highlightVertice, mm->highlightEdge);
-			drawScene();
-		}
-		break;
-	}
-	case 'h': // try to make edge horizontal
-	{
-		Manager* mm = getInstance();
-		if (mm->highlightEdge != -1)
-		{
-			GL::Polygon* polygon = mm->polygons[mm->highlightPolygon];
-			polygon->MakeEdgeHorizontal(mm->highlightEdge);
-			//GL::DrawPolygons(mm->polygons, mm->highlightPolygon, mm->highlightVertice, mm->highlightEdge);
-			drawScene();
-		}
-		break;
-	}
-	case 's': // set angle
-	{
-		Manager* mm = getInstance();
-		if (mm->highlightVertice != -1)
-			if (mm->polygons[mm->highlightPolygon]->SetAngleFunction(mm->highlightVertice))
-				//	GL::DrawPolygons(mm->polygons, mm->highlightPolygon, mm->highlightVertice, mm->highlightEdge);
-				drawScene();
 		break;
 	}
 	}
@@ -241,38 +202,17 @@ void Manager::NewVertexAndEdge(int x, int y)
 		p = polygons[polygons.size() - 1];
 	if (p != nullptr)
 	{
-		/*if ((p->VertCount() > 0) && (highlightVertice == 0) && (highlightPolygon == (polygons.size() - 1)))
-		{
-			if (p->Loop())
-			{
-				GL::DrawPolygons(polygons, -1, -1, -1);
-				return;
-			}
-		}
-		else */
 		if (!(p->IsLooped()))
 		{
 			p->AddVertex(x, y);
-			//GL::DrawPolygons(polygons, -1, -1, -1);
 			glutPostRedisplay();
 			return;
 		}
 	}
-	//else
-	//{
 	GL::Polygon* pp = new GL::Polygon();
 	polygons.push_back(pp);
 	polygons[polygons.size() - 1]->AddVertex(x, y);
-	//}
-
-	/*if (polygon->CheckMouseNearVertice(x, y) != -1)
-	{
-		return;
-	}*/
-
-	//if (polygon->VertCount() > 1)
 	GL::DrawPolygons(polygons, -1, -1, -1);
-	//drawScene();
 	glutPostRedisplay();
 }
 bool Manager::CheckVertices(int x, int y)
@@ -295,7 +235,6 @@ bool Manager::CheckVertices(int x, int y)
 			highlightVertice = -1;
 			highlightPolygon = -1;
 		}
-		//GL::DrawPolygons(polygons, highlightPolygon, highlightVertice, highlightEdge);
 		glutPostRedisplay();
 		return false;
 	}
@@ -304,8 +243,8 @@ bool Manager::CheckVertices(int x, int y)
 		highlightVertice = v;
 		glutPostRedisplay();
 		highlightPolygon = p;
-		//GL::DrawPolygons(polygons, highlightPolygon, highlightVertice, highlightEdge);
 	}
+	glutPostRedisplay();
 	return true;
 }
 void Manager::CheckEdges(int x, int y)
@@ -326,14 +265,14 @@ void Manager::CheckEdges(int x, int y)
 		{
 			highlightEdge = -1;
 			highlightPolygon = -1;
-			GL::DrawPolygons(polygons, highlightPolygon, highlightVertice, highlightEdge);
+			glutPostRedisplay();
 		}
 	}
 	else if ((highlightEdge != e) || (highlightPolygon != p))
 	{
 		highlightEdge = e;
 		highlightPolygon = p;
-		GL::DrawPolygons(polygons, highlightPolygon, highlightVertice, highlightEdge);
+		glutPostRedisplay();
 	}
 }
 
@@ -358,7 +297,6 @@ void Manager::ClippingPolygons()
 			SutherlandHodgman(convexNr, i);
 	}
 }
-
 bool IsSameSide(GL::Vertex p1, GL::Vertex insidePoint, GL::Vertex p0, GL::Vertex p2)
 {
 	bool isSameSide = false; // 
@@ -432,15 +370,12 @@ void Manager::SutherlandHodgman(int clipPolygonNr, int subjectPolygonNr)
 	}
 	if (output.size() > 0 && output[0] == output[output.size() - 1])
 		output.erase(output.begin() + output.size() - 1);
-	polygons[subjectPolygonNr]->SetVertices( output);
+	polygons[subjectPolygonNr]->SetVertices(output);
 }
 
 void Manager::drawGUI()
 {
 	ImGui_ImplGLUT_NewFrame(WINDOW_WIDTH, WINDOW_HEIGHT);
-
-	// 1. Show a simple window
-	// Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
 	{
 		ImGui::SetWindowPos(ImVec2(WINDOW_WIDTH - MENU_WIDTH, 0));
 		ImGui::SetWindowSize(ImVec2(MENU_WIDTH, WINDOW_HEIGHT));
@@ -500,31 +435,20 @@ void Manager::drawGUI()
 		ImGui::RadioButton("Brak [0,0,0]", &rb4, 0);
 		ImGui::RadioButton("Z tekstury \"Height Map\" TODO", &rb4, 1);
 		ImGui::Text("------------------------------------------------");
-		if (ImGui::Button("Clip Polygons")) 
+		if (ImGui::Button("Clip Polygons"))
 			ClippingPolygons();
 	}
-
-	/*{
-		ImGui::SetNextWindowPos(ImVec2(0, 100));
-		ImGui::SetNextWindowSize(ImVec2(300, 500));
-		ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiSetCond_FirstUseEver);
-		ImGui::ShowTestWindow(&show_test_window2);
-	}*/
-
 	ImGui::Render();
 }
 void Manager::mouseCallback(int button, int state, int x, int y)
 {
 	if (getInstance()->mouseEvent(button, state, x, y))
-	{
 		glutPostRedisplay();
-	}
 }
 void Manager::mouseDragCallback(int x, int y)
 {
 	ImGuiIO& io = ImGui::GetIO();
 	io.MousePos = ImVec2((float)x, (float)y);
-
 	glutPostRedisplay();
 }
 void Manager::mouseMoveCallback(int x, int y)
@@ -536,15 +460,12 @@ void Manager::mouseMoveCallback(int x, int y)
 	}
 	ImGuiIO& io = ImGui::GetIO();
 	io.MousePos = ImVec2((float)x, (float)y);
-
 	glutPostRedisplay();
 }
 void Manager::keyboardCallback(unsigned char nChar, int x, int y)
 {
 	if (getInstance()->keyboardEvent(nChar, x, y))
-	{
 		glutPostRedisplay();
-	}
 }
 bool Manager::mouseEvent(int button, int state, int x, int y)
 {
@@ -578,9 +499,7 @@ bool Manager::mouseEvent(int button, int state, int x, int y)
 bool Manager::keyboardEvent(unsigned char nChar, int nX, int nY)
 {
 	ImGuiIO& io = ImGui::GetIO();
-
 	io.AddInputCharacter(nChar);
-
 	return true;
 }
 

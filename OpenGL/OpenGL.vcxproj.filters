@@ -19,20 +19,17 @@
     <Filter Include="Polygon">
       <UniqueIdentifier>{1861849c-831f-4a55-8755-3f08f6df75f7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GraphicsLibrary\Point">
-      <UniqueIdentifier>{63b69871-80f5-4e2d-8ec0-e69ca2fbff7c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GraphicsLibrary\LineCoefficient">
       <UniqueIdentifier>{888d2d0a-9039-481e-a716-37a78ba96861}</UniqueIdentifier>
     </Filter>
     <Filter Include="GraphicsLibrary\Manager">
       <UniqueIdentifier>{4daad2d5-22a1-41ab-a1a0-2824cd3328a8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GraphicsLibrary\Vertex">
-      <UniqueIdentifier>{ab2a087e-ebd9-498e-8e1c-c38b316d4841}</UniqueIdentifier>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{19fdf89c-7378-4bfd-b317-2e9f6a8aaf41}</UniqueIdentifier>
     </Filter>
-    <Filter Include="IMGUI">
-      <UniqueIdentifier>{fe33ae83-3847-4cb9-831c-dff77fbae697}</UniqueIdentifier>
+    <Filter Include="Vertex">
+      <UniqueIdentifier>{6dba6408-5ea4-44c1-a677-7209effc5aa4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,43 +45,28 @@
     <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Vertex.cpp">
-      <Filter>GraphicsLibrary\Vertex</Filter>
-    </ClCompile>
     <ClCompile Include="Manager.cpp">
       <Filter>GraphicsLibrary\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="Point.cpp">
-      <Filter>GraphicsLibrary\Point</Filter>
     </ClCompile>
     <ClCompile Include="LineCoefficient.cpp">
       <Filter>GraphicsLibrary\LineCoefficient</Filter>
     </ClCompile>
-    <ClCompile Include="imgui\imgui.cpp">
-      <Filter>IMGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_demo.cpp">
-      <Filter>IMGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_draw.cpp">
-      <Filter>IMGUI</Filter>
-    </ClCompile>
     <ClCompile Include="imgui\imgui_impl_glut.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="global_variable.cpp">
-      <Filter>Header Files</Filter>
+    <ClCompile Include="imgui\imgui.cpp">
+      <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="imgui\imguifilesystem.cpp">
-      <Filter>IMGUI</Filter>
+    <ClCompile Include="imgui\imgui_draw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Vertex.cpp">
+      <Filter>Vertex</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsLibrary.h">
       <Filter>GraphicsLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="Vertex.h">
-      <Filter>GraphicsLibrary\Vertex</Filter>
     </ClInclude>
     <ClInclude Include="Manager.h">
       <Filter>GraphicsLibrary\Manager</Filter>
@@ -95,29 +77,8 @@
     <ClInclude Include="Polygon.h">
       <Filter>Polygon</Filter>
     </ClInclude>
-    <ClInclude Include="Point.h">
-      <Filter>GraphicsLibrary\Point</Filter>
-    </ClInclude>
     <ClInclude Include="AET.h">
       <Filter>GraphicsLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui.h">
-      <Filter>IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imconfig.h">
-      <Filter>IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui_internal.h">
-      <Filter>IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\stb_rect_pack.h">
-      <Filter>IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\stb_textedit.h">
-      <Filter>IMGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\stb_truetype.h">
-      <Filter>IMGUI</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imgui_impl_glut.h">
       <Filter>Source Files</Filter>
@@ -125,11 +86,23 @@
     <ClInclude Include="global_variable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="imgui\dirent_portable.h">
-      <Filter>IMGUI</Filter>
+    <ClInclude Include="imgui\imgui.h">
+      <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="imgui\imguifilesystem.h">
-      <Filter>IMGUI</Filter>
+    <ClInclude Include="imgui\imgui_internal.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\stb_rect_pack.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\stb_textedit.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\stb_truetype.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Vertex</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

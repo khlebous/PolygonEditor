@@ -13,11 +13,6 @@ GL::Vertex::Vertex(int _x, int _y)
 	x = _x;
 	y = _y;
 }
-GL::Vertex::Vertex(GL::Point p)
-{
-	x = p.x;
-	y = p.y;
-}
 
 void GL::Vertex::Move(int _x, int _y)
 {

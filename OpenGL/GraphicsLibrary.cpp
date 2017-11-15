@@ -38,18 +38,12 @@ void GL::FillPolygon(GL::Polygon * p)
 	unsigned char* normalMap = nullptr;
 	if (isNormalMap)
 	{
-		normalMap = SOIL_load_image("map1.bmp", &normalMapWidth, &normalMapHeight, 0, SOIL_LOAD_RGB);
+		normalMap = SOIL_load_image("bevelnormalmap.png", &normalMapWidth, &normalMapHeight, 0, SOIL_LOAD_RGB);
 		if (normalMap == 0)
 			cout << "Can't load texture\n";
 	}
 	if (isLightAnimated)
 	{
-		/*float cr = cosf(lightStep);
-		float sr = sinf(lightStep);
-		float xxx = thisLightVectorX;
-		float yyy = thisLightVectorY;
-		lightVectorX = cr * xxx - sr*yyy;
-		lightVectorY = sr * xxx + cr*yyy;*/
 		lightPositionX = lightRadius* cosf(lightAngle) + (WINDOW_WIDTH - MENU_WIDTH) / 2;
 		lightPositionY = lightRadius* sinf(lightAngle) + WINDOW_HEIGHT / 2;
 		lightAngle += lightStep;
@@ -121,12 +115,11 @@ void GL::FillPolygon(GL::Polygon * p)
 					int qq = (int)round(cos);
 					int ww = (int)round(k);
 					qq = textureWidth - qq% textureWidth;
-					ww = textureHight - ww%textureHight - 1;
+					ww = textureHight - ww%textureHight;
 					int thisNum = (qq + ww*textureWidth) * 3;
 					unsigned char r = texture[thisNum + 0];
 					unsigned char g = texture[thisNum + 1];
 					unsigned char b = texture[thisNum + 2];
-					//cout << r << " " << g << " " << b << "\n";
 					thisPolygonFillColorR = (float)r / 255;
 					thisPolygonFillColorG = (float)g / 255;
 					thisPolygonFillColorB = (float)b / 255;
@@ -138,13 +131,9 @@ void GL::FillPolygon(GL::Polygon * p)
 					qq = normalMapWidth - qq% normalMapWidth;
 					ww = normalMapHeight - ww%normalMapHeight;
 					int thisNum = (qq + ww*normalMapWidth) * 3;
-					/*unsigned char r = normalMap[thisNum + 0];
-					unsigned char g = normalMap[thisNum + 1];
-					unsigned char b = normalMap[thisNum + 2];*/
 					unsigned char r = normalMap[thisNum + 0];
 					unsigned char g = normalMap[thisNum + 1];
 					unsigned char b = normalMap[thisNum + 2];
-					//cout << r << " " << g << " " << b << "\n";
 					thisNormalVectorX = (float)r / 128 - 1;
 					thisNormalVectorY = (float)g / 128 - 1;
 					thisNormalVectorZ = (float)b / 255;
@@ -170,10 +159,9 @@ void GL::FillPolygon(GL::Polygon * p)
 					(lightVectorX *thisNormalVectorX +
 					lightVectorY*thisNormalVectorY +
 					 lightVectorZ * thisNormalVectorZ) / lightNorm / normNorm;
-				//if (cos < 0)
-				//	cos = 0;
-				if (cosinus < 0)
-					cosinus = 0;
+				
+				/*if (cosinus < 0)
+					cosinus = 0;*/
 				glColor3f(
 					lightColorR*thisPolygonFillColorR*cosinus,
 					lightColorG*thisPolygonFillColorG*cosinus,
@@ -194,17 +182,15 @@ void GL::FillPolygon(GL::Polygon * p)
 	for (int q = 0; q < size; q++)
 		glVertex2i(v[q].GetX(), v[q].GetY());
 	glEnd();
-	glColor3f(1, 1, vertexColorB);
+	/*glColor3f(1, 1, vertexColorB);
 	glBegin(GL_POINTS);
 	glVertex2i(lightPositionX, lightPositionY);
-	glEnd();
+	glEnd();*/
 	delete indexes;
 }
 
 void GL::DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, int highlightE)
 {
-	//glClear(GL_COLOR_BUFFER_BIT);
-
 	for (int i = 0; i < p.size(); i++)
 	{
 		if (p[i]->IsLooped())
@@ -221,8 +207,6 @@ void GL::DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, in
 			GL::DrawHighlightEdge(p[highlightP]->GetVertex(highlightE),
 				p[highlightP]->GetVertex(highlightE + 1));
 	}
-
-	//glutSwapBuffers();
 }
 void GL::DrawPolygon(GL::Polygon * p)
 {
@@ -240,24 +224,6 @@ void GL::DrawPolygon(GL::Polygon * p)
 		if (p->IsLooped())
 			GL::DrawEdge(vertices[i], vertices[0]);
 	}
-
-	/*list<int> vEdges = p->GetVEdges();
-	for (auto it = vEdges.begin(); it != vEdges.end(); it++)
-		GL::DrawVertSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
-	list<int> hEdges = p->GetHEdges();
-	for (auto it = hEdges.begin(); it != hEdges.end(); it++)
-		GL::DrawHorizSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
-	for (auto const &a : p->GetAngles())
-		GL::DrawAngleSign(p->GetVertex(a.first));
-	*/
-	/*list<int> vEdgesTmp = p->GetVEdgesTmp();
-	for (auto it = vEdgesTmp.begin(); it != vEdgesTmp.end(); it++)
-		GL::DrawVertSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
-	list<int> hEdgesTmp = p->GetHEdgesTmp();
-	for (auto it = hEdgesTmp.begin(); it != hEdgesTmp.end(); it++)
-		GL::DrawHorizSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
-*/
-
 }
 
 void GL::DrawVertice(GL::Vertex v)
@@ -279,27 +245,27 @@ void GL::DrawHighlightVertice(GL::Vertex v)
 
 void GL::DrawEdge(GL::Vertex v1, GL::Vertex v2)
 {
-	vector<GL::Point> edge = CalculateLinePixels(v1, v2);
+	vector<pair<int,int>> edge = CalculateLinePixels(v1, v2);
 	glColor3f(edgeColorR, edgeColorG, edgeColorB);
 	glPointSize(EDGE_POINT_SIZE);
 	glBegin(GL_POINTS);
-	for (GL::Point& p : edge)
-		glVertex2i(p.x, p.y);
+	for (pair<int,int> p : edge)
+		glVertex2i(p.first,p.second);
 	glEnd();
 }
 void GL::DrawHighlightEdge(GL::Vertex v1, GL::Vertex v2)
 {
-	vector<GL::Point> edge = CalculateLinePixels(v1, v2);
+	vector<pair<int,int>> edge = CalculateLinePixels(v1, v2);
 	glColor3f(edgeHColorR, edgeHColorG, edgeHColorB);
 	glPointSize(EDGE_POINT_SIZE);
 	glBegin(GL_POINTS);
-	for (GL::Point& p : edge)
-		glVertex2i(p.x, p.y);
+	for (pair<int, int> p : edge)
+		glVertex2i(p.first, p.second);
 	glEnd();
 }
-vector<GL::Point> GL::CalculateLinePixels(GL::Vertex v1, GL::Vertex v2)
+vector<pair<int,int>> GL::CalculateLinePixels(GL::Vertex v1, GL::Vertex v2)
 {
-	vector<GL::Point> line;
+	vector<pair<int, int>> line;
 	int x1 = v1.GetX();
 	int y1 = v1.GetY();
 	int x2 = v2.GetX();
@@ -310,10 +276,10 @@ vector<GL::Point> GL::CalculateLinePixels(GL::Vertex v1, GL::Vertex v2)
 	int signY = y1 < y2 ? 1 : -1;
 	int error = dx - dy;
 
-	line.push_back(GL::Point(x2, y2));
+	line.push_back(make_pair(x2, y2));
 	while (x1 != x2 || y1 != y2)
 	{
-		line.push_back(GL::Point(x1, y1));
+		line.push_back(make_pair(x1, y1));
 		int error2 = error * 2;
 		if (error2 > -dy)
 		{
@@ -327,35 +293,4 @@ vector<GL::Point> GL::CalculateLinePixels(GL::Vertex v1, GL::Vertex v2)
 		}
 	}
 	return line;
-}
-
-void GL::DrawVertSign(GL::Vertex v1, GL::Vertex v2)
-{
-	int x = (v1.GetX() + v2.GetX()) / 2;
-	int y = (v1.GetY() + v2.GetY()) / 2 - 8;
-	glColor3f(1.0f, 0.5f, 0.0f);
-	glPointSize(5);
-	glBegin(GL_POINTS);
-	for (int j = 0; j < 4; j++)
-		glVertex2i(x, y + j * 4);
-	glEnd();
-}
-void GL::DrawHorizSign(GL::Vertex v1, GL::Vertex v2)
-{
-	int x = (v1.GetX() + v2.GetX()) / 2 - 8;
-	int y = (v1.GetY() + v2.GetY()) / 2;
-	glColor3f(1.0f, 0.5f, 0.0f);
-	glPointSize(5);
-	glBegin(GL_POINTS);
-	for (int j = 0; j < 4; j++)
-		glVertex2i(x + j * 4, y);
-	glEnd();
-}
-void GL::DrawAngleSign(GL::Vertex v1)
-{
-	glColor3f(0.0f, 0.3f, 1.0f);
-	glPointSize(8);
-	glBegin(GL_POINTS);
-	glVertex2i(v1.GetX(), v1.GetY());
-	glEnd();
 }

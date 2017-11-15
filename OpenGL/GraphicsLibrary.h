@@ -16,7 +16,7 @@ namespace GL
 	
 	void DrawEdge(GL::Vertex v1, GL::Vertex v2);
 	void DrawHighlightEdge(GL::Vertex v1, GL::Vertex v2);
-	vector<GL::Point> CalculateLinePixels(GL::Vertex v1, GL::Vertex v2);
+	vector<pair<int,int>> CalculateLinePixels(GL::Vertex v1, GL::Vertex v2);
 
 	void DrawVertSign(GL::Vertex v1, GL::Vertex v2);
 	void DrawHorizSign(GL::Vertex v1, GL::Vertex v2);
