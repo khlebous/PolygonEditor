@@ -18,10 +18,10 @@ Manager::Manager()
 {
 	polygons = vector<GL::Polygon*>();
 	GL::Polygon* pp = new GL::Polygon();
-	pp->AddVertex(100, 100);
-	pp->AddVertex(500, 100);
-	pp->AddVertex(500, 500);
-	pp->AddVertex(100, 500);
+	pp->AddVertex(50, 50);
+	pp->AddVertex(700, 50);
+	pp->AddVertex(700, 700);
+	pp->AddVertex(50, 700);
 	pp->Loop();
 	polygons.push_back(pp);
 	highlightVertice = -1;

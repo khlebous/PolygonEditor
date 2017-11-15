@@ -43,3 +43,7 @@ extern bool isLightAnimated;
 extern float lightRadius;
 extern float lightAngle;
 extern float lightStep;
+
+extern float lightPositionX;
+extern float lightPositionY;
+extern float lightPositionZ;

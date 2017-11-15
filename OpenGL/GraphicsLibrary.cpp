@@ -38,18 +38,21 @@ void GL::FillPolygon(GL::Polygon * p)
 	unsigned char* normalMap = nullptr;
 	if (isNormalMap)
 	{
-		normalMap = SOIL_load_image("bevelnormalmap.png", &normalMapWidth, &normalMapHeight, 0, SOIL_LOAD_RGB);
+		normalMap = SOIL_load_image("map1.bmp", &normalMapWidth, &normalMapHeight, 0, SOIL_LOAD_RGB);
 		if (normalMap == 0)
 			cout << "Can't load texture\n";
 	}
 	if (isLightAnimated)
 	{
-		float cr = cosf(lightStep);
+		/*float cr = cosf(lightStep);
 		float sr = sinf(lightStep);
 		float xxx = thisLightVectorX;
 		float yyy = thisLightVectorY;
 		lightVectorX = cr * xxx - sr*yyy;
-		lightVectorY = sr * xxx + cr*yyy;
+		lightVectorY = sr * xxx + cr*yyy;*/
+		lightPositionX = lightRadius* cosf(lightAngle) + (WINDOW_WIDTH - MENU_WIDTH) / 2;
+		lightPositionY = lightRadius* sinf(lightAngle) + WINDOW_HEIGHT / 2;
+		lightAngle += lightStep;
 		glutPostRedisplay();
 	}
 	glPointSize(1);
@@ -140,21 +143,33 @@ void GL::FillPolygon(GL::Polygon * p)
 					unsigned char b = normalMap[thisNum + 2];*/
 					unsigned char r = normalMap[thisNum + 0];
 					unsigned char g = normalMap[thisNum + 1];
-					unsigned char b = normalMap[thisNum + 2]; 
+					unsigned char b = normalMap[thisNum + 2];
 					//cout << r << " " << g << " " << b << "\n";
-					thisNormalVectorX = (float)r / 128-1;
-					thisNormalVectorY = (float)g / 128-1;
+					thisNormalVectorX = (float)r / 128 - 1;
+					thisNormalVectorY = (float)g / 128 - 1;
 					thisNormalVectorZ = (float)b / 255;
 				}
-				float lightNorm = 1;
-				
-					float normNorm = 1;
-					normNorm=sqrt(thisNormalVectorX*thisNormalVectorX + thisNormalVectorY*thisNormalVectorY + thisNormalVectorZ*thisNormalVectorZ);
+				float normNorm = 1;
+				normNorm = sqrt(thisNormalVectorX*thisNormalVectorX + thisNormalVectorY*thisNormalVectorY + thisNormalVectorZ*thisNormalVectorZ);
 
-				float cosinus =
-					(lightVectorX*thisNormalVectorX +
-						lightVectorY*thisNormalVectorY +
-						thisLightVectorZ*thisNormalVectorZ) / lightNorm/normNorm;
+				float cosinus = 0;
+				float lightNorm = 1;
+				if (isLightAnimated)
+				{
+					float lightPositionXtmp = lightPositionX - (int)round(cos);
+					lightPositionXtmp = -lightPositionXtmp;
+					float lightPositionYtmp = lightPositionY - (int)round(k);
+					lightNorm = sqrt(lightPositionXtmp*lightPositionXtmp + lightPositionYtmp*lightPositionYtmp + lightPositionZ*lightPositionZ);
+					cosinus =
+						(lightPositionXtmp*thisNormalVectorX +
+						lightPositionYtmp*thisNormalVectorY +
+							lightPositionZ * thisNormalVectorZ) / lightNorm / normNorm;
+				}
+				else
+					cosinus =
+					(lightVectorX *thisNormalVectorX +
+					lightVectorY*thisNormalVectorY +
+					 lightVectorZ * thisNormalVectorZ) / lightNorm / normNorm;
 				//if (cos < 0)
 				//	cos = 0;
 				if (cosinus < 0)
@@ -178,6 +193,10 @@ void GL::FillPolygon(GL::Polygon * p)
 	glBegin(GL_POINTS);
 	for (int q = 0; q < size; q++)
 		glVertex2i(v[q].GetX(), v[q].GetY());
+	glEnd();
+	glColor3f(1, 1, vertexColorB);
+	glBegin(GL_POINTS);
+	glVertex2i(lightPositionX, lightPositionY);
 	glEnd();
 	delete indexes;
 }
