@@ -485,7 +485,6 @@ void GL::Polygon::CheckEdgeVH(int n, list<int>* v1, list<int>* v2, bool checkV)
 			vertices[n2] = GL::Vertex(v2.GetX(), y);
 			hEdges.push_back(n);
 		}
-		//UpdateAllEdgeCoeff();
 	}
 	UpdateEdgeCoeff(n);
 	int l1 = (n - 1 + vertices.size()) % vertices.size();
@@ -495,13 +494,11 @@ void GL::Polygon::CheckEdgeVH(int n, list<int>* v1, list<int>* v2, bool checkV)
 	{
 		GL::Vertex v = LineIntersection(edgeCoeff[l1], edgeCoeff[n]);
 		vertices[n].Move(v.GetX(), v.GetY());
-		//UpdateEdgeCoeff(l1);
 	}
 	if (CheckAngleIsSetToVertex(r2))
 	{
 		GL::Vertex v = LineIntersection(edgeCoeff[r1], edgeCoeff[n]);
 		vertices[r1].Move(v.GetX(), v.GetY());
-		//UpdateEdgeCoeff();
 	}
 }
 
@@ -530,20 +527,6 @@ void GL::Polygon::UpdateEdgeCoeff(int n)
 	}
 	edgeCoeff[n] = LineCoefficients(LineCoefficients(vertices[n], vertices[(n + 1) % vertices.size()]));
 }
-//void GL::Polygon::DeleteVertFromAngleVector(int n)
-//{
-//	auto itr = angles.begin();
-//	while (itr != angles.end())
-//	{
-//		if ((*itr) == n)
-//		{
-//			angles.erase(itr++);
-//			return;
-//		}
-//		else
-//			++itr;
-//	}
-//}
 void GL::Polygon::DeleteSetAngle(int n)
 {
 	auto it = vertSetAngle.begin();

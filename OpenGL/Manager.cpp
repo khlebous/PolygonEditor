@@ -365,8 +365,80 @@ void Manager::ClippingPolygons()
 	}
 }
 
-void Manager::SutherlandHodgman(int clipPolygon, int subjectPolygon)
+bool IsSameSide(GL::Vertex p1, GL::Vertex insidePoint, GL::Vertex p0, GL::Vertex p2)
 {
+	bool isSameSide = false; // 
+	double tmp1 = (p1.GetX() - p0.GetX()) * (p2.GetY() - p0.GetY()) - (p2.GetX() - p0.GetX()) * (p1.GetY() - p0.GetY());
+	double tmp2 = (insidePoint.GetX() - p0.GetX()) * (p2.GetY() - p0.GetY()) - (p2.GetX() - p0.GetX()) * (insidePoint.GetY() - p0.GetY());
+	if (tmp1 * tmp2 >= 0)
+		isSameSide = true;
+	return isSameSide;
+}
+void Manager::SutherlandHodgman(int clipPolygonNr, int subjectPolygonNr)
+{
+	vector<GL::Vertex> przeciecie = vector<GL::Vertex>();
+	vector<GL::Vertex> output = vector<GL::Vertex>();
+	output = polygons[subjectPolygonNr]->GetVertices();
+	vector<GL::Vertex>clipPolygon = polygons[clipPolygonNr]->GetVertices();
+	vector<GL::Vertex>subjectPolygon = polygons[subjectPolygonNr]->GetVertices();
+	int n = polygons[clipPolygonNr]->VertCount();
+
+	GL::Vertex insidePoint = GL::Vertex((clipPolygon[0].GetX() + clipPolygon[1].GetX() + clipPolygon[2].GetX()) / 3,
+		(clipPolygon[0].GetY() + clipPolygon[1].GetY() + clipPolygon[2].GetY()) / 3);
+	for (int i = 0; i < n; i++)
+	{
+		// e - pocz - clipPolig[i]
+		//     koniec [i+1]
+		vector<GL::Vertex> input = output;
+		output = vector<GL::Vertex>();
+		GL::Vertex pp = input[input.size() - 1];
+		for (GL::Vertex &p : input)
+		{
+			GL::Vertex p1 = p;
+			GL::Vertex p0 = clipPolygon[i];
+			GL::Vertex p2 = GL::Vertex();
+			if (i + 1 == clipPolygon.size())
+				p2 = clipPolygon[0];
+			else
+				p2 = clipPolygon[i + 1];
+
+			bool isSameSide = IsSameSide(p1, insidePoint, p0, p2);
+			if (isSameSide) // p po wewn stronie
+			{
+				p1 = pp;
+				isSameSide = IsSameSide(p1, insidePoint, p0, p2);
+				if (!isSameSide) // pp nie po wewn
+				{
+					GL::LineCoefficients lc1 = GL::LineCoefficients(pp, p);
+					GL::LineCoefficients lc2 = GL::LineCoefficients(p0, p2);
+					output.push_back(lc1.LineIntersection(lc2));
+				}
+				if (output.size() == 0)
+					output.push_back(p);
+				else if (output[output.size() - 1] != p)
+					output.push_back(p);
+			}
+			else
+			{
+				p1 = pp;
+				isSameSide = IsSameSide(p1, insidePoint, p0, p2);
+				if (isSameSide) // pp po wewn
+				{
+					GL::LineCoefficients lc1 = GL::LineCoefficients(pp, p);
+					GL::LineCoefficients lc2 = GL::LineCoefficients(p0, p2);
+					GL::Vertex tmp = lc1.LineIntersection(lc2);
+					if (output.size() == 0)
+						output.push_back(tmp);
+					else if (output[output.size() - 1] != tmp)
+						output.push_back(tmp);
+				}
+			}
+			pp = p;
+		}
+	}
+	if (output.size() > 0 && output[0] == output[output.size() - 1])
+		output.erase(output.begin() + output.size() - 1);
+	polygons[subjectPolygonNr]->SetVertices( output);
 }
 
 void Manager::drawGUI()

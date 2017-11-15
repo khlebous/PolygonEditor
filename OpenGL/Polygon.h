@@ -24,11 +24,12 @@ namespace GL
 		list<int> vTmpEdges; // vertical temporary Edges
 		list<int> hTmpEdges; // horizontal temporary Edges
 
-		void AddVertex(int x, int y){ AddVertex(GL::Vertex(x, y)); }
+		void AddVertex(int x, int y) { AddVertex(GL::Vertex(x, y)); }
 		void AddVertex(GL::Vertex p);
 
-		vector<GL::Vertex> GetVertices(){ return vertices; }
-		GL::Vertex GetVertex(int index){ return vertices[(index+vertices.size())%vertices.size()]; }
+		vector<GL::Vertex> GetVertices() { return vertices; }
+		void SetVertices(vector<GL::Vertex> vv) { vertices = vv; }
+		GL::Vertex GetVertex(int index) { return vertices[(index + vertices.size()) % vertices.size()]; }
 		int VertCount() { return vertices.size(); }
 		list<int> GetVEdges() { return vEdges; }
 		list<int> GetHEdges() { return hEdges; }
@@ -40,7 +41,7 @@ namespace GL
 		int CheckMouseNearEdge(int x, int y);
 		bool IsInside(int x, int y);
 		bool Loop();
-		bool IsLooped() { return isLooped==1; }
+		bool IsLooped() { return isLooped == 1; }
 
 		void MoveVertex(int vertNum, int x, int y);
 		void AddVertAtEdge(int n, int x, int y);
@@ -59,12 +60,12 @@ namespace GL
 		bool CheckEdgeVetical(int n);
 		bool CheckEdgeHorizontal(int n);
 		void CheckEdgeVH(int n, list<int>* v1, list <int>* v2, bool checkV);
-		
+
 		bool CheckAngleIsSetToVertex(int n);
 		void UpdateAllEdgeCoeff();
 		void UpdateEdgeCoeff(int n);
 		void DeleteSetAngle(int n);
-		
+
 		double Distance(double x1, double y1, double x2, double y2);
 		GL::Vertex LineIntersection(GL::LineCoefficients lc1, GL::LineCoefficients lc2);
 	};

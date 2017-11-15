@@ -17,5 +17,6 @@ namespace GL
 		int GetB() { return B; }
 		int GetC() { return C; }
 		LineCoefficients FindParallelLine(int x, int y);
+		GL::Vertex LineIntersection(GL::LineCoefficients lc1);
 	};
 }
