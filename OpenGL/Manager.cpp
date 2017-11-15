@@ -194,12 +194,6 @@ void Manager::keyboardFunc(unsigned char key, int x, int y)
 				drawScene();
 		break;
 	}
-	case 'c':
-	{
-		Manager* m = getInstance();
-		m->ClippingPolygons();
-		break;
-	}
 	}
 }
 void Manager::motionFuncLeft(int _x, int _y)
@@ -505,6 +499,9 @@ void Manager::drawGUI()
 		static int rb4 = 0;
 		ImGui::RadioButton("Brak [0,0,0]", &rb4, 0);
 		ImGui::RadioButton("Z tekstury \"Height Map\" TODO", &rb4, 1);
+		ImGui::Text("------------------------------------------------");
+		if (ImGui::Button("Clip Polygons")) 
+			ClippingPolygons();
 	}
 
 	/*{
