@@ -35,6 +35,11 @@ private:
 	bool CheckVertices(int x, int y);
 	void CheckEdges(int x, int y);
 
+	void ClippingPolygons();
+	
+	//clipPolygon - convex
+	void SutherlandHodgman(int clipPolygon, int subjectPolygon);
+
 	void drawGUI();
 	static void mouseCallback(int button, int state, int x, int y);
 	static void mouseDragCallback(int x, int y);

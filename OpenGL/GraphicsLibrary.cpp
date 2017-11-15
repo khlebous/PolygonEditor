@@ -133,7 +133,7 @@ void GL::FillPolygon(GL::Polygon * p)
 					int qq = (int)round(cos);
 					int ww = (int)round(k);
 					qq = normalMapWidth - qq% normalMapWidth;
-					ww = normalMapHeight - ww%normalMapHeight - 1;
+					ww = normalMapHeight - ww%normalMapHeight;
 					int thisNum = (qq + ww*normalMapWidth) * 3;
 					/*unsigned char r = normalMap[thisNum + 0];
 					unsigned char g = normalMap[thisNum + 1];

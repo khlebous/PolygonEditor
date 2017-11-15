@@ -23,3 +23,26 @@ GL::LineCoefficients GL::LineCoefficients::FindParallelLine(int x, int y)
 	int c = (A*x + B*y);
 	return GL::LineCoefficients(A, B, c);
 }
+GL::Vertex GL::LineCoefficients::LineIntersection(GL::LineCoefficients lc1)
+{
+	int A1 = lc1.GetA();
+	int B1 = lc1.GetB();
+	int C1 = lc1.GetC();
+
+	int A2 = A;
+	int B2 = B;
+	int C2 = C;
+
+	double det = A1*B2 - A2*B1;
+
+	if (det == 0)
+	{
+	}
+	else
+	{
+		double x = (B2*C1 - B1*C2) / det;
+		double y = (A1*C2 - A2*C1) / det;
+		return GL::Vertex(round(x), round(y));
+	}
+	return GL::Vertex(-1, -1);
+}

@@ -32,7 +32,7 @@ extern float lightColorG = 1.0f;
 extern float lightColorB = 1.0f;
 
 extern bool isTexture = false;
-extern bool isNormalMap = true;
+extern bool isNormalMap = false;
 extern bool isLightAnimated = true;
 extern float lightRadius = 100;
 extern float lightAngle = 0;
