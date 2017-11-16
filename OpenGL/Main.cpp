@@ -27,16 +27,16 @@ extern float lightColorR = 1.0f;
 extern float lightColorG = 1.0f;
 extern float lightColorB = 1.0f;
 
-extern bool isTexture = false;
+extern bool isTexture = true;
 extern bool isNormalMap = true;
-extern bool isLightAnimated = true;
+extern bool isLightAnimated = false;
 
-extern float lightRadius = 100;
+extern int lightRadius = 100;
 extern float lightAngle = 0;
 extern float lightStep = 0.2f;
 extern float lightPositionX = 0;
 extern float lightPositionY = 0;
-extern float lightPositionZ = 100;
+extern int lightPositionZ = 100;
 
 extern float lightVectorX = 0;
 extern float lightVectorY = 0;
@@ -46,6 +46,8 @@ extern float normalVectorX = 0;
 extern float normalVectorY = 0;
 extern float normalVectorZ = 1;
 
+extern int textureNr = 0;
+extern int normalMapNr=0;
 #pragma endregion
 #include "GL/glew.h"
 #include "GL/freeglut.h"
@@ -82,9 +84,7 @@ int main(int argc, char **argv)
 	Manager* m = Manager::getInstance();
 	glutDisplayFunc(Manager::drawScene);
 	glutPassiveMotionFunc(Manager::mousePassiveFunc);
-
 	init();
 	glutMainLoop();
-
 	return 0;
 }

@@ -11,7 +11,7 @@ namespace GL
 	class Polygon
 	{
 		vector<GL::Vertex> vertices;
-		int isLooped;
+		bool isLooped;
 	public:
 		Polygon();
 		~Polygon();
@@ -28,7 +28,7 @@ namespace GL
 		int CheckMouseNearEdge(int x, int y);
 		bool IsInside(int x, int y);
 		bool Loop();
-		bool IsLooped() { return isLooped == 1; }
+		bool IsLooped() { return isLooped; }
 
 		void MoveVertex(int vertNum, int x, int y);
 		void AddVertAtEdge(int n, int x, int y);

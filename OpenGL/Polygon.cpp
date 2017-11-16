@@ -5,7 +5,7 @@
 GL::Polygon::Polygon() :isLooped(0)
 {
 	vertices = vector<GL::Vertex>();
-	//isLooped = false;
+	isLooped = false;
 }
 GL::Polygon::~Polygon()
 {
@@ -40,7 +40,7 @@ int GL::Polygon::CheckMouseNearEdge(int x, int y)
 			+ 5)
 			return i;
 	}
-	if (isLooped == 1)
+	if (isLooped)
 	{
 		if (Distance(vertices[i].GetX(), vertices[i].GetY(), x, y) +
 			Distance(vertices[0].GetX(), vertices[0].GetY(), x, y)
@@ -53,7 +53,7 @@ int GL::Polygon::CheckMouseNearEdge(int x, int y)
 }
 bool GL::Polygon::IsInside(int x, int y)
 {
-	if (isLooped == 0)
+	if (!isLooped)
 		return false;
 	int i, j, nvert = vertices.size();
 	bool c = false;
@@ -68,17 +68,15 @@ bool GL::Polygon::IsInside(int x, int y)
 }
 bool GL::Polygon::Loop()
 {
-	if ((VertCount() < 3) || (isLooped == 1))
+	if ((VertCount() < 3) || (isLooped))
 		return false;
-	isLooped = 1;
+	isLooped=true;
 	return true;
 }
 
 //vert
 void GL::Polygon::MoveVertex(int n, int x, int y)
 {
-	if (isLooped == 0)
-		return;
 	vertices[n].Move(x, y);
 }
 void GL::Polygon::AddVertAtEdge(int n, int x, int y)

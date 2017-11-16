@@ -17,13 +17,21 @@ Manager* Manager::instance = NULL;
 Manager::Manager()
 {
 	polygons = vector<GL::Polygon*>();
-	GL::Polygon* pp = new GL::Polygon();
-	pp->AddVertex(50, 50);
-	pp->AddVertex(700, 50);
-	pp->AddVertex(700, 500);
-	pp->AddVertex(50, 500);
-	pp->Loop();
-	polygons.push_back(pp);
+	GL::Polygon* p1 = new GL::Polygon();
+	p1->AddVertex(400, 50);
+	p1->AddVertex(800, 50);
+	p1->AddVertex(800, 500);
+	p1->AddVertex(500, 200);
+	p1->AddVertex(400, 400);
+	p1->Loop();
+	GL::Polygon* p2 = new GL::Polygon();
+	p2->AddVertex(50, 50);
+	p2->AddVertex(350, 50);
+	p2->AddVertex(300, 500);
+	p2->AddVertex(50, 500);
+	p2->Loop();
+	polygons.push_back(p2);
+	polygons.push_back(p1);
 	highlightVertice = -1;
 	highlightEdge = -1;
 	highlightPolygon = -1;
@@ -64,7 +72,6 @@ void Manager::mouseFunc(int button, int state, int x, int y)
 		{
 			if (mm->polygons[mm->highlightPolygon]->Loop())
 			{
-				//GL::DrawPolygons(mm->polygons, mm->highlightPolygon, mm->highlightVertice, -1);
 				drawScene();
 				return;
 			}
@@ -79,7 +86,7 @@ void Manager::mouseFunc(int button, int state, int x, int y)
 			}
 			mm->_nr = -1;
 		}
-		if (-1 != mm->_nr)
+		if ((mm->highlightPolygon==-1) && (-1 != mm->_nr))
 		{
 			glutMotionFunc(Manager::motionFuncRight);
 			mm->_x = x;
@@ -398,13 +405,39 @@ void Manager::drawGUI()
 		ImGui::Text("------------------------------------------------");
 		ImGui::Text("Wektor do zrodla switala");
 		static int rb1 = 0;
-		ImGui::RadioButton("Staly [0,0,1]", &rb1, 0);
-		ImGui::RadioButton("Swiatlo animowane TODO", &rb1, 1);
+		if (ImGui::RadioButton("Staly [0,0,1]", &rb1, 0))
+		{
+			isLightAnimated = false;
+			glutPostRedisplay();
+		}
+		if (ImGui::RadioButton("Swiatlo animowane", &rb1, 1))
+		{
+			isLightAnimated = true;
+			glutPostRedisplay();
+		}
+		ImGui::SliderInt("Radius", &lightRadius, 1, 500);
+		ImGui::SliderInt("Wysokosc", &lightPositionZ, 50, 200);
 		ImGui::Text("------------------------------------------------");
 		ImGui::Text("Kolor obiektu");
 		static int rb2 = 0;
-		if (ImGui::RadioButton("Staly kolor", &rb2, 0))
+		if (ImGui::RadioButton("Z tekstury", &rb2, 0))
+		{
+			isTexture = true;
+			glutPostRedisplay();
+		}
+		//ImGui::SameLine();
+		const char* listbox_items[] = { "human", "banana", "bricks" };
+		ImGui::ListBox(" ", &textureNr, listbox_items, IM_ARRAYSIZE(listbox_items), 3);
+		if (lastTexture!=textureNr)
+		{
+			lastTexture = textureNr;
+			glutPostRedisplay();
+		}
+		if (ImGui::RadioButton("Staly kolor", &rb2, 1))
+		{
 			isTexture = false;
+			glutPostRedisplay();
+		}
 		ImGui::SameLine();
 		if (ImGui::ColorEdit3("##1", (float*)&fillColor, misc_flags))
 		{
@@ -412,23 +445,28 @@ void Manager::drawGUI()
 			polygonFillColorG = fillColor.y;
 			polygonFillColorB = fillColor.z;
 		}
-		if (ImGui::RadioButton("Z tekstury TODO list", &rb2, 1))
-			isTexture = true;
-		ImGui::SameLine();
-		const char* listbox_items[] = { "1.jpg", "2.png", "3.jpg" };
-		/*ImGui::ListBox("", &listbox_item_current, listbox_items, IM_ARRAYSIZE(listbox_items), 3);
-		{
-
-		}*/
 		ImGui::Text("------------------------------------------------");
 		/*ImGui::Text("Wektor normalny z zaburzeniem");
 		ImGui::Text("N'=N+D");*/
 		ImGui::Text("N (wektor normalny przed zaburzeniem)");
 		static int rb3 = 0;
-		if (ImGui::RadioButton("Staly vector N [0,0,1]", &rb3, 0))
-			isNormalMap = false;
-		if (ImGui::RadioButton("Z tekstury \"Normal Map\" TODO list", &rb3, 1))
+		if (ImGui::RadioButton("Z tekstury \"Normal Map\" TODO list", &rb3, 0))
+		{
 			isNormalMap = true;
+			glutPostRedisplay();
+		}
+		const char* listbox_items2[] = { "human", "hemisphere", "hemisphereAndOther", "bricks" };
+		ImGui::ListBox("qwe", &normalMapNr, listbox_items2, IM_ARRAYSIZE(listbox_items2), 4);
+		if (lastNormalMap != normalMapNr)
+		{
+			lastNormalMap = normalMapNr;
+			glutPostRedisplay();
+		}
+		if (ImGui::RadioButton("Staly vector N [0,0,1]", &rb3, 1))
+		{
+			isNormalMap = false;
+			glutPostRedisplay();
+		}
 		ImGui::Text("------------------------------------------------");
 		ImGui::Text("Zaburzenie D");
 		static int rb4 = 0;

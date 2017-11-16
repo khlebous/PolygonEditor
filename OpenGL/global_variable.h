@@ -40,10 +40,13 @@ extern bool isTexture;
 extern bool isNormalMap;
 
 extern bool isLightAnimated;
-extern float lightRadius;
+extern int lightRadius;
 extern float lightAngle;
 extern float lightStep;
 
 extern float lightPositionX;
 extern float lightPositionY;
-extern float lightPositionZ;
+extern int lightPositionZ;
+
+extern int textureNr; 
+extern int normalMapNr;

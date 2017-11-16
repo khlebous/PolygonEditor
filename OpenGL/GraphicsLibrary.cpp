@@ -30,7 +30,23 @@ void GL::FillPolygon(GL::Polygon * p)
 	unsigned char* texture = nullptr;
 	if (isTexture)
 	{
-		texture = SOIL_load_image("bevel-texure.png", &textureWidth, &textureHight, 0, SOIL_LOAD_RGB);
+		char* s = "";
+		switch (textureNr)
+		{
+		case 0:
+			s = "t0.png";
+			break;
+		case 1:
+			s = "t1.png";
+			break;
+		case 2:
+			s = "t2.png";
+			break;
+		default:
+			s = "t0.png";
+			break;
+		}
+		texture = SOIL_load_image(s, &textureWidth, &textureHight, 0, SOIL_LOAD_RGB);
 		if (texture == 0)
 			cout << "Can't load texture\n";
 	}
@@ -38,7 +54,26 @@ void GL::FillPolygon(GL::Polygon * p)
 	unsigned char* normalMap = nullptr;
 	if (isNormalMap)
 	{
-		normalMap = SOIL_load_image("bevelnormalmap.png", &normalMapWidth, &normalMapHeight, 0, SOIL_LOAD_RGB);
+		char* s = "";
+		switch (normalMapNr)
+		{
+		case 0:
+			s = "n0.png";
+			break;
+		case 1:
+			s = "n1.bmp";
+			break;
+		case 2:
+			s = "n2.jpg";
+			break;
+		case 3:
+			s = "n3.png";
+			break;
+		default:
+			s = "n0.png";
+			break;
+		}
+		normalMap = SOIL_load_image(s, &normalMapWidth, &normalMapHeight, 0, SOIL_LOAD_RGB);
 		if (normalMap == 0)
 			cout << "Can't load texture\n";
 	}
@@ -115,7 +150,7 @@ void GL::FillPolygon(GL::Polygon * p)
 					int qq = (int)round(cos);
 					int ww = (int)round(k);
 					qq = textureWidth - qq% textureWidth;
-					ww = textureHight - ww%textureHight;
+					ww = textureHight - fabs(ww%textureHight);
 					int thisNum = (qq + ww*textureWidth) * 3;
 					unsigned char r = texture[thisNum + 0];
 					unsigned char g = texture[thisNum + 1];
@@ -129,7 +164,8 @@ void GL::FillPolygon(GL::Polygon * p)
 					int qq = (int)round(cos);
 					int ww = (int)round(k);
 					qq = normalMapWidth - qq% normalMapWidth;
-					ww = normalMapHeight - ww%normalMapHeight;
+
+					ww = normalMapHeight - fabs(ww%normalMapHeight);
 					int thisNum = (qq + ww*normalMapWidth) * 3;
 					unsigned char r = normalMap[thisNum + 0];
 					unsigned char g = normalMap[thisNum + 1];
@@ -151,15 +187,15 @@ void GL::FillPolygon(GL::Polygon * p)
 					lightNorm = sqrt(lightPositionXtmp*lightPositionXtmp + lightPositionYtmp*lightPositionYtmp + lightPositionZ*lightPositionZ);
 					cosinus =
 						(lightPositionXtmp*thisNormalVectorX +
-						lightPositionYtmp*thisNormalVectorY +
+							lightPositionYtmp*thisNormalVectorY +
 							lightPositionZ * thisNormalVectorZ) / lightNorm / normNorm;
 				}
 				else
 					cosinus =
 					(lightVectorX *thisNormalVectorX +
-					lightVectorY*thisNormalVectorY +
-					 lightVectorZ * thisNormalVectorZ) / lightNorm / normNorm;
-				
+						lightVectorY*thisNormalVectorY +
+						lightVectorZ * thisNormalVectorZ) / lightNorm / normNorm;
+
 				/*if (cosinus < 0)
 					cosinus = 0;*/
 				glColor3f(
@@ -195,7 +231,7 @@ void GL::DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, in
 	{
 		if (p[i]->IsLooped())
 			GL::FillPolygon(p[i]);
-		else
+		/*else*/
 			GL::DrawPolygon(p[i]);
 	}
 
@@ -215,14 +251,15 @@ void GL::DrawPolygon(GL::Polygon * p)
 	auto size = (int)vertices.size() - 1;
 	for (; i < size; i++)
 	{
-		GL::DrawVertice(vertices[i]);
 		GL::DrawEdge(vertices[i], vertices[i + 1]);
+		GL::DrawVertice(vertices[i]);
 	}
 	if (size != -1)
 	{
-		DrawVertice(vertices[i]);
 		if (p->IsLooped())
 			GL::DrawEdge(vertices[i], vertices[0]);
+		DrawVertice(vertices[i]);
+		DrawVertice(vertices[0]);
 	}
 }
 
@@ -245,17 +282,17 @@ void GL::DrawHighlightVertice(GL::Vertex v)
 
 void GL::DrawEdge(GL::Vertex v1, GL::Vertex v2)
 {
-	vector<pair<int,int>> edge = CalculateLinePixels(v1, v2);
+	vector<pair<int, int>> edge = CalculateLinePixels(v1, v2);
 	glColor3f(edgeColorR, edgeColorG, edgeColorB);
 	glPointSize(EDGE_POINT_SIZE);
 	glBegin(GL_POINTS);
-	for (pair<int,int> p : edge)
-		glVertex2i(p.first,p.second);
+	for (pair<int, int> p : edge)
+		glVertex2i(p.first, p.second);
 	glEnd();
 }
 void GL::DrawHighlightEdge(GL::Vertex v1, GL::Vertex v2)
 {
-	vector<pair<int,int>> edge = CalculateLinePixels(v1, v2);
+	vector<pair<int, int>> edge = CalculateLinePixels(v1, v2);
 	glColor3f(edgeHColorR, edgeHColorG, edgeHColorB);
 	glPointSize(EDGE_POINT_SIZE);
 	glBegin(GL_POINTS);
@@ -263,7 +300,7 @@ void GL::DrawHighlightEdge(GL::Vertex v1, GL::Vertex v2)
 		glVertex2i(p.first, p.second);
 	glEnd();
 }
-vector<pair<int,int>> GL::CalculateLinePixels(GL::Vertex v1, GL::Vertex v2)
+vector<pair<int, int>> GL::CalculateLinePixels(GL::Vertex v1, GL::Vertex v2)
 {
 	vector<pair<int, int>> line;
 	int x1 = v1.GetX();

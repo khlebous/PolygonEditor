@@ -15,6 +15,8 @@ class Manager
 	int _y;
 	bool isMoving = false;
 	bool drawingArea = false;
+	int lastTexture = 0;
+	int lastNormalMap = 0;
 
 	static Manager* instance;
 	Manager();
