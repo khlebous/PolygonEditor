@@ -15,9 +15,9 @@ float vertexHColorB = 0.0f;
 extern float edgeColorR = 1.0f;
 extern float edgeColorG = 1.0f;
 extern float edgeColorB = 1.0f;
-extern float edgeHColorR = 0.13f;
-extern float edgeHColorG = 0.168f;
-extern float edgeHColorB = 0.18f;
+extern float edgeHColorR = 1.0;
+extern float edgeHColorG = 0.0f;
+extern float edgeHColorB = 0.0f;
 
 extern float polygonFillColorR = 0.33f;
 extern float polygonFillColorG = 0.36f;

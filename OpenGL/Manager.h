@@ -17,6 +17,8 @@ class Manager
 	bool drawingArea = false;
 	int lastTexture = 0;
 	int lastNormalMap = 0;
+	int choosedPolygon1 = -1;
+	int choosedPolygon2 = -1;
 
 	static Manager* instance;
 	Manager();

@@ -79,18 +79,35 @@ void Manager::mouseFunc(int button, int state, int x, int y)
 		//move polygon
 		for (int i = 0; i < p.size(); i++)
 		{
+
 			if (p[i]->IsInside(x, y))
 			{
+
 				mm->_nr = i;
+				if (mm->choosedPolygon1 == -1)
+				{
+					mm->choosedPolygon1 =i;
+				}
+				else if (mm->choosedPolygon2 == -1)
+					mm->choosedPolygon2 = mm->_nr;
+				else if(mm->choosedPolygon2 != i)
+				{
+					mm->choosedPolygon1 = mm->choosedPolygon2;
+					mm->choosedPolygon2 = i;
+				}
 				break;
 			}
 			mm->_nr = -1;
 		}
-		if ((mm->highlightPolygon==-1) && (-1 != mm->_nr))
+		if ((-1 != mm->_nr))
 		{
-			glutMotionFunc(Manager::motionFuncRight);
-			mm->_x = x;
-			mm->_y = y;
+			
+			if (mm->highlightPolygon == -1)
+			{
+				glutMotionFunc(Manager::motionFuncRight);
+				mm->_x = x;
+				mm->_y = y;
+			}
 		}
 		else if (mm->highlightVertice == -1)
 			mm->NewVertexAndEdge(x, y);
@@ -172,7 +189,6 @@ void Manager::motionFuncLeft(int _x, int _y)
 		GL::Polygon* p = mm->polygons[mm->highlightPolygon];
 		p->MoveVertex(mm->highlightVertice, _x, WINDOW_HEIGHT - _y);
 	}
-	//GL::DrawPolygons(mm->polygons, -1, -1, -1);
 	drawScene();
 }
 void Manager::motionFuncRight(int x, int y)
@@ -182,8 +198,7 @@ void Manager::motionFuncRight(int x, int y)
 	mm->polygons[mm->_nr]->MovePolygon(x - mm->_x, y - mm->_y);
 	mm->_x = x;
 	mm->_y = y;
-	//GL::DrawPolygons(mm->polygons, -1, -1, -1);
-	drawScene();
+	glutPostRedisplay();
 }
 void Manager::drawScene()
 {
@@ -192,7 +207,7 @@ void Manager::drawScene()
 
 	// draw gui
 	Manager* mm = getInstance();
-	GL::DrawPolygons(mm->polygons, mm->highlightPolygon, mm->highlightVertice, mm->highlightEdge);
+	GL::DrawPolygons(mm->polygons, mm->highlightPolygon, mm->highlightVertice, mm->highlightEdge, mm->choosedPolygon1, mm->choosedPolygon2);
 	mm->drawGUI();
 
 	glutSwapBuffers();
@@ -219,7 +234,6 @@ void Manager::NewVertexAndEdge(int x, int y)
 	GL::Polygon* pp = new GL::Polygon();
 	polygons.push_back(pp);
 	polygons[polygons.size() - 1]->AddVertex(x, y);
-	GL::DrawPolygons(polygons, -1, -1, -1);
 	glutPostRedisplay();
 }
 bool Manager::CheckVertices(int x, int y)
@@ -285,24 +299,19 @@ void Manager::CheckEdges(int x, int y)
 
 void Manager::ClippingPolygons()
 {
-	if (polygons.size() != 2)
-		return;
-	int convexNr = -1;
-	for (int i = 0; i < polygons.size(); i++)
+	if ((choosedPolygon1 != -1) && (choosedPolygon2!=-1) && (polygons[choosedPolygon1]->CheckConvex()))
 	{
-		if (polygons[i]->CheckConvex())
-		{
-			convexNr = i;
-			break;
-		}
+		SutherlandHodgman(choosedPolygon1, choosedPolygon2);
+		polygons.erase(polygons.begin() + choosedPolygon1);
 	}
-	if (convexNr == -1)
-		return;
-	for (int i = 0; i < polygons.size(); i++)
+	else if (polygons[choosedPolygon2]->CheckConvex())
 	{
-		if (i != convexNr)
-			SutherlandHodgman(convexNr, i);
+		SutherlandHodgman(choosedPolygon2, choosedPolygon1);
+		polygons.erase(polygons.begin() + choosedPolygon2);
 	}
+	choosedPolygon1 = -1;
+	choosedPolygon2 = -1;
+	glutPostRedisplay();
 }
 bool IsSameSide(GL::Vertex p1, GL::Vertex insidePoint, GL::Vertex p0, GL::Vertex p2)
 {
@@ -428,7 +437,7 @@ void Manager::drawGUI()
 		//ImGui::SameLine();
 		const char* listbox_items[] = { "human", "banana", "bricks" };
 		ImGui::ListBox(" ", &textureNr, listbox_items, IM_ARRAYSIZE(listbox_items), 3);
-		if (lastTexture!=textureNr)
+		if (lastTexture != textureNr)
 		{
 			lastTexture = textureNr;
 			glutPostRedisplay();

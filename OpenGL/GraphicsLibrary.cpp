@@ -225,75 +225,60 @@ void GL::FillPolygon(GL::Polygon * p)
 	delete indexes;
 }
 
-void GL::DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, int highlightE)
+void GL::DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, int highlightE, int choosedP1, int choosedP2)
 {
 	for (int i = 0; i < p.size(); i++)
 	{
 		if (p[i]->IsLooped())
 			GL::FillPolygon(p[i]);
 		/*else*/
-			GL::DrawPolygon(p[i]);
+		GL::DrawPolygon(p[i],(i==choosedP1)||(i==choosedP2));
 	}
-
 	if (highlightP != -1)
 	{
 		if (highlightV != -1)
-			GL::DrawHighlightVertice(p[highlightP]->GetVertex(highlightV));
+			GL::DrawVertice(p[highlightP]->GetVertex(highlightV), true);
 		else if (highlightE != -1)
-			GL::DrawHighlightEdge(p[highlightP]->GetVertex(highlightE),
-				p[highlightP]->GetVertex(highlightE + 1));
+			GL::DrawEdge(p[highlightP]->GetVertex(highlightE),
+				p[highlightP]->GetVertex(highlightE + 1),true);
 	}
 }
-void GL::DrawPolygon(GL::Polygon * p)
+void GL::DrawPolygon(GL::Polygon * p, bool choosed)
 {
 	vector<GL::Vertex> vertices = p->GetVertices();
 	int i = 0;
 	auto size = (int)vertices.size() - 1;
 	for (; i < size; i++)
 	{
-		GL::DrawEdge(vertices[i], vertices[i + 1]);
-		GL::DrawVertice(vertices[i]);
+		GL::DrawEdge(vertices[i], vertices[i + 1],choosed);
+		GL::DrawVertice(vertices[i],choosed);
 	}
 	if (size != -1)
 	{
 		if (p->IsLooped())
-			GL::DrawEdge(vertices[i], vertices[0]);
-		DrawVertice(vertices[i]);
-		DrawVertice(vertices[0]);
+			GL::DrawEdge(vertices[i], vertices[0],choosed);
+		DrawVertice(vertices[i],choosed);
 	}
 }
 
-void GL::DrawVertice(GL::Vertex v)
+void GL::DrawVertice(GL::Vertex v, bool highlight)
 {
-	glColor3f(vertexColorR, vertexColorG, vertexColorB);
+	if (highlight)
+		glColor3f(vertexHColorR, vertexHColorG, vertexHColorB);
+	else
+		glColor3f(vertexColorR, vertexColorG, vertexColorB);
 	glPointSize(VERTEX_POINT_SIZE);
 	glBegin(GL_POINTS);
 	glVertex2i(v.GetX(), v.GetY());
 	glEnd();
 }
-void GL::DrawHighlightVertice(GL::Vertex v)
-{
-	glColor3f(vertexHColorR, vertexHColorG, vertexHColorB);
-	glPointSize(VERTEX_POINT_SIZE);
-	glBegin(GL_POINTS);
-	glVertex2i(v.GetX(), v.GetY());
-	glEnd();
-}
-
-void GL::DrawEdge(GL::Vertex v1, GL::Vertex v2)
+void GL::DrawEdge(GL::Vertex v1, GL::Vertex v2, bool highlight)
 {
 	vector<pair<int, int>> edge = CalculateLinePixels(v1, v2);
-	glColor3f(edgeColorR, edgeColorG, edgeColorB);
-	glPointSize(EDGE_POINT_SIZE);
-	glBegin(GL_POINTS);
-	for (pair<int, int> p : edge)
-		glVertex2i(p.first, p.second);
-	glEnd();
-}
-void GL::DrawHighlightEdge(GL::Vertex v1, GL::Vertex v2)
-{
-	vector<pair<int, int>> edge = CalculateLinePixels(v1, v2);
-	glColor3f(edgeHColorR, edgeHColorG, edgeHColorB);
+	if (highlight)
+		glColor3f(edgeHColorR, edgeHColorG, edgeHColorB);
+	else
+		glColor3f(edgeColorR, edgeColorG, edgeColorB);
 	glPointSize(EDGE_POINT_SIZE);
 	glBegin(GL_POINTS);
 	for (pair<int, int> p : edge)
