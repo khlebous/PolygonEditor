@@ -18,14 +18,14 @@ Manager::Manager()
 {
 	polygons = vector<GL::Polygon*>();
 	GL::Polygon* p1 = new GL::Polygon();
-	p1->AddVertex(400, 50);
-	p1->AddVertex(800, 50);
+	p1->AddVertex(400, 40);
+	p1->AddVertex(800, 40);
 	p1->AddVertex(800, 500);
 	p1->AddVertex(500, 200);
 	p1->AddVertex(400, 400);
 	p1->Loop();
 	GL::Polygon* p2 = new GL::Polygon();
-	p2->AddVertex(50, 50);
+	p2->AddVertex(40, 50);
 	p2->AddVertex(350, 50);
 	p2->AddVertex(300, 500);
 	p2->AddVertex(50, 500);
@@ -299,7 +299,9 @@ void Manager::CheckEdges(int x, int y)
 
 void Manager::ClippingPolygons()
 {
-	if ((choosedPolygon1 != -1) && (choosedPolygon2!=-1) && (polygons[choosedPolygon1]->CheckConvex()))
+	if (choosedPolygon1 == -1 || choosedPolygon2 == -1)
+		return;
+	if (polygons[choosedPolygon1]->CheckConvex())
 	{
 		SutherlandHodgman(choosedPolygon1, choosedPolygon2);
 		polygons.erase(polygons.begin() + choosedPolygon1);
@@ -338,6 +340,8 @@ void Manager::SutherlandHodgman(int clipPolygonNr, int subjectPolygonNr)
 		// e - pocz - clipPolig[i]
 		//     koniec [i+1]
 		vector<GL::Vertex> input = output;
+		if (input.size() == 0)
+			break;
 		output = vector<GL::Vertex>();
 		GL::Vertex pp = input[input.size() - 1];
 		for (GL::Vertex &p : input)
@@ -386,7 +390,12 @@ void Manager::SutherlandHodgman(int clipPolygonNr, int subjectPolygonNr)
 	}
 	if (output.size() > 0 && output[0] == output[output.size() - 1])
 		output.erase(output.begin() + output.size() - 1);
-	polygons[subjectPolygonNr]->SetVertices(output);
+	if (output.size() == 0)
+	{
+		polygons[subjectPolygonNr]= new GL::Polygon();
+	}
+	else
+		polygons[subjectPolygonNr]->SetVertices(output);
 }
 
 void Manager::drawGUI()
@@ -403,6 +412,17 @@ void Manager::drawGUI()
 		static bool options_menu = true;
 		int misc_flags = (hdr ? ImGuiColorEditFlags_HDR : 0) | (alpha_half_preview ? ImGuiColorEditFlags_AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0)) | (options_menu ? 0 : ImGuiColorEditFlags_NoOptions);
 		static float f = 0.0f;
+		if (ImGui::CollapsingHeader("Klawiszologia"))
+		{
+			ImGui::TextWrapped("Zeby zrobic obcinanie trzeba spoczatku wybrac dwa wilokaty (Jesli wielokat jest wybrany ma wszystkie krawedzie i wierzcholki na czerwono). Nastepnie trzeba wcinac przycisk \"obcinanie\"\n\n");
+			ImGui::TextWrapped("Wszystkie kolory mozna zmienic wpisujac liczby zamiast R, G lub B w odpowiednie miejsca albo wciskajac kwadrat po prawej od tych liczb i wybierajac kolor\n\n");
+			ImGui::TextWrapped("Radius i wysokosc swiatla animowanego zmienia sie za pomoca suwakow\n\n");
+			ImGui::TextWrapped("Teksuty/mapy normalny mozna zmieniac wybierajac z podanych list tekstur/map normalnych");
+		}
+		ImGui::Text("------------------------------------------------");
+		if (ImGui::Button("Obcinanie (Sutherland Hodgman)"))
+			ClippingPolygons();
+		ImGui::Text("------------------------------------------------");
 		ImGui::Text("Kolor zrodla swiata");
 		static ImVec4 lightColor = ImColor((int)(lightColorR * 255), (int)(lightColorG * 255), (int)(lightColorB * 255));
 		if (ImGui::ColorEdit3("##2", (float*)&lightColor, misc_flags))
@@ -481,9 +501,7 @@ void Manager::drawGUI()
 		static int rb4 = 0;
 		ImGui::RadioButton("Brak [0,0,0]", &rb4, 0);
 		ImGui::RadioButton("Z tekstury \"Height Map\" TODO", &rb4, 1);
-		ImGui::Text("------------------------------------------------");
-		if (ImGui::Button("Clip Polygons"))
-			ClippingPolygons();
+		
 	}
 	ImGui::Render();
 }

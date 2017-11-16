@@ -2,7 +2,7 @@
 #pragma region global_variable
 using namespace std;
 const int WINDOW_WIDTH = 1200;
-const int WINDOW_HEIGHT = 600;
+const int WINDOW_HEIGHT = 650;
 const int MENU_WIDTH = 350;
 
 float vertexColorR = 0.13f;
