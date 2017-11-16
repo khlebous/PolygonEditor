@@ -2,7 +2,7 @@
 #pragma region global_variable
 using namespace std;
 const int WINDOW_WIDTH = 1200;
-const int WINDOW_HEIGHT = 650;
+const int WINDOW_HEIGHT = 700;
 const int MENU_WIDTH = 350;
 
 float vertexColorR = 0.13f;
@@ -28,8 +28,13 @@ extern float lightColorG = 1.0f;
 extern float lightColorB = 1.0f;
 
 extern bool isTexture = true;
-extern bool isNormalMap = true;
+extern int isNormalMap = 0;
 extern bool isLightAnimated = false;
+extern int isDisorder = false;
+
+extern float normalDisorderX=0;
+extern float normalDisorderY=0;
+extern float normalDisorderZ=0;
 
 extern int lightRadius = 100;
 extern float lightAngle = 0;
@@ -48,6 +53,11 @@ extern float normalVectorZ = 1;
 
 extern int textureNr = 0;
 extern int normalMapNr=0;
+extern int hemisphereRadius =200;
+
+extern int hemispherePosX = (WINDOW_WIDTH - MENU_WIDTH) / 2;
+extern int hemispherePosY = WINDOW_HEIGHT / 2;
+
 #pragma endregion
 #include "GL/glew.h"
 #include "GL/freeglut.h"
@@ -73,9 +83,8 @@ int main(int argc, char **argv)
 	glutInit(&argc, argv);
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
-	//glutInitDisplayMode(GLUT_DOUBLE);
 	glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	glutInitWindowPosition(50, 50);
+	glutInitWindowPosition(0, 0);
 	glutCreateWindow("PolygonEditor");
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();

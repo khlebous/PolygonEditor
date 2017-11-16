@@ -40,7 +40,6 @@ Manager::Manager()
 	_y = -1;
 	_nr = -1;
 }
-
 Manager* Manager::getInstance()
 {
 	if (!instance)
@@ -105,6 +104,8 @@ void Manager::mouseFunc(int button, int state, int x, int y)
 			if (mm->highlightPolygon == -1)
 			{
 				glutMotionFunc(Manager::motionFuncRight);
+				hemispherePosX = x;
+				hemispherePosY = y;
 				mm->_x = x;
 				mm->_y = y;
 			}
@@ -118,6 +119,8 @@ void Manager::mouseFunc(int button, int state, int x, int y)
 void Manager::mousePassiveFunc(int x, int y)
 {
 	y = WINDOW_HEIGHT - y;
+	hemispherePosX = x;
+	hemispherePosY = y;
 	Manager* mm = getInstance();
 	if ((x < WINDOW_WIDTH - MENU_WIDTH))
 	{
@@ -183,11 +186,14 @@ void Manager::keyboardFunc(unsigned char key, int x, int y)
 }
 void Manager::motionFuncLeft(int _x, int _y)
 {
+	_y = WINDOW_HEIGHT - _y;
+	hemispherePosX = _x;
+	hemispherePosY = _y;
 	Manager* mm = getInstance();
 	if (mm->highlightVertice != -1)
 	{
 		GL::Polygon* p = mm->polygons[mm->highlightPolygon];
-		p->MoveVertex(mm->highlightVertice, _x, WINDOW_HEIGHT - _y);
+		p->MoveVertex(mm->highlightVertice, _x, _y);
 	}
 	drawScene();
 }
@@ -198,6 +204,8 @@ void Manager::motionFuncRight(int x, int y)
 	mm->polygons[mm->_nr]->MovePolygon(x - mm->_x, y - mm->_y);
 	mm->_x = x;
 	mm->_y = y;
+	hemispherePosX = x;
+	hemispherePosY = y;
 	glutPostRedisplay();
 }
 void Manager::drawScene()
@@ -454,7 +462,6 @@ void Manager::drawGUI()
 			isTexture = true;
 			glutPostRedisplay();
 		}
-		//ImGui::SameLine();
 		const char* listbox_items[] = { "human", "banana", "bricks" };
 		ImGui::ListBox(" ", &textureNr, listbox_items, IM_ARRAYSIZE(listbox_items), 3);
 		if (lastTexture != textureNr)
@@ -481,7 +488,7 @@ void Manager::drawGUI()
 		static int rb3 = 0;
 		if (ImGui::RadioButton("Z tekstury \"Normal Map\" TODO list", &rb3, 0))
 		{
-			isNormalMap = true;
+			isNormalMap = 0;
 			glutPostRedisplay();
 		}
 		const char* listbox_items2[] = { "human", "hemisphere", "hemisphereAndOther", "bricks" };
@@ -493,15 +500,25 @@ void Manager::drawGUI()
 		}
 		if (ImGui::RadioButton("Staly vector N [0,0,1]", &rb3, 1))
 		{
-			isNormalMap = false;
+			isNormalMap = 1;
 			glutPostRedisplay();
 		}
+		if (ImGui::RadioButton("Podazajacy za kursorem pokula", &rb3, 2))
+		{
+			isNormalMap = 2;
+			glutPostRedisplay();
+		}
+		ImGui::SliderInt("Radius polkuli", &hemisphereRadius, 1, 200);
 		ImGui::Text("------------------------------------------------");
 		ImGui::Text("Zaburzenie D");
 		static int rb4 = 0;
-		ImGui::RadioButton("Brak [0,0,0]", &rb4, 0);
-		ImGui::RadioButton("Z tekstury \"Height Map\" TODO", &rb4, 1);
-		
+		if (ImGui::RadioButton("Brak [0,0,0]", &rb4, 0))
+			isDisorder = false;
+		if (ImGui::RadioButton("Z tekstury \"Height Map\"", &rb4, 1))
+			isDisorder = true;
+		const char* listbox_items3[] = { "bricks" };
+		int hNr = 0;
+		ImGui::ListBox("HeightMap", &hNr, listbox_items3, IM_ARRAYSIZE(listbox_items3),1);
 	}
 	ImGui::Render();
 }

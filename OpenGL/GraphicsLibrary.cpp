@@ -7,6 +7,8 @@
 const int VERTEX_POINT_SIZE = 6;
 const int EDGE_POINT_SIZE = 1;
 
+
+
 struct less_than_key
 {
 	inline bool operator() (const GL::Vertex& struct1, const GL::Vertex& struct2)
@@ -26,8 +28,14 @@ void GL::FillPolygon(GL::Polygon * p)
 	float thisLightVectorY = lightVectorY;
 	float thisLightVectorZ = lightVectorZ;
 
-	int textureWidth, textureHight;
+	float thisNormalDisorderX = normalDisorderX;
+	float thisNormalDisorderY = normalDisorderY;
+	float thisNormalDisorderZ = normalDisorderZ;
+
 	unsigned char* texture = nullptr;
+	unsigned char* normalMap = nullptr;
+	unsigned char* heightMap = nullptr;
+	int textureWidth, textureHight;
 	if (isTexture)
 	{
 		char* s = "";
@@ -51,8 +59,7 @@ void GL::FillPolygon(GL::Polygon * p)
 			cout << "Can't load texture\n";
 	}
 	int normalMapWidth, normalMapHeight;
-	unsigned char* normalMap = nullptr;
-	if (isNormalMap)
+	if (isNormalMap == 0)
 	{
 		char* s = "";
 		switch (normalMapNr)
@@ -75,6 +82,13 @@ void GL::FillPolygon(GL::Polygon * p)
 		}
 		normalMap = SOIL_load_image(s, &normalMapWidth, &normalMapHeight, 0, SOIL_LOAD_RGB);
 		if (normalMap == 0)
+			cout << "Can't load texture\n";
+	}
+	int heightMapWidth, heightMapHeight;
+	if (isDisorder)
+	{
+		heightMap = SOIL_load_image("h0.png", &heightMapWidth, &heightMapHeight, 0, SOIL_LOAD_RGB);
+		if (heightMap == 0)
 			cout << "Can't load texture\n";
 	}
 	if (isLightAnimated)
@@ -101,10 +115,10 @@ void GL::FillPolygon(GL::Polygon * p)
 	int ymax = v[indexes[size - 1]].GetY();
 	vector<GL::AET> AET = vector<GL::AET>();
 	int vIndex = 0;
-	for (int k = ymin; k <= ymax; k++)
+	for (int vertexY = ymin; vertexY <= ymax; vertexY++)
 	{
 		vector<GL::Vertex> vPrev = vector<GL::Vertex>();
-		while (v[indexes[vIndex]].GetY() == k - 1)
+		while (v[indexes[vIndex]].GetY() == vertexY - 1)
 			vPrev.push_back(v[indexes[vIndex++]]);
 		for (int i = 0; i < vPrev.size(); i++)
 		{
@@ -142,13 +156,13 @@ void GL::FillPolygon(GL::Polygon * p)
 		std::sort(AET.begin(), AET.end());
 		for (int l = 0; l < AET.size(); l += 2)
 		{
-			int cos = AET[l].x;
-			while (cos <= (int)round(AET[l + 1].x))
+			int vertexX = AET[l].x;
+			while (vertexX <= (int)round(AET[l + 1].x))
 			{
 				if (isTexture)
 				{
-					int qq = (int)round(cos);
-					int ww = (int)round(k);
+					int qq = (int)round(vertexX);
+					int ww = (int)round(vertexY);
 					qq = textureWidth - qq% textureWidth;
 					ww = textureHight - fabs(ww%textureHight);
 					int thisNum = (qq + ww*textureWidth) * 3;
@@ -159,12 +173,11 @@ void GL::FillPolygon(GL::Polygon * p)
 					thisPolygonFillColorG = (float)g / 255;
 					thisPolygonFillColorB = (float)b / 255;
 				}
-				if (isNormalMap)
+				if (isNormalMap == 0)
 				{
-					int qq = (int)round(cos);
-					int ww = (int)round(k);
+					int qq = (int)round(vertexX);
+					int ww = (int)round(vertexY);
 					qq = normalMapWidth - qq% normalMapWidth;
-
 					ww = normalMapHeight - fabs(ww%normalMapHeight);
 					int thisNum = (qq + ww*normalMapWidth) * 3;
 					unsigned char r = normalMap[thisNum + 0];
@@ -174,6 +187,46 @@ void GL::FillPolygon(GL::Polygon * p)
 					thisNormalVectorY = (float)g / 128 - 1;
 					thisNormalVectorZ = (float)b / 255;
 				}
+				else if (isNormalMap == 2)
+				{
+					if (sqrt((vertexX - hemispherePosX)*(vertexX - hemispherePosX) + (vertexY - hemispherePosY)*(vertexY - hemispherePosY)) < hemisphereRadius)
+					{
+						thisNormalVectorX = -vertexX + hemispherePosX;
+						thisNormalVectorY = vertexY - hemispherePosY;
+						thisNormalVectorZ = sqrt(hemisphereRadius*hemisphereRadius - thisNormalVectorX*thisNormalVectorX - thisNormalVectorY*thisNormalVectorY);
+					}
+					else
+					{
+						thisNormalVectorX = 0;
+						thisNormalVectorY = 0;
+						thisNormalVectorZ = 1;
+					}
+				}
+				if (isDisorder)
+				{
+					//int Tx = 1;
+					//int Ty = 0;
+					//int Tz = -thisNormalVectorX;
+					//int Bx = 0;
+					//int By = 1;
+					//int Bz = -thisNormalVectorY;
+					//int qq = (int)round(vertexX);
+					//int ww = (int)round(vertexY);
+					//qq = heightMapWidth - qq% heightMapWidth;
+					//ww = heightMapHeight - fabs(ww%heightMapHeight);
+					//int thisNum = (qq + ww*heightMapWidth) * 3;
+					//int nextNum = (qq + (ww + 1)*heightMapWidth) * 3;
+					//int nextNum2 = (qq + (ww)*(heightMapWidth + 1)) * 3;
+					//unsigned char r0 = normalMap[thisNum + 0];
+					///*unsigned char g0 = normalMap[thisNum + 1];
+					//unsigned char b0 = normalMap[thisNum + 2];*/
+					//unsigned char r1 = normalMap[nextNum + 0];
+					///*unsigned char g1 = normalMap[nextNum + 1];
+					//unsigned char b1 = normalMap[nextNum + 2];*/
+					//unsigned char r2 = normalMap[nextNum2 + 0];
+					//float dhx = r1 - r0;
+					//float dhy = r2 - r0;
+				}
 				float normNorm = 1;
 				normNorm = sqrt(thisNormalVectorX*thisNormalVectorX + thisNormalVectorY*thisNormalVectorY + thisNormalVectorZ*thisNormalVectorZ);
 
@@ -181,9 +234,9 @@ void GL::FillPolygon(GL::Polygon * p)
 				float lightNorm = 1;
 				if (isLightAnimated)
 				{
-					float lightPositionXtmp = lightPositionX - (int)round(cos);
+					float lightPositionXtmp = lightPositionX - (int)round(vertexX);
 					lightPositionXtmp = -lightPositionXtmp;
-					float lightPositionYtmp = lightPositionY - (int)round(k);
+					float lightPositionYtmp = lightPositionY - (int)round(vertexY);
 					lightNorm = sqrt(lightPositionXtmp*lightPositionXtmp + lightPositionYtmp*lightPositionYtmp + lightPositionZ*lightPositionZ);
 					cosinus =
 						(lightPositionXtmp*thisNormalVectorX +
@@ -196,13 +249,11 @@ void GL::FillPolygon(GL::Polygon * p)
 						lightVectorY*thisNormalVectorY +
 						lightVectorZ * thisNormalVectorZ) / lightNorm / normNorm;
 
-				/*if (cosinus < 0)
-					cosinus = 0;*/
 				glColor3f(
 					lightColorR*thisPolygonFillColorR*cosinus,
 					lightColorG*thisPolygonFillColorG*cosinus,
 					lightColorB*thisPolygonFillColorB*cosinus);
-				glVertex2i((int)round(cos++), (int)round(k));
+				glVertex2i((int)round(vertexX++), (int)round(vertexY));
 			}
 
 		}
@@ -218,10 +269,6 @@ void GL::FillPolygon(GL::Polygon * p)
 	for (int q = 0; q < size; q++)
 		glVertex2i(v[q].GetX(), v[q].GetY());
 	glEnd();
-	/*glColor3f(1, 1, vertexColorB);
-	glBegin(GL_POINTS);
-	glVertex2i(lightPositionX, lightPositionY);
-	glEnd();*/
 	delete indexes;
 }
 
@@ -232,7 +279,7 @@ void GL::DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, in
 		if (p[i]->IsLooped())
 			GL::FillPolygon(p[i]);
 		/*else*/
-		GL::DrawPolygon(p[i],(i==choosedP1)||(i==choosedP2));
+		GL::DrawPolygon(p[i], (i == choosedP1) || (i == choosedP2));
 	}
 	if (highlightP != -1)
 	{
@@ -240,7 +287,7 @@ void GL::DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, in
 			GL::DrawVertice(p[highlightP]->GetVertex(highlightV), true);
 		else if (highlightE != -1)
 			GL::DrawEdge(p[highlightP]->GetVertex(highlightE),
-				p[highlightP]->GetVertex(highlightE + 1),true);
+				p[highlightP]->GetVertex(highlightE + 1), true);
 	}
 }
 void GL::DrawPolygon(GL::Polygon * p, bool choosed)
@@ -250,14 +297,14 @@ void GL::DrawPolygon(GL::Polygon * p, bool choosed)
 	auto size = (int)vertices.size() - 1;
 	for (; i < size; i++)
 	{
-		GL::DrawEdge(vertices[i], vertices[i + 1],choosed);
-		GL::DrawVertice(vertices[i],choosed);
+		GL::DrawEdge(vertices[i], vertices[i + 1], choosed);
+		GL::DrawVertice(vertices[i], choosed);
 	}
 	if (size != -1)
 	{
 		if (p->IsLooped())
-			GL::DrawEdge(vertices[i], vertices[0],choosed);
-		DrawVertice(vertices[i],choosed);
+			GL::DrawEdge(vertices[i], vertices[0], choosed);
+		DrawVertice(vertices[i], choosed);
 	}
 }
 
@@ -316,3 +363,4 @@ vector<pair<int, int>> GL::CalculateLinePixels(GL::Vertex v1, GL::Vertex v2)
 	}
 	return line;
 }
+

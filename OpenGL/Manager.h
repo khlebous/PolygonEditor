@@ -4,7 +4,6 @@
 class Manager
 {
 	vector<GL::Polygon*> polygons;
-	
 
 	int highlightVertice;
 	int highlightEdge;
@@ -28,23 +27,22 @@ public:
 
 	static void mouseFunc(int button, int state, int x, int y);
 	static void mousePassiveFunc(int x, int y);
-	static void keyboardFunc(unsigned char key, int x, int y);
-	static void motionFuncLeft(int x, int y);
-	static void motionFuncRight(int x, int y);
 	//
 	static void drawScene();
 	//
-	void NewVertexAndEdge(int x, int y);
 private:
+	void NewVertexAndEdge(int x, int y);
 	bool CheckVertices(int x, int y);
 	void CheckEdges(int x, int y);
 
+	void drawGUI();
 	void ClippingPolygons();
 	
-	//clipPolygon - convex
-	void SutherlandHodgman(int clipPolygon, int subjectPolygon);
+	void SutherlandHodgman(int clipPolygon, int subjectPolygon); //clipPolygon - convex
+	static void keyboardFunc(unsigned char key, int x, int y);
+	static void motionFuncLeft(int x, int y);
+	static void motionFuncRight(int x, int y);
 
-	void drawGUI();
 	static void mouseCallback(int button, int state, int x, int y);
 	static void mouseDragCallback(int x, int y);
 	static void mouseMoveCallback(int x, int y);

@@ -1,4 +1,6 @@
+Dokumentacja do projektu 2 jest w menu po prawej stronie okna.
 
+Dokumentacja do projektu 1:
 przesuwanie wielokata: nacisnac lewy przycisw wewnat welokata
 
 Ustawienie relacji,dodawanie wierzcholkow i t.d. z klawiatury:

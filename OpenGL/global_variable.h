@@ -37,7 +37,12 @@ extern float normalVectorY;
 extern float normalVectorZ;
 
 extern bool isTexture;
-extern bool isNormalMap;
+extern int isNormalMap;
+extern int isDisorder;
+
+extern float normalDisorderX;
+extern float normalDisorderY;
+extern float normalDisorderZ;
 
 extern bool isLightAnimated;
 extern int lightRadius;
@@ -50,3 +55,7 @@ extern int lightPositionZ;
 
 extern int textureNr; 
 extern int normalMapNr;
+extern int hemisphereRadius;
+
+extern int hemispherePosX;
+extern int hemispherePosY;
