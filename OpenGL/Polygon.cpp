@@ -2,7 +2,7 @@
 #include <math.h>
 #include <iostream>
 #define PI 3.14159265
-GL::Polygon::Polygon():isLooped(0)
+GL::Polygon::Polygon() :isLooped(0)
 {
 	vertices = vector<GL::Vertex>();
 	vEdges = list<int>();
@@ -54,7 +54,7 @@ int GL::Polygon::CheckMouseNearEdge(int x, int y)
 			+ 5)
 			return i;
 	}
-	if (isLooped==1)
+	if (isLooped == 1)
 	{
 		if (Distance(vertices[i].GetX(), vertices[i].GetY(), x, y) +
 			Distance(vertices[0].GetX(), vertices[0].GetY(), x, y)
@@ -67,7 +67,7 @@ int GL::Polygon::CheckMouseNearEdge(int x, int y)
 }
 bool GL::Polygon::IsInside(int x, int y)
 {
-	if (isLooped==0)
+	if (isLooped == 0)
 		return false;
 	int i, j, nvert = vertices.size();
 	bool c = false;
@@ -82,7 +82,7 @@ bool GL::Polygon::IsInside(int x, int y)
 }
 bool GL::Polygon::Loop()
 {
-	if ((VertCount() < 3) || (isLooped==1))
+	if ((VertCount() < 3) || (isLooped == 1))
 		return false;
 	isLooped = 1;
 	edgeCoeff.push_back(LineCoefficients(vertices[vertices.size() - 1], vertices[0]));
@@ -92,7 +92,7 @@ bool GL::Polygon::Loop()
 //vert
 void GL::Polygon::MoveVertex(int n, int x, int y)
 {
-	if (isLooped==0)
+	if (isLooped == 0)
 		return;
 	bool changes = false;
 	GL::Vertex v = vertices[n];
@@ -336,7 +336,7 @@ bool GL::Polygon::EdgeNearHorizontal(int n)
 {
 
 	int n1 = (n + 1) % vertices.size();
-	if (fabs( vertices[n].GetY() - vertices[n1].GetY()) < 5)
+	if (fabs(vertices[n].GetY() - vertices[n1].GetY()) < 5)
 		return true;
 	else
 		return false;
@@ -345,7 +345,7 @@ bool GL::Polygon::EdgeNearHorizontal(int n)
 //angle
 bool GL::Polygon::SetAngleFunction(int n)
 {
-	if (isLooped==0)
+	if (isLooped == 0)
 		return false;
 	if (CheckAngleIsSetToVertex(n))
 	{
@@ -355,7 +355,7 @@ bool GL::Polygon::SetAngleFunction(int n)
 
 	int l1 = (n - 1 + vertices.size()) % vertices.size();
 	int r1 = (n + 1) % vertices.size();
-	if ((isLooped==1) || (n != 0 && (n + 1) != vertices.size()))
+	if ((isLooped == 1) || (n != 0 && (n + 1) != vertices.size()))
 	{
 		if (CheckAngleIsSetToVertex(l1) || CheckAngleIsSetToVertex(r1))
 			return false;
@@ -377,21 +377,40 @@ bool GL::Polygon::SetAngleFunction(int n)
 		float newAngle = -1;
 		cout << "wnter your angle: ";
 		cin >> newAngle;
+		if (newAngle == -1)
+			newAngle = angle;
 		cout << "new angle : " << newAngle << "\n";
 		newAngle = newAngle / 180.0*PI;
 		cout << "new angle : (rad)" << newAngle << "\n";
-
 		GL::Vertex v_sr = GL::Vertex((v_l1.GetX() + v_r1.GetX()) / 2, (v_l1.GetY() + v_r1.GetY()) / 2);
-		//dodac if - czy w lefo czy w prawo
-		int x = v_l1.GetX() - v_sr.GetX();
-		int y = v_l1.GetY() - v_sr.GetY();
-		int x_rot = -y;
-		int y_rot = x;
-		double a = Distance(v_l1.GetX(), v_l1.GetY(), v_sr.GetX(), v_sr.GetY());
-		int b = a / tan(a);
+		cout << "1 : " << v_l1.GetX() << " " << v_l1.GetY() << "\n";
+		cout << "2 : " << v_r1.GetX() << " " << v_r1.GetY() << "\n";
+		cout << "srodk : " << v_sr.GetX() << " " << v_sr.GetY() << "\n";
 
-		x_rot = x_rot / a*b;
-		y_rot = y_rot / a*b;
+		int x = v_l1.GetX() - v_sr.GetX();
+		cout << "x = " << x << "\n";
+		int y = v_l1.GetY() - v_sr.GetY();
+		cout << "y = " << y << "\n";
+		//dodac if - czy w lefo czy w prawo
+		int x_rot = -y;
+		cout << "x_rot = " << x_rot << "\n";
+		int y_rot = x;
+		cout << "y_rot = " << y_rot << "\n";
+		if ((v_l1.GetX() - v_sr.GetX())*(v.GetY() - v_sr.GetY()) - (v_l1.GetY() - v_sr.GetY())*(v.GetX() - v_sr.GetX()) < 0)
+		{
+			x_rot = y;
+			y_rot = -x;
+		}
+		
+		double a = Distance(v_l1.GetX(), v_l1.GetY(), v_sr.GetX(), v_sr.GetY());
+		cout << "a  = " << a << "\n";
+		int b = a / tan(newAngle/2);
+		cout << "b  = " << b << "\n";
+
+		x_rot = x_rot / a*b + v_sr.GetX();
+		cout << "x_rot = " << x_rot << "\n";
+		y_rot = y_rot / a*b+ v_sr.GetY();
+		cout << "y_rot = " << y_rot << "\n";
 
 		MoveVertex(n, x_rot, y_rot);
 
@@ -444,13 +463,13 @@ void GL::Polygon::CheckEdgeVH(int n, list<int>* v1, list<int>* v2, bool checkV)
 	if (CheckAngleIsSetToVertex(n) || CheckAngleIsSetToVertex((n + 1) % vertices.size()))
 		return;;
 	{
-		if ((isLooped==1) || (n != 0))
+		if ((isLooped == 1) || (n != 0))
 		{
 			it = std::find((*v1).begin(), (*v1).end(), (n - 1 + vertices.size()) % vertices.size());
 			if (it != (*v1).end())
 				return;
 		}
-		if ((isLooped==1) || (n + 1 != vertices.size() - 1))
+		if ((isLooped == 1) || (n + 1 != vertices.size() - 1))
 		{
 			it = std::find((*v1).begin(), (*v1).end(), (n + 1) % vertices.size());
 			if (it != (*v1).end())

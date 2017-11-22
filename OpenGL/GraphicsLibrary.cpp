@@ -34,6 +34,14 @@ void GL::DrawPolygon(GL::Polygon * p)
 		if (p->IsLooped())
 			GL::DrawEdge(vertices[i], vertices[0]);
 	}
+	list<int> vEdges = p->GetVEdges();
+	for (auto it = vEdges.begin(); it != vEdges.end(); it++)
+		GL::DrawVertSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
+	list<int> hEdges = p->GetHEdges();
+	for (auto it = hEdges.begin(); it != hEdges.end(); it++)
+		GL::DrawHorizSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
+	for (auto const &a : p->GetAngles())
+		GL::DrawAngleSign(p->GetVertex(a.first));
 }
 
 void GL::DrawVertice(GL::Vertex v, bool isH)
