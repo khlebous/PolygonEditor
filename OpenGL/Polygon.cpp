@@ -276,8 +276,8 @@ void GL::Polygon::AddVertAtEdge(int n, int x, int y)
 		if ((*it) >= n)
 			*it = ((*it + 1) % vertices.size());
 	for (auto& el : vertSetAngle)
-		if (el.first > n)
-			el.first = (n++) % vertices.size();
+		if (el.first >= n)
+			el.first = (el.first++) % vertices.size();
 
 	edgeCoeff.insert(edgeCoeff.begin() + n, LineCoefficients(vertices[n], vertices[n1]));
 	UpdateEdgeCoeff(n1);
@@ -374,45 +374,45 @@ bool GL::Polygon::SetAngleFunction(int n)
 
 		std::cin.clear();
 		cout << "angle : " << angle << "\n";
-		float newAngle = -1;
-		cout << "wnter your angle: ";
-		cin >> newAngle;
-		if (newAngle == -1)
-			newAngle = angle;
-		cout << "new angle : " << newAngle << "\n";
-		newAngle = newAngle / 180.0*PI;
-		cout << "new angle : (rad)" << newAngle << "\n";
-		GL::Vertex v_sr = GL::Vertex((v_l1.GetX() + v_r1.GetX()) / 2, (v_l1.GetY() + v_r1.GetY()) / 2);
-		cout << "1 : " << v_l1.GetX() << " " << v_l1.GetY() << "\n";
-		cout << "2 : " << v_r1.GetX() << " " << v_r1.GetY() << "\n";
-		cout << "srodk : " << v_sr.GetX() << " " << v_sr.GetY() << "\n";
+		//float newAngle = -1;
+		//cout << "wnter your angle: ";
+		//cin >> newAngle;
+		//if (newAngle == -1)
+		//	newAngle = angle;
+		//cout << "new angle : " << newAngle << "\n";
+		//newAngle = newAngle / 180.0*PI;
+		//cout << "new angle : (rad)" << newAngle << "\n";
+		//GL::Vertex v_sr = GL::Vertex((v_l1.GetX() + v_r1.GetX()) / 2, (v_l1.GetY() + v_r1.GetY()) / 2);
+		//cout << "1 : " << v_l1.GetX() << " " << v_l1.GetY() << "\n";
+		//cout << "2 : " << v_r1.GetX() << " " << v_r1.GetY() << "\n";
+		//cout << "srodk : " << v_sr.GetX() << " " << v_sr.GetY() << "\n";
 
-		int x = v_l1.GetX() - v_sr.GetX();
-		cout << "x = " << x << "\n";
-		int y = v_l1.GetY() - v_sr.GetY();
-		cout << "y = " << y << "\n";
-		//dodac if - czy w lefo czy w prawo
-		int x_rot = -y;
-		cout << "x_rot = " << x_rot << "\n";
-		int y_rot = x;
-		cout << "y_rot = " << y_rot << "\n";
-		if ((v_l1.GetX() - v_sr.GetX())*(v.GetY() - v_sr.GetY()) - (v_l1.GetY() - v_sr.GetY())*(v.GetX() - v_sr.GetX()) < 0)
-		{
-			x_rot = y;
-			y_rot = -x;
-		}
-		
-		double a = Distance(v_l1.GetX(), v_l1.GetY(), v_sr.GetX(), v_sr.GetY());
-		cout << "a  = " << a << "\n";
-		int b = a / tan(newAngle/2);
-		cout << "b  = " << b << "\n";
+		//int x = v_l1.GetX() - v_sr.GetX();
+		//cout << "x = " << x << "\n";
+		//int y = v_l1.GetY() - v_sr.GetY();
+		//cout << "y = " << y << "\n";
+		////dodac if - czy w lefo czy w prawo
+		//int x_rot = -y;
+		//cout << "x_rot = " << x_rot << "\n";
+		//int y_rot = x;
+		//cout << "y_rot = " << y_rot << "\n";
+		//if ((v_l1.GetX() - v_sr.GetX())*(v.GetY() - v_sr.GetY()) - (v_l1.GetY() - v_sr.GetY())*(v.GetX() - v_sr.GetX()) < 0)
+		//{
+		//	x_rot = y;
+		//	y_rot = -x;
+		//}
+		//
+		//double a = Distance(v_l1.GetX(), v_l1.GetY(), v_sr.GetX(), v_sr.GetY());
+		//cout << "a  = " << a << "\n";
+		//int b = a / tan(newAngle/2);
+		//cout << "b  = " << b << "\n";
 
-		x_rot = x_rot / a*b + v_sr.GetX();
-		cout << "x_rot = " << x_rot << "\n";
-		y_rot = y_rot / a*b+ v_sr.GetY();
-		cout << "y_rot = " << y_rot << "\n";
+		//x_rot = x_rot / a*b + v_sr.GetX();
+		//cout << "x_rot = " << x_rot << "\n";
+		//y_rot = y_rot / a*b+ v_sr.GetY();
+		//cout << "y_rot = " << y_rot << "\n";
 
-		MoveVertex(n, x_rot, y_rot);
+		//MoveVertex(n, x_rot, y_rot);
 
 		vertSetAngle.push_back(make_pair(n, angle));
 		return true;
