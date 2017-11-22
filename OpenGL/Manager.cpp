@@ -149,8 +149,10 @@ void Manager::keyboardFunc(unsigned char key, int x, int y)
 	{
 		Manager* mm = getInstance();
 		if (mm->highlightVertice != -1)
+		{
 			if (mm->polygons[mm->highlightPolygon]->SetAngleFunction(mm->highlightVertice))
 				GL::DrawPolygons(mm->polygons, mm->highlightPolygon, mm->highlightVertice, mm->highlightEdge);
+		}
 		break;
 	}
 	case 'c': // checkbox

@@ -369,10 +369,31 @@ bool GL::Polygon::SetAngleFunction(int n)
 		int x1 = v_l1.GetX() - v.GetX();	int x2 = v_r1.GetX() - v.GetX();
 		int y1 = v_l1.GetY() - v.GetY();	int y2 = v_r1.GetY() - v.GetY();
 		float dot = x1*x2 + y1*y2;
+		float angleRad = acos((dot / (sqrt(x1*x1 + y1*y1)*sqrt(x2*x2 + y2*y2))));
 		float angle = acos((dot / (sqrt(x1*x1 + y1*y1)*sqrt(x2*x2 + y2*y2))))* 180.0 / PI;
 
 		std::cin.clear();
 		cout << "angle : " << angle << "\n";
+		float newAngle = -1;
+		cout << "wnter your angle: ";
+		cin >> newAngle;
+		cout << "new angle : " << newAngle << "\n";
+		newAngle = newAngle / 180.0*PI;
+		cout << "new angle : (rad)" << newAngle << "\n";
+
+		GL::Vertex v_sr = GL::Vertex((v_l1.GetX() + v_r1.GetX()) / 2, (v_l1.GetY() + v_r1.GetY()) / 2);
+		//dodac if - czy w lefo czy w prawo
+		int x = v_l1.GetX() - v_sr.GetX();
+		int y = v_l1.GetY() - v_sr.GetY();
+		int x_rot = -y;
+		int y_rot = x;
+		double a = Distance(v_l1.GetX(), v_l1.GetY(), v_sr.GetX(), v_sr.GetY());
+		int b = a / tan(a);
+
+		x_rot = x_rot / a*b;
+		y_rot = y_rot / a*b;
+
+		MoveVertex(n, x_rot, y_rot);
 
 		vertSetAngle.push_back(make_pair(n, angle));
 		return true;
