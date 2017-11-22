@@ -9,11 +9,9 @@ namespace GL
 	void DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, int highlightE);
 	void DrawPolygon(GL::Polygon* p);
 
-	void DrawVertice(GL::Vertex v);
-	void DrawHighlightVertice(GL::Vertex v);
+	void DrawVertice(GL::Vertex v, bool isH=false);
 	
-	void DrawEdge(GL::Vertex v1, GL::Vertex v2);
-	void DrawHighlightEdge(GL::Vertex v1, GL::Vertex v2);
+	void DrawEdge(GL::Vertex v1, GL::Vertex v2, bool isH=false);
 	vector<GL::Point> CalculateLinePixels(GL::Vertex v1, GL::Vertex v2);
 
 	void DrawVertSign(GL::Vertex v1, GL::Vertex v2);

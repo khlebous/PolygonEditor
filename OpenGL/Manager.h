@@ -4,8 +4,6 @@
 class Manager
 {
 	vector<GL::Polygon*> polygons;
-	//GL::Polygon* polygon;
-	//GL::Polygon* polygon2;
 
 	int highlightVertice;
 	int highlightEdge;

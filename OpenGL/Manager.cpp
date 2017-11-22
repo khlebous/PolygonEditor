@@ -30,7 +30,6 @@ Manager::~Manager()
 	for (auto &p : polygons)
 		p->~Polygon();
 	polygons.clear();
-	//polygon->~Polygon();
 }
 
 void Manager::mouseFunc(int button, int state, int x, int y)
@@ -44,8 +43,6 @@ void Manager::mouseFunc(int button, int state, int x, int y)
 		y = WINDOW_WIDTH - y;
 		glutMotionFunc(Manager::motionFuncLeft);
 		Manager* mm = getInstance();
-		//GL::Polygon* polygon = mm->polygon;
-		//GL::Polygon* polygon2 = mm->polygon2;
 		vector<GL::Polygon*> p = mm->polygons;
 
 		//loop
@@ -120,8 +117,6 @@ void Manager::keyboardFunc(unsigned char key, int x, int y)
 	case 'l': // loop polygon
 	{
 		Manager* mm = getInstance();
-		//GL::Polygon* polygon = mm->polygon;
-		//GL::Polygon* polygon2 = mm->polygon2;
 		GL::Polygon* p = mm->polygons[mm->polygons.size() - 1];
 		if (!p->IsLooped())
 			p->Loop();
@@ -237,9 +232,6 @@ void Manager::NewVertexAndEdge(int x, int y)
 		p = nullptr;
 	else
 		p = polygons[polygons.size() - 1];
-	//if (polygon == nullptr)
-	//	*polygon = GL::Polygon();
-	//GL::Polygon* polygon = getInstance()->polygon;
 	if (p != nullptr)
 	{
 		if ((p->VertCount() > 0) && (highlightVertice == 0) && (highlightPolygon == (polygons.size() - 1)))
@@ -262,14 +254,6 @@ void Manager::NewVertexAndEdge(int x, int y)
 	GL::Polygon* pp = new GL::Polygon();
 	polygons.push_back(pp);
 	polygons[polygons.size() - 1]->AddVertex(x, y);
-	//}
-
-	/*if (polygon->CheckMouseNearVertice(x, y) != -1)
-	{
-		return;
-	}*/
-
-	//if (polygon->VertCount() > 1)
 	GL::DrawPolygons(polygons, -1, -1, -1);
 }
 

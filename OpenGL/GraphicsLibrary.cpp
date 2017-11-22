@@ -2,19 +2,19 @@
 void GL::DrawPolygons(vector<GL::Polygon*> p, int highlightP, int highlightV, int highlightE)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-
-	for (int i = 0; i < p.size(); i++)
+	
+	int size = (int)p.size();
+	for (int i = 0; i <size; i++)
 		GL::DrawPolygon(p[i]);
 
 	if (highlightP != -1)
 	{
 		if (highlightV != -1)
-			GL::DrawHighlightVertice(p[highlightP]->GetVertex(highlightV));
+			GL::DrawVertice(p[highlightP]->GetVertex(highlightV), true);
 		else if (highlightE != -1)
-			GL::DrawHighlightEdge(p[highlightP]->GetVertex(highlightE),
-				p[highlightP]->GetVertex(highlightE + 1));
+			GL::DrawEdge(p[highlightP]->GetVertex(highlightE),
+				p[highlightP]->GetVertex(highlightE + 1), true);
 	}
-
 	glutSwapBuffers();
 }
 
@@ -34,67 +34,34 @@ void GL::DrawPolygon(GL::Polygon * p)
 		if (p->IsLooped())
 			GL::DrawEdge(vertices[i], vertices[0]);
 	}
-
-	/*list<int> vEdges = p->GetVEdges();
-	for (auto it = vEdges.begin(); it != vEdges.end(); it++)
-		GL::DrawVertSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
-	list<int> hEdges = p->GetHEdges();
-	for (auto it = hEdges.begin(); it != hEdges.end(); it++)
-		GL::DrawHorizSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
-	for (auto const &a : p->GetAngles())
-		GL::DrawAngleSign(p->GetVertex(a.first));
-	*/
-	/*list<int> vEdgesTmp = p->GetVEdgesTmp();
-	for (auto it = vEdgesTmp.begin(); it != vEdgesTmp.end(); it++)
-		GL::DrawVertSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
-	list<int> hEdgesTmp = p->GetHEdgesTmp();
-	for (auto it = hEdgesTmp.begin(); it != hEdgesTmp.end(); it++)
-		GL::DrawHorizSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
-*/
-
 }
 
-void GL::DrawVertice(GL::Vertex v)
+void GL::DrawVertice(GL::Vertex v, bool isH)
 {
-	glColor3f(1.0f, 1.0f, 1.0f);
+	if (isH)
+		glColor3f(1.0f, 0.0f, 0.0f);
+	else
+		glColor3f(1.0f, 1.0f, 1.0f);
 	glPointSize(4);
 	glBegin(GL_POINTS);
 	glVertex2i(v.GetX(), v.GetY());
 	glEnd();
-	glFlush();
-}
-void GL::DrawHighlightVertice(GL::Vertex v)
-{
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glPointSize(4);
-	glBegin(GL_POINTS);
-	glVertex2i(v.GetX(), v.GetY());
-	glEnd();
-	glFlush();
 }
 
-void GL::DrawEdge(GL::Vertex v1, GL::Vertex v2)
+void GL::DrawEdge(GL::Vertex v1, GL::Vertex v2, bool isH)
 {
 	vector<GL::Point> edge = CalculateLinePixels(v1, v2);
-	glColor3f(1.0f, 1.0f, 1.0f);
+	if (isH)
+		glColor3f(1.0f, 0.0f, 0.0f);
+	else
+		glColor3f(1.0f, 1.0f, 1.0f);
 	glPointSize(1);
 	glBegin(GL_POINTS);
 	for (GL::Point& p : edge)
 		glVertex2i(p.x, p.y);
 	glEnd();
-	glFlush();
 }
-void GL::DrawHighlightEdge(GL::Vertex v1, GL::Vertex v2)
-{
-	vector<GL::Point> edge = CalculateLinePixels(v1, v2);
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glPointSize(1);
-	glBegin(GL_POINTS);
-	for (GL::Point& p : edge)
-		glVertex2i(p.x, p.y);
-	glEnd();
-	glFlush();
-}
+
 vector<GL::Point> GL::CalculateLinePixels(GL::Vertex v1, GL::Vertex v2)
 {
 	vector<GL::Point> line;
@@ -151,6 +118,7 @@ void GL::DrawHorizSign(GL::Vertex v1, GL::Vertex v2)
 	glEnd();
 	glFlush();
 }
+
 void GL::DrawAngleSign(GL::Vertex v1)
 {
 	glColor3f(0.0f, 0.3f, 1.0f);
