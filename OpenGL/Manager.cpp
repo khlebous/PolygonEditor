@@ -54,6 +54,12 @@ void Manager::mouseFunc(int button, int state, int x, int y)
 				return;
 			}
 		}
+		//move vertex
+		if (mm->highlightVertice != -1)
+		{
+			mm->polygons[mm->highlightPolygon]->MoveVertex(mm->highlightVertice, x, y);
+			return;
+		}
 		//move polygon
 		for (int i = 0; i < p.size(); i++)
 		{
@@ -71,9 +77,7 @@ void Manager::mouseFunc(int button, int state, int x, int y)
 			mm->_y = y;
 		}
 		else if(mm->highlightVertice == -1)
-			mm->NewVertexAndEdge(x, y);
-		else
-			mm->polygons[mm->highlightPolygon]->MoveVertex(mm->highlightVertice, x, y);
+			mm->NewVertexAndEdge(x, y);			
 	}
 }
 
