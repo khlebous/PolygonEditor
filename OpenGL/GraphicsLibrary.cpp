@@ -42,6 +42,13 @@ void GL::DrawPolygon(GL::Polygon * p)
 		GL::DrawHorizSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
 	for (auto const &a : p->GetAngles())
 		GL::DrawAngleSign(p->GetVertex(a.first));
+
+	list<int> vTmpEdges = p->GetVEdgesTmp();
+	for (auto it = vTmpEdges.begin(); it != vTmpEdges.end(); it++)
+		GL::DrawVertSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
+	list<int> hTmpEdges = p->GetHEdgesTmp();
+	for (auto it = hTmpEdges.begin(); it != hTmpEdges.end(); it++)
+		GL::DrawHorizSign(p->GetVertex(*it), p->GetVertex(((*it) + 1) % vertices.size()));
 }
 
 void GL::DrawVertice(GL::Vertex v, bool isH)

@@ -284,7 +284,7 @@ void GL::Polygon::AddVertAtEdge(int n, int x, int y)
 }
 void GL::Polygon::DeleteVert(int n)
 {
-	if (isLooped && vertices.size() < 4)
+	if (!isLooped || (isLooped && vertices.size() < 4))
 	{
 		return;
 	}
@@ -326,7 +326,7 @@ void GL::Polygon::MakeEdgeHorizontal(int n)
 bool GL::Polygon::EdgeNearVertical(int n)
 {
 	int n1 = (n + 1) % vertices.size();
-	if (fabs(vertices[n].GetX() - vertices[n1].GetX()) < 5)
+	if (fabs(vertices[n].GetX() - vertices[n1].GetX()) < 10)
 		return true;
 	else
 		return false;
@@ -374,45 +374,32 @@ bool GL::Polygon::SetAngleFunction(int n)
 
 		std::cin.clear();
 		cout << "angle : " << angle << "\n";
-		//float newAngle = -1;
-		//cout << "wnter your angle: ";
-		//cin >> newAngle;
-		//if (newAngle == -1)
-		//	newAngle = angle;
-		//cout << "new angle : " << newAngle << "\n";
-		//newAngle = newAngle / 180.0*PI;
-		//cout << "new angle : (rad)" << newAngle << "\n";
-		//GL::Vertex v_sr = GL::Vertex((v_l1.GetX() + v_r1.GetX()) / 2, (v_l1.GetY() + v_r1.GetY()) / 2);
-		//cout << "1 : " << v_l1.GetX() << " " << v_l1.GetY() << "\n";
-		//cout << "2 : " << v_r1.GetX() << " " << v_r1.GetY() << "\n";
-		//cout << "srodk : " << v_sr.GetX() << " " << v_sr.GetY() << "\n";
+		float newAngle = -1;
+		cout << "wnter your angle: ";
+		cin >> newAngle;
+		if (newAngle == -1)
+			newAngle = angle;
+		cout << "new angle : " << newAngle << "\n";
+		newAngle = newAngle / 180.0*PI;
+		GL::Vertex v_sr = GL::Vertex((v_l1.GetX() + v_r1.GetX()) / 2, (v_l1.GetY() + v_r1.GetY()) / 2);
 
-		//int x = v_l1.GetX() - v_sr.GetX();
-		//cout << "x = " << x << "\n";
-		//int y = v_l1.GetY() - v_sr.GetY();
-		//cout << "y = " << y << "\n";
-		////dodac if - czy w lefo czy w prawo
-		//int x_rot = -y;
-		//cout << "x_rot = " << x_rot << "\n";
-		//int y_rot = x;
-		//cout << "y_rot = " << y_rot << "\n";
-		//if ((v_l1.GetX() - v_sr.GetX())*(v.GetY() - v_sr.GetY()) - (v_l1.GetY() - v_sr.GetY())*(v.GetX() - v_sr.GetX()) < 0)
-		//{
-		//	x_rot = y;
-		//	y_rot = -x;
-		//}
-		//
-		//double a = Distance(v_l1.GetX(), v_l1.GetY(), v_sr.GetX(), v_sr.GetY());
-		//cout << "a  = " << a << "\n";
-		//int b = a / tan(newAngle/2);
-		//cout << "b  = " << b << "\n";
+		int x = v_l1.GetX() - v_sr.GetX();
+		int y = v_l1.GetY() - v_sr.GetY();
+		int x_rot = -y;
+		int y_rot = x;
+		if ((v_l1.GetX() - v_sr.GetX())*(v.GetY() - v_sr.GetY()) - (v_l1.GetY() - v_sr.GetY())*(v.GetX() - v_sr.GetX()) < 0)
+		{
+			x_rot = y;
+			y_rot = -x;
+		}
+		
+		double a = Distance(v_l1.GetX(), v_l1.GetY(), v_sr.GetX(), v_sr.GetY());
+		int b = a / tan(newAngle/2);
 
-		//x_rot = x_rot / a*b + v_sr.GetX();
-		//cout << "x_rot = " << x_rot << "\n";
-		//y_rot = y_rot / a*b+ v_sr.GetY();
-		//cout << "y_rot = " << y_rot << "\n";
+		x_rot = x_rot / a*b + v_sr.GetX();
+		y_rot = y_rot / a*b+ v_sr.GetY();
 
-		//MoveVertex(n, x_rot, y_rot);
+		MoveVertex(n, x_rot, y_rot);
 
 		vertSetAngle.push_back(make_pair(n, angle));
 		return true;
@@ -425,9 +412,7 @@ void GL::Polygon::MovePolygon(int xOffset, int yOffset)
 {
 	GL::Vertex vOffset = GL::Vertex(xOffset, yOffset);
 	for (GL::Vertex &v : vertices)
-	{
 		v = v + vOffset;
-	}
 	UpdateAllEdgeCoeff();
 }
 
@@ -543,20 +528,6 @@ void GL::Polygon::UpdateEdgeCoeff(int n)
 	}
 	edgeCoeff[n] = LineCoefficients(LineCoefficients(vertices[n], vertices[(n + 1) % vertices.size()]));
 }
-//void GL::Polygon::DeleteVertFromAngleVector(int n)
-//{
-//	auto itr = angles.begin();
-//	while (itr != angles.end())
-//	{
-//		if ((*itr) == n)
-//		{
-//			angles.erase(itr++);
-//			return;
-//		}
-//		else
-//			++itr;
-//	}
-//}
 void GL::Polygon::DeleteSetAngle(int n)
 {
 	auto it = vertSetAngle.begin();

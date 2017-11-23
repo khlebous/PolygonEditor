@@ -8,8 +8,6 @@ Manager* Manager::instance = NULL;
 Manager::Manager()
 {
 	polygons = vector<GL::Polygon*>();
-	//polygon = new GL::Polygon;
-	//polygon2 = new GL::Polygon;
 	highlightVertice = -1;
 	highlightEdge = -1;
 	highlightPolygon = -1;
@@ -176,44 +174,47 @@ void Manager::motionFuncLeft(int _x, int _y)
 	Manager* mm = getInstance();
 	if (mm->highlightVertice != -1)
 	{
-		/*if (mm->checkBox)
+
+		GL::Polygon* p = mm->polygons[mm->highlightPolygon];
+		if (mm->checkBox)
 		{
-			if (p->EdgeNearVertical(mm->highlightVertice))
+			p->hTmpEdges = list<int>();
+			p->vTmpEdges = list<int>();
+			int n = mm->highlightVertice;
+			if (p->EdgeNearVertical(n))
 			{
-				auto it = find(p->vTmpEdges.begin(), p->vTmpEdges.end(), mm->highlightVertice);
-				if (it == p->vTmpEdges.end())
-					p->vTmpEdges.push_back(mm->highlightVertice);
+				//auto it = find(p->vTmpEdges.begin(), p->vTmpEdges.end(), n);
+				//if (it == p->vTmpEdges.end())
+					p->vTmpEdges.push_back(n);
 			}
-			else
-				p->vTmpEdges = list<int>();
-			if (p->EdgeNearHorizontal(mm->highlightVertice))
+			//else
+			//	p->vTmpEdges = list<int>();
+			if (p->EdgeNearHorizontal(n))
 			{
-				auto it = find(p->hTmpEdges.begin(), p->hTmpEdges.end(), mm->highlightVertice);
-				if (it == p->hTmpEdges.end())
-					p->hTmpEdges.push_back(mm->highlightVertice);
+				//auto it = find(p->hTmpEdges.begin(), p->hTmpEdges.end(), n);
+				//if (it == p->hTmpEdges.end())
+					p->hTmpEdges.push_back(n);
 			}
-			else
-				p->hTmpEdges = list<int>();
+			//else
+			//	p->hTmpEdges = list<int>();
 			int n1 = (mm->highlightVertice - 1) % (p->VertCount());
 			if (p->EdgeNearVertical(n1))
 			{
-				auto it = find(p->vTmpEdges.begin(), p->vTmpEdges.end(), n1);
-				if (it == p->vTmpEdges.end())
+				//auto it = find(p->vTmpEdges.begin(), p->vTmpEdges.end(), n1);
+				//if (it == p->vTmpEdges.end())
 					p->vTmpEdges.push_back(n1);
 			}
-			else
-				p->vTmpEdges = list<int>();
+			//else
+			//	p->vTmpEdges = list<int>();
 			if (p->EdgeNearHorizontal(n1))
 			{
-				auto it = find(p->hTmpEdges.begin(), p->hTmpEdges.end(), n1);
-				if (it == p->hTmpEdges.end())
+				//auto it = find(p->hTmpEdges.begin(), p->hTmpEdges.end(), n1);
+				//if (it == p->hTmpEdges.end())
 					p->hTmpEdges.push_back(n1);
 			}
-			else
-				p->hTmpEdges = list<int>();
-		}*/
-
-		GL::Polygon* p = mm->polygons[mm->highlightPolygon];
+			//else
+			//	p->hTmpEdges = list<int>();
+		}
 		p->MoveVertex(mm->highlightVertice, _x, WINDOW_WIDTH - _y);
 	}
 	GL::DrawPolygons(mm->polygons, -1, -1, -1);
