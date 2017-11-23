@@ -1,0 +1,21 @@
+
+przesuwanie wielokata: nacisnac lewy przycisw wewnat welokata
+
+Ustawienie relacji,dodawanie wierzcholkow i t.d. z klawiatury:
+esc - wyjscie z aplikacji
+l (loop) - zamyka wielokat
+
+
+W trakcie podswitliania wierzcholka:
+	d (delete) - usuwa wierzcholek
+	s (set) - ustawia/usuwa kat
+
+W trakcie podswitliania krawedzi
+	a (add) - dodaje wierzcholek na krawedzi
+	v (vertical) - sprawdz mozna li zrobic krawiedz vertykalna(jesli tak to ustawia ogr na werticalnosc krawedzi, jesli nie to nic nie robi) jesli krawedz wczesniej byla wertkalna usuwa to ograniczenie
+	h (horizontal) - analogicznie jak z "vertical"
+
+
+Algorytm: Staramy sie przesuwac jak najmniej wierzcholków. Kiedy przesuwamy jakis wierzcholek(v) i musimy przesuwac sasiedni(v1), to krawedzie to krawedz vv1 przesuwa sie równolegle to swojej poczatkowej pozycji.
+
+c - checkbox (dziala tylko pojawianie sie znakow, nie zostaja)

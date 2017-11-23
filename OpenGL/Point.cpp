@@ -24,5 +24,5 @@ bool GL::Point::operator==(Point & p) const
 bool GL::Point::operator!=(Point & p) const
 {
 	return ((x != p.x) || (y != p.y));
-
 }
+
