@@ -10,7 +10,6 @@ GL::Polygon::Polygon() :isLooped(0)
 
 	vertSetAngle = vector<pair<int, float>>();
 	edgeCoeff = vector<LineCoefficients>();
-	//isLooped = false;
 }
 GL::Polygon::~Polygon()
 {
@@ -285,9 +284,7 @@ void GL::Polygon::AddVertAtEdge(int n, int x, int y)
 void GL::Polygon::DeleteVert(int n)
 {
 	if (!isLooped || (isLooped && vertices.size() < 4))
-	{
 		return;
-	}
 	int n1 = (n - 1 + vertices.size()) % vertices.size();
 	vEdges.remove(n1);
 	vEdges.remove(n);
@@ -483,7 +480,6 @@ void GL::Polygon::CheckEdgeVH(int n, list<int>* v1, list<int>* v2, bool checkV)
 			vertices[n2] = GL::Vertex(v2.GetX(), y);
 			hEdges.push_back(n);
 		}
-		//UpdateAllEdgeCoeff();
 	}
 	UpdateEdgeCoeff(n);
 	int l1 = (n - 1 + vertices.size()) % vertices.size();
@@ -493,13 +489,11 @@ void GL::Polygon::CheckEdgeVH(int n, list<int>* v1, list<int>* v2, bool checkV)
 	{
 		GL::Vertex v = LineIntersection(edgeCoeff[l1], edgeCoeff[n]);
 		vertices[n].Move(v.GetX(), v.GetY());
-		//UpdateEdgeCoeff(l1);
 	}
 	if (CheckAngleIsSetToVertex(r2))
 	{
 		GL::Vertex v = LineIntersection(edgeCoeff[r1], edgeCoeff[n]);
 		vertices[r1].Move(v.GetX(), v.GetY());
-		//UpdateEdgeCoeff();
 	}
 }
 
